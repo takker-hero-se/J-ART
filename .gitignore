@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+
+# 生成物（CI で毎回生成・デプロイされるためコミット不要）
+site/
+results.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

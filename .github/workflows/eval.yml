@@ -1,0 +1,87 @@
+name: J-ART (Japanese Adversarial Red-Team framework) - Eval & Deploy
+
+# 定期実行(cron) + 手動実行(workflow_dispatch) の両対応
+on:
+  schedule:
+    # 毎日 UTC 18:00 (JST 翌03:00) に実行
+    - cron: "0 18 * * *"
+  workflow_dispatch:
+    inputs:
+      force_mock:
+        description: "APIキーを使わず決定論シミュレーション(MOCK)で実行する"
+        type: boolean
+        default: false
+  push:
+    branches: [ main ]
+    paths:
+      - "config.yaml"
+      - "run_assessment.py"
+      - "generate_site.py"
+      - ".github/workflows/eval.yml"
+
+# GitHub Pages へのデプロイに必要な権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行は1つに集約（古いデプロイは中断）
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run assessment
+        env:
+          # 機密情報は GitHub Secrets から安全に読み込む（未設定のプロバイダはMOCKで実行）
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          # 手動実行で force_mock=true の場合は強制MOCK
+          JART_FORCE_MOCK: ${{ github.event.inputs.force_mock == 'true' && '1' || '' }}
+        run: |
+          python run_assessment.py --config config.yaml --out results.json
+
+      - name: Generate static site
+        run: |
+          python generate_site.py --results results.json --outdir site
+
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Archive raw results
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-json
+          path: results.json
+          retention-days: 30
+
+  deploy:
+    needs: evaluate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
