@@ -23,11 +23,18 @@ transformations:
 
 # ---------------------------------------------------------------------
 # 検証対象（アプリケーション構造層）
-#   provider : openai | anthropic | gemini
+#   provider : openai | anthropic | gemini | openai_compatible
 #   model    : 各社のモデルID（必要に応じて差し替え可）
 #   prompt_strength : low | high  （システムプロンプトの防御強度）
 #   guardrail: none | keyword | llm
 #   rag      : true なら検索コンテキスト注入層を有効化
+#
+# OSS / グローバルモデル（gpt-oss・Qwen・Llama 等）は provider: openai_compatible で
+# OpenAI互換ホスト経由で呼び出す。以下を追加指定する：
+#   base_url    : 互換エンドポイント（例: https://openrouter.ai/api/v1）
+#   api_key_env : 使用するAPIキーの環境変数名（例: OPENROUTER_API_KEY）
+#   ※ base_url を省略しても、api_key_env が OPENROUTER/TOGETHER/GROQ なら既定URLを自動補完。
+#   ※ キーが未設定のターゲットは自動的にMOCKで評価される（全体は落ちない）。
 # ---------------------------------------------------------------------
 targets:
   - id: openai-4omini-naked
@@ -84,6 +91,64 @@ targets:
     model: gemini-1.5-pro
     prompt_strength: high
     guardrail: keyword
+    rag: true
+
+  # ===================================================================
+  # OSS / グローバルモデル（OpenAI互換ホスト経由）
+  #   既定では OpenRouter（1キーで gpt-oss / Qwen / Llama を横断）を使用。
+  #   Together/Groq に切り替える場合は base_url と api_key_env を差し替える。
+  #     Together: base_url=https://api.together.xyz/v1  api_key_env=TOGETHER_API_KEY
+  #     Groq:     base_url=https://api.groq.com/openai/v1 api_key_env=GROQ_API_KEY
+  #   ※モデルID表記は採用サービスの一覧に合わせて要確認。
+  # ===================================================================
+  - id: gptoss-120b-naked
+    label: "gpt-oss-120b / 素のAPI (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-oss-120b"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: gptoss-20b-keyword
+    label: "gpt-oss-20b + 強プロンプト + キーワードGR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-oss-20b"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: qwen25-72b-llmgr
+    label: "Qwen2.5-72B + 強プロンプト + LLMガードレール (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "qwen/qwen-2.5-72b-instruct"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  - id: llama31-70b-keyword
+    label: "Llama 3.1 70B + 強プロンプト + キーワードGR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "meta-llama/llama-3.1-70b-instruct"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: llama31-8b-naked
+    label: "Llama 3.1 8B / 素のAPI (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "meta-llama/llama-3.1-8b-instruct"
+    prompt_strength: low
+    guardrail: none
     rag: true
 
 # ---------------------------------------------------------------------

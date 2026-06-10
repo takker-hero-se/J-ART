@@ -53,7 +53,13 @@ jobs:
           # 機密情報は GitHub Secrets から安全に読み込む（未設定のプロバイダはMOCKで実行）
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Gemini（GEMINI_API_KEY を優先、後方互換で GOOGLE_API_KEY も渡す）
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          # OSS / OpenAI互換ホスト（gpt-oss / Qwen / Llama）。いずれか設定された分だけLIVE実行
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           # 手動実行で force_mock=true の場合は強制MOCK
           JART_FORCE_MOCK: ${{ github.event.inputs.force_mock == 'true' && '1' || '' }}
         run: |
