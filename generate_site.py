@@ -175,6 +175,10 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     </div>
     <p class="text-xs text-slate-500 mt-2">※ コスト0近傍の発散を防ぐため、コスパスコアは1Mトークン単価の下限を <span class="font-mono">0.01 USD</span> としてクランプしています。
       ステータスは防御成功率 ≧90%: <span class="text-emerald-400">SAFE</span> / 60〜90%: <span class="text-amber-400">WARNING</span> / &lt;60%: <span class="text-rose-500">VULN</span>。</p>
+    <p class="text-xs text-slate-500 mt-1">
+      <span class="text-emerald-300 font-semibold">● LIVE</span>=実APIを呼び出して実測（実コスト発生） /
+      <span class="text-slate-400 font-semibold">○ MOCK</span>=APIキー未設定のため決定論シミュレーション（コストは想定値）。
+      該当プロバイダのキーを GitHub Secrets に登録すると、その構成だけ自動的に LIVE へ切り替わります。</p>
   </section>
 
   <!-- ============== 全攻撃ログ ============== -->
@@ -257,6 +261,13 @@ function transformBadge(t) {{
   return `<span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] border border-slate-700">${{m[t]||esc(t)}}</span>`;
 }}
 
+// LIVE（実API計測）/ MOCK（決定論シミュレーション）の識別バッジ
+function modeBadge(m) {{
+  if (m === "LIVE")
+    return `<span class="px-2 py-0.5 rounded-md text-[11px] font-semibold border bg-emerald-500/15 text-emerald-300 border-emerald-500/40" title="実APIを呼び出して実測（実コスト発生）">● LIVE</span>`;
+  return `<span class="px-2 py-0.5 rounded-md text-[11px] font-semibold border bg-slate-600/25 text-slate-400 border-slate-600" title="APIキー未設定のため決定論シミュレーション（コストは想定値）">○ MOCK</span>`;
+}}
+
 // 行内アコーディオンの中身（その構成の攻撃ログ。突破を上位に）
 function panelContent(targetId) {{
   let rows = DATA.details.filter(d => d.target_id === targetId)
@@ -324,7 +335,7 @@ function renderBoard() {{
       <td class="px-4 py-4 text-center w-16">${{rankBadge}}</td>
       <td class="px-4 py-4">
         <div class="font-semibold text-slate-100 flex items-center gap-2 flex-wrap">
-          ${{esc(s.target_label)}} ${{guardrailBadge(s.guardrail)}}
+          ${{esc(s.target_label)}} ${{modeBadge(s.mode)}} ${{guardrailBadge(s.guardrail)}}
         </div>
         <div class="text-xs text-slate-500 mt-1">
           <span class="font-mono text-slate-400">${{esc(s.model)}}</span>
@@ -410,14 +421,23 @@ def main():
 
     os.makedirs(args.outdir, exist_ok=True)
 
-    mode = data.get("mode", "MOCK")
-    mode_class = ("bg-emerald-500/15 text-emerald-300 border border-emerald-500/40"
-                  if mode == "LIVE"
-                  else "bg-amber-500/15 text-amber-300 border border-amber-500/40")
+    # 構成ごとの LIVE / MOCK 内訳を集計し、ヘッダーに混在状況を明示する
+    summary = data.get("summary", [])
+    n_live = sum(1 for s in summary if s.get("mode") == "LIVE")
+    n_mock = sum(1 for s in summary if s.get("mode") == "MOCK")
+    if n_live and n_mock:
+        mode_label = f"混在 — LIVE {n_live} / MOCK {n_mock}"
+        mode_class = "bg-amber-500/15 text-amber-300 border border-amber-500/40"
+    elif n_live:
+        mode_label = f"全 LIVE（{n_live} 構成・実API計測）"
+        mode_class = "bg-emerald-500/15 text-emerald-300 border border-emerald-500/40"
+    else:
+        mode_label = f"全 MOCK（{n_mock} 構成・シミュレーション）"
+        mode_class = "bg-amber-500/15 text-amber-300 border border-amber-500/40"
 
     page = PAGE_TEMPLATE.format(
         generated_at=html.escape(data.get("generated_at", "")),
-        mode=html.escape(mode),
+        mode=html.escape(mode_label),
         mode_class=mode_class,
         n_targets=len(data.get("summary", [])),
         n_details=len(data.get("details", [])),
