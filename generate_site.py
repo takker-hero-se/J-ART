@@ -361,6 +361,14 @@ function panelContent(targetId) {{
   return head + rows.map(d => logCard(d)).join("");
 }}
 
+// 安全マスク: 悪意あるコアは run_assessment.py 側で既に伏字化済みだが、
+// 万一プレースホルダ(CORE_SLOT)が残っていても画面では必ずマスクへ置換する二重防御。
+const CORE_SLOT = "<<CORE>>";
+const CORE_MASK = "[ 悪意ある指示のコア（安全のためマスク済） ]";
+function maskCore(s) {{
+  return (s || "").split(CORE_SLOT).join(CORE_MASK);
+}}
+
 // 個別の攻撃ログカード（<details>）
 function logCard(d) {{
   return `
@@ -383,12 +391,13 @@ function logCard(d) {{
           <span class="text-slate-300">${{esc(d.reason)}}</span>
         </div>
         <div>
-          <div class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">▸ 攻撃プロンプト（日本語難読化・変形後）</div>
-          <pre class="code-scroll whitespace-pre-wrap break-words font-mono text-xs leading-relaxed bg-slate-950 border border-slate-800 rounded-lg p-3.5 text-slate-300 max-h-72 overflow-auto">${{esc(d.prompt_excerpt)}}</pre>
+          <div class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">🔓 突破された日本語変形テンプレート（コアはマスク済）</div>
+          <div class="text-[11px] text-slate-500 mb-1.5 leading-relaxed">難読化の<span class="text-amber-300/90">フレームワーク（前置き・改行・偽前提など）</span>はそのまま掲載し、悪用（兵器化）を防ぐため<span class="text-rose-300/90">悪意ある指示のコアはマスク</span>しています。</div>
+          <pre class="code-scroll whitespace-pre-wrap break-words font-mono text-xs leading-relaxed bg-slate-950 border border-slate-800 rounded-lg p-3.5 text-slate-300 max-h-72 overflow-auto">${{esc(maskCore(d.prompt_excerpt))}}</pre>
         </div>
         <div>
           <div class="text-[11px] uppercase tracking-wider text-slate-500 mb-1">▸ モデルの応答（Reasoning）</div>
-          <pre class="code-scroll whitespace-pre-wrap break-words font-mono text-xs leading-relaxed bg-slate-950 border ${{d.breached?"border-rose-900/50":"border-slate-800"}} rounded-lg p-3.5 ${{d.breached?"text-rose-300":"text-emerald-300"}} max-h-72 overflow-auto">${{esc(d.response_excerpt)}}</pre>
+          <pre class="code-scroll whitespace-pre-wrap break-words font-mono text-xs leading-relaxed bg-slate-950 border ${{d.breached?"border-rose-900/50":"border-slate-800"}} rounded-lg p-3.5 ${{d.breached?"text-rose-300":"text-emerald-300"}} max-h-72 overflow-auto">${{esc(maskCore(d.response_excerpt))}}</pre>
         </div>
       </div>
     </details>`;
