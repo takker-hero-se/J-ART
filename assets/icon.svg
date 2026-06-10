@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="J-ART">
+  <title>J-ART</title>
+  <defs>
+    <linearGradient id="jart-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#064e3b"/>
+      <stop offset="1" stop-color="#020617"/>
+    </linearGradient>
+    <linearGradient id="jart-edge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6ee7b7"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="jart-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="1.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- 背景: ダークネイビーの角丸（明色タブでも視認性確保） -->
+  <rect x="0" y="0" width="64" height="64" rx="14" fill="#020617"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" fill="none" stroke="#10b981" stroke-opacity="0.18"/>
+
+  <g filter="url(#jart-glow)">
+    <!-- 盾: 防御 / 耐性 -->
+    <path d="M32 8 L51 14.5 V31 C51 43.2 42.6 50.7 32 55 C21.4 50.7 13 43.2 13 31 V14.5 Z"
+          fill="url(#jart-shield)" stroke="url(#jart-edge)" stroke-width="2.4"
+          stroke-linejoin="round"/>
+
+    <!-- 照準レティクル: 敵対的レッドチーム（ターゲティング） -->
+    <circle cx="32" cy="30.5" r="11" fill="none" stroke="#34d399" stroke-width="2"/>
+    <g stroke="#34d399" stroke-width="2" stroke-linecap="round">
+      <line x1="32" y1="14.5" x2="32" y2="21"/>
+      <line x1="32" y1="40" x2="32" y2="46.5"/>
+      <line x1="16" y1="30.5" x2="22.5" y2="30.5"/>
+      <line x1="41.5" y1="30.5" x2="48" y2="30.5"/>
+    </g>
+
+    <!-- 中心: 日の丸 ＝ ブルズアイ（日本特化 × 標的の二重表現） -->
+    <circle cx="32" cy="30.5" r="4.4" fill="#f43f5e"/>
+  </g>
+</svg>
