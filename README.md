@@ -1,4 +1,6 @@
-# 🛡 J-ART (Japanese Adversarial Red-Team framework)
+<p align="center"><img src="assets/icon.svg" alt="J-ART" width="96" height="96"></p>
+
+# J-ART (Japanese Adversarial Red-Team framework)
 
 **日本語環境における RAG システム / ガードレール構成の、MITRE ATLAS 準拠 脆弱性耐性リーダーボード（静的Webサイト）**
 
@@ -20,8 +22,9 @@ GitHub Actions で定期実行し、結果を GitHub Pages に自動公開しま
 | `config.yaml` | 検証対象(targets)・ベース攻撃(attacks)・カナリア/マーカー定義 |
 | `run_assessment.py` | 日本語変形・コスト計測・防御判定を実行し `results.json` を出力 |
 | `generate_site.py` | `results.json` から並び替え可能なランキング表＋攻撃ログ付き `index.html` を生成 |
-| `.github/workflows/eval.yml` | cron + 手動実行 → 評価 → サイト生成 → GitHub Pages 自動デプロイ |
+| `.github/workflows/eval.yml` | cron(毎週月曜) + 手動実行 + 設定ファイル更新push → 評価 → サイト生成 → GitHub Pages 自動デプロイ |
 | `requirements.txt` | 依存ライブラリ |
+| `assets/icon.svg` | ブランドアイコン（favicon・ヘッダーロゴ）。盾=防御耐性 / 照準=敵対的レッドチーム / 中心の赤丸=日の丸＝標的。`generate_site.py` がサイトへ反映 |
 
 ## ローカル実行
 
@@ -39,14 +42,23 @@ python generate_site.py             # -> site/index.html
 ```bash
 export OPENAI_API_KEY=...
 export ANTHROPIC_API_KEY=...
-export GOOGLE_API_KEY=...
+export GEMINI_API_KEY=...        # 後方互換で GOOGLE_API_KEY も可
+export OPENROUTER_API_KEY=...    # OSSモデル(gpt-oss/Qwen/Llama)用。Together/Groqでも可
 ```
+
+> ローカルでは上記をまとめて `.env` に書いておくと管理が楽です（`.env` は `.gitignore` 済み）。
 
 ## GitHub での自動公開
 
 1. リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定。
-2. **Settings → Secrets and variables → Actions** に `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `GOOGLE_API_KEY` を登録（任意。未登録分はMOCKで評価）。
-3. `main` への push、毎日のcron、または Actions タブの手動実行で、評価〜デプロイが自動実行されます。
+2. **Settings → Secrets and variables → Actions** に各プロバイダのキーを登録（任意。未登録分はMOCKで評価）:
+   - `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` / `GEMINI_API_KEY`（商用モデル）
+   - `OPENROUTER_API_KEY`（OSSモデル。`TOGETHER_API_KEY` / `GROQ_API_KEY` でも可）
+   - `.env` にまとめてあれば `gh secret set -f .env` で一括登録できます。
+3. 評価〜デプロイは次のいずれかで自動実行されます:
+   - **毎週月曜 JST 03:00**（cron / UTC 日曜18:00）
+   - `config.yaml` / `run_assessment.py` / `generate_site.py` / `eval.yml` を `main` に push したとき
+   - Actions タブからの手動実行（`force_mock` 指定でAPI不使用のMOCK実行も可能）
 
 ## 判定の仕組み（決定論ジャッジ）
 
