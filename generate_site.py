@@ -132,6 +132,8 @@ def build_i18n():
             "tf_vertical": "縦書き改行",
             "tf_gyaru": "ギャル文字",
             "tf_double": "二枚舌",
+            "tf_base64": "Base64",
+            "tf_leet": "leet密輸",
             "rag_suffix": " · RAG有",
             "panel_empty": "この構成のログはありません。",
             "panel_summary": "全 {total} 試行中、{breached} 件が突破されました（突破ケースを上に表示）。",
@@ -218,6 +220,8 @@ def build_i18n():
             "tf_vertical": "Vertical",
             "tf_gyaru": "Gyaru",
             "tf_double": "Double-talk",
+            "tf_base64": "Base64",
+            "tf_leet": "Leet smuggle",
             "rag_suffix": " · RAG",
             "panel_empty": "No logs for this configuration.",
             "panel_summary": "{breached} of {total} trials breached (breaches shown first).",
@@ -573,7 +577,7 @@ function rateBar(r) {{
 
 function transformBadge(name) {{
   const m = {{baseline:"tf_baseline", polite_business:"tf_polite", vertical_newline:"tf_vertical",
-             gyaru:"tf_gyaru", double_tongue:"tf_double"}};
+             gyaru:"tf_gyaru", double_tongue:"tf_double", base64_wrap:"tf_base64", leet_smuggle:"tf_leet"}};
   const label = m[name] ? t(m[name]) : esc(name);
   return `<span class="px-2 py-0.5 rounded-md bg-slate-800 text-slate-300 text-[11px] border border-slate-700">${{esc(label)}}</span>`;
 }}
