@@ -27,6 +27,7 @@ import base64
 import hashlib
 import argparse
 import datetime
+import concurrent.futures
 
 try:
     import yaml
@@ -460,6 +461,10 @@ MAX_RETRIES = 4          # 最大試行回数（初回含む）
 RETRY_BASE_DELAY = 2.0   # 指数バックオフの基準秒
 REQUEST_TIMEOUT = 60     # 1リクエストのタイムアウト秒
 
+# 評価の並列ワーカー数。試行は (target, attack, transform) ごとに独立なので有界並列で
+# 壁時計を短縮できる。各プロバイダのRPM上限に当たらないよう既定は控えめ（環境変数で調整可）。
+MAX_WORKERS = max(1, int(os.environ.get("JART_MAX_WORKERS", "8")))
+
 
 def _is_retryable(e: Exception) -> bool:
     """429 / タイムアウト / 5xx / 一時的接続障害は再試行可能とみなす。"""
@@ -822,21 +827,51 @@ def main():
     all_details = []
     any_live = False
 
+    # 構成ごとのモード（LIVE/MOCK）を先に確定
+    target_mode = {}
     for target in targets:
         mode = "LIVE" if is_live(target) else "MOCK"
+        target_mode[target["id"]] = mode
         any_live = any_live or (mode == "LIVE")
-        print(f"[*] 評価中: {target['id']}  ({mode})", flush=True)
-        recs = []
-        for attack in attacks:
-            for tname in transforms:
-                if tname not in TRANSFORM_TEMPLATES:
-                    continue
-                rec = run_one(target, attack, tname, secret, markers)
-                rec["mode"] = mode
-                recs.append(rec)
-                flag = "突破" if rec["breached"] else "防御"
-                print(f"    - {attack['id']:<24} / {tname:<16} -> {flag}", flush=True)
-        summaries.append(summarize(target, mode, recs))
+        print(f"[*] 評価対象: {target['id']}  ({mode})", flush=True)
+
+    # 全 (target, attack, transform) を平坦化（各試行は独立）
+    work = [
+        (target, attack, tname)
+        for target in targets
+        for attack in attacks
+        for tname in transforms
+        if tname in TRANSFORM_TEMPLATES
+    ]
+    total = len(work)
+
+    def _do(item):
+        target, attack, tname = item
+        rec = run_one(target, attack, tname, secret, markers)
+        rec["mode"] = target_mode[target["id"]]
+        return rec
+
+    # 有界並列で実行（決定論は突破判定のハッシュ由来で実行順に非依存）
+    records_by_target = {t["id"]: [] for t in targets}
+    done = 0
+    print(f"[*] {total} 試行を最大 {MAX_WORKERS} 並列で実行します", flush=True)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        for fut in concurrent.futures.as_completed(ex.submit(_do, it) for it in work):
+            rec = fut.result()
+            records_by_target[rec["target_id"]].append(rec)
+            done += 1
+            flag = "突破" if rec["breached"] else "防御"
+            print(f"    [{done}/{total}] {rec['target_id']:<22} / "
+                  f"{rec['attack_id']:<24} / {rec['transformation']:<16} -> {flag}", flush=True)
+
+    # 出力順を安定化（config 上の attack × transform 順）してから集計
+    attack_order = {a["id"]: i for i, a in enumerate(attacks)}
+    transform_order = {t: i for i, t in enumerate(transforms)}
+    for target in targets:
+        recs = records_by_target[target["id"]]
+        recs.sort(key=lambda r: (attack_order.get(r["attack_id"], 1_000),
+                                 transform_order.get(r["transformation"], 1_000)))
+        summaries.append(summarize(target, target_mode[target["id"]], recs))
         all_details.extend(recs)
 
     # コスパスコア降順でランキング
