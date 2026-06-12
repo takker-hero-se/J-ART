@@ -493,6 +493,10 @@ function t(key) {{
   if (L && L[key] != null) return L[key];
   return (I18N.ja && I18N.ja[key] != null) ? I18N.ja[key] : key;
 }}
+// 構成名は UI 表示なので言語に応じて切替（EN時は target_label_en があれば使用）
+function labelOf(o) {{
+  return (LANG === "en" && o.target_label_en) ? o.target_label_en : o.target_label;
+}}
 function modeText() {{
   const s = DATA.summary || [];
   const live = s.filter(function(x) {{ return x.mode === "LIVE"; }}).length;
@@ -656,7 +660,7 @@ function renderBoard() {{
       <td class="px-4 py-4 text-center w-16">${{rankBadge}}</td>
       <td class="px-4 py-4">
         <div class="font-semibold text-slate-100 flex items-center gap-2 flex-wrap">
-          ${{esc(s.target_label)}} ${{modeBadge(s.mode)}} ${{promptBadge(s.prompt_strength)}} ${{guardrailBadge(s.guardrail)}}
+          ${{esc(labelOf(s))}} ${{modeBadge(s.mode)}} ${{promptBadge(s.prompt_strength)}} ${{guardrailBadge(s.guardrail)}}
         </div>
         <div class="text-xs text-slate-500 mt-1">
           <span class="font-mono text-slate-400">${{esc(s.model)}}</span>
@@ -678,7 +682,7 @@ function renderBoard() {{
       <td colspan="7">
         <div class="acc-wrap"><div class="acc-inner">
           <div class="px-4 sm:px-6 py-5 bg-slate-950/60 border-t border-slate-800/60 space-y-2.5">
-            <div class="text-sm font-semibold text-emerald-300 mb-1">${{t("panel_log_for").replace("{{label}}", esc(s.target_label))}}</div>
+            <div class="text-sm font-semibold text-emerald-300 mb-1">${{t("panel_log_for").replace("{{label}}", esc(labelOf(s)))}}</div>
             ${{panelContent(s.target_id)}}
           </div>
         </div></div>
@@ -711,7 +715,7 @@ const sel = document.getElementById("filter-target");
 function buildFilter() {{
   const cur = sel.value;
   sel.innerHTML = `<option value="">${{esc(t("filter_all"))}}</option>` +
-    DATA.summary.map(s=>`<option value="${{esc(s.target_id)}}">${{esc(s.target_label)}}</option>`).join("");
+    DATA.summary.map(s=>`<option value="${{esc(s.target_id)}}">${{esc(labelOf(s))}}</option>`).join("");
   sel.value = cur;
 }}
 

@@ -39,6 +39,7 @@ transformations:
 targets:
   - id: openai-4omini-naked
     label: "GPT-4o-mini / 素のAPI"
+    label_en: "GPT-4o-mini / Naked API"
     provider: openai
     model: gpt-4o-mini
     prompt_strength: low
@@ -47,6 +48,7 @@ targets:
 
   - id: openai-4omini-keyword
     label: "GPT-4o-mini + 強プロンプト + キーワードGR"
+    label_en: "GPT-4o-mini + Hardened + Keyword GR"
     provider: openai
     model: gpt-4o-mini
     prompt_strength: high
@@ -55,6 +57,7 @@ targets:
 
   - id: openai-4o-llmgr
     label: "GPT-4o + 強プロンプト + LLMガードレール"
+    label_en: "GPT-4o + Hardened + LLM guardrail"
     provider: openai
     model: gpt-4o
     prompt_strength: high
@@ -63,6 +66,7 @@ targets:
 
   - id: anthropic-haiku-keyword
     label: "Claude Haiku + 強プロンプト + キーワードGR"
+    label_en: "Claude Haiku + Hardened + Keyword GR"
     provider: anthropic
     model: claude-3-5-haiku-latest
     prompt_strength: high
@@ -71,6 +75,7 @@ targets:
 
   - id: anthropic-sonnet-llmgr
     label: "Claude Sonnet + 強プロンプト + LLMガードレール"
+    label_en: "Claude Sonnet + Hardened + LLM guardrail"
     provider: anthropic
     model: claude-3-5-sonnet-latest
     prompt_strength: high
@@ -79,6 +84,7 @@ targets:
 
   - id: gemini-flash-naked
     label: "Gemini 1.5 Flash / 素のAPI"
+    label_en: "Gemini 1.5 Flash / Naked API"
     provider: gemini
     model: gemini-1.5-flash
     prompt_strength: low
@@ -87,6 +93,7 @@ targets:
 
   - id: gemini-pro-keyword
     label: "Gemini 1.5 Pro + 強プロンプト + キーワードGR"
+    label_en: "Gemini 1.5 Pro + Hardened + Keyword GR"
     provider: gemini
     model: gemini-1.5-pro
     prompt_strength: high
@@ -103,6 +110,7 @@ targets:
   # ===================================================================
   - id: gptoss-120b-naked
     label: "gpt-oss-120b / 素のAPI (OpenRouter)"
+    label_en: "gpt-oss-120b / Naked API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -113,6 +121,7 @@ targets:
 
   - id: gptoss-20b-keyword
     label: "gpt-oss-20b + 強プロンプト + キーワードGR (OpenRouter)"
+    label_en: "gpt-oss-20b + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -123,6 +132,7 @@ targets:
 
   - id: qwen25-72b-llmgr
     label: "Qwen2.5-72B + 強プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "Qwen2.5-72B + Hardened + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -133,6 +143,7 @@ targets:
 
   - id: llama31-70b-keyword
     label: "Llama 3.1 70B + 強プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Llama 3.1 70B + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -143,6 +154,7 @@ targets:
 
   - id: llama31-8b-naked
     label: "Llama 3.1 8B / 素のAPI (OpenRouter)"
+    label_en: "Llama 3.1 8B / Naked API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY

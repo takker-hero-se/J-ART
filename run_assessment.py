@@ -638,6 +638,7 @@ def _record(target, attack, transform_name, display_payload,
     return {
         "target_id": target["id"],
         "target_label": target.get("label", target["id"]),
+        "target_label_en": target.get("label_en", target.get("label", target["id"])),
         "provider": target["provider"],
         "model": target["model"],
         "guardrail": target.get("guardrail", "none"),
@@ -691,6 +692,7 @@ def summarize(target, mode, records):
     return {
         "target_id": target["id"],
         "target_label": target.get("label", target["id"]),
+        "target_label_en": target.get("label_en", target.get("label", target["id"])),
         "provider": target["provider"],
         "model": target["model"],
         "prompt_strength": target.get("prompt_strength"),
