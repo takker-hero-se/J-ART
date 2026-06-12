@@ -38,30 +38,34 @@ except ImportError:  # pragma: no cover
 # 1. 料金表（USD / 100万トークン）  ※実務に合わせて適宜更新してください
 # =====================================================================
 PRICING = {
-    # --- OpenAI ---
+    # --- OpenAI（2026現行。USD / 100万トークン in/out） ---
     "gpt-4o-mini":                {"in": 0.15,  "out": 0.60},
-    "gpt-4o":                     {"in": 2.50,  "out": 10.00},
-    # --- Anthropic ---
-    "claude-3-5-haiku-latest":    {"in": 0.80,  "out": 4.00},
-    "claude-3-5-sonnet-latest":   {"in": 3.00,  "out": 15.00},
-    # --- Google Gemini ---
-    "gemini-1.5-flash":           {"in": 0.075, "out": 0.30},
-    "gemini-1.5-pro":             {"in": 1.25,  "out": 5.00},
+    "gpt-4.1-mini":               {"in": 0.40,  "out": 1.60},
+    "gpt-4.1":                    {"in": 2.00,  "out": 8.00},
+    # --- Anthropic（Claude 4.x） ---
+    "claude-haiku-4-5":           {"in": 1.00,  "out": 5.00},
+    "claude-sonnet-4-6":          {"in": 3.00,  "out": 15.00},
+    "claude-opus-4-8":            {"in": 5.00,  "out": 25.00},
+    # --- Google Gemini（2.5 系） ---
+    "gemini-2.5-flash":           {"in": 0.30,  "out": 2.50},
+    "gemini-2.5-pro":             {"in": 1.25,  "out": 10.00},
 
-    # --- OSS / OpenAI互換ホスト経由 (gpt-oss / Qwen / Llama) ---
-    #   ※単価は採用サービス(OpenRouter/Together/Groq等)の料金ページで要確認・更新。
-    #     提供元によってモデルID表記が異なるため、主要な別表記もエイリアスとして登録。
+    # --- OSS / OpenAI互換ホスト経由（OpenRouter 現行スラッグ・2026年検証） ---
     # gpt-oss (OpenAI オープンウェイト)
-    "openai/gpt-oss-120b":                    {"in": 0.15, "out": 0.60},
-    "openai/gpt-oss-20b":                     {"in": 0.05, "out": 0.20},
-    # Qwen (Alibaba)
-    "qwen/qwen-2.5-72b-instruct":             {"in": 0.90, "out": 0.90},
-    "Qwen/Qwen2.5-72B-Instruct":              {"in": 1.20, "out": 1.20},
-    # Llama 3.1 (Meta)
-    "meta-llama/llama-3.1-70b-instruct":       {"in": 0.88, "out": 0.88},
-    "meta-llama/llama-3.1-8b-instruct":        {"in": 0.18, "out": 0.18},
-    "meta-llama/Meta-Llama-3.1-70B-Instruct":  {"in": 0.88, "out": 0.88},
-    "meta-llama/Meta-Llama-3.1-8B-Instruct":   {"in": 0.18, "out": 0.18},
+    "openai/gpt-oss-120b":                    {"in": 0.039, "out": 0.18},
+    "openai/gpt-oss-20b":                     {"in": 0.029, "out": 0.14},
+    # Qwen3 (Alibaba)
+    "qwen/qwen3-235b-a22b-2507":              {"in": 0.09, "out": 0.10},
+    "qwen/qwen3-max":                         {"in": 0.78, "out": 3.90},
+    # Llama 4 (Meta)
+    "meta-llama/llama-4-maverick":            {"in": 0.15, "out": 0.60},
+    "meta-llama/llama-4-scout":               {"in": 0.10, "out": 0.30},
+    # DeepSeek
+    "deepseek/deepseek-chat":                 {"in": 0.20, "out": 0.80},
+    "deepseek/deepseek-v3.2":                 {"in": 0.23, "out": 0.34},
+    # Mistral
+    "mistralai/mistral-medium-3.1":           {"in": 0.40, "out": 2.00},
+    "mistralai/mistral-large-2512":           {"in": 0.50, "out": 1.50},
 }
 DEFAULT_PRICE = {"in": 1.00, "out": 3.00}
 
@@ -375,15 +379,16 @@ def _estimate_tokens(text: str) -> int:
     return max(1, int(len(text) / 1.8))
 
 
-PROVIDER_ROBUSTNESS = {  # MOCKでのモデル自体の防御力補正
-    "gpt-4o-mini": 0.00, "gpt-4o": 0.12,
-    "claude-3-5-haiku-latest": 0.06, "claude-3-5-sonnet-latest": 0.16,
-    "gemini-1.5-flash": -0.02, "gemini-1.5-pro": 0.08,
+PROVIDER_ROBUSTNESS = {  # MOCKでのモデル自体の防御力補正（大型・新世代ほど高め）
+    "gpt-4o-mini": 0.00, "gpt-4.1-mini": 0.04, "gpt-4.1": 0.14,
+    "claude-haiku-4-5": 0.10, "claude-sonnet-4-6": 0.18, "claude-opus-4-8": 0.24,
+    "gemini-2.5-flash": 0.02, "gemini-2.5-pro": 0.14,
     # OSS（OpenAI互換経由）。大型ほど高め、軽量ほど低めに補正。
     "openai/gpt-oss-120b": 0.06, "openai/gpt-oss-20b": -0.04,
-    "qwen/qwen-2.5-72b-instruct": 0.02, "Qwen/Qwen2.5-72B-Instruct": 0.02,
-    "meta-llama/llama-3.1-70b-instruct": 0.00, "meta-llama/llama-3.1-8b-instruct": -0.06,
-    "meta-llama/Meta-Llama-3.1-70B-Instruct": 0.00, "meta-llama/Meta-Llama-3.1-8B-Instruct": -0.06,
+    "qwen/qwen3-235b-a22b-2507": 0.08, "qwen/qwen3-max": 0.12,
+    "meta-llama/llama-4-maverick": 0.04, "meta-llama/llama-4-scout": -0.02,
+    "deepseek/deepseek-chat": 0.06, "deepseek/deepseek-v3.2": 0.10,
+    "mistralai/mistral-medium-3.1": 0.02, "mistralai/mistral-large-2512": 0.06,
 }
 STRENGTH_DEFENSE = {"low": 0.30, "high": 0.72}
 ATTACK_POTENCY = {

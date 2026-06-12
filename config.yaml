@@ -39,6 +39,7 @@ transformations:
 #   ※ キーが未設定のターゲットは自動的にMOCKで評価される（全体は落ちない）。
 # ---------------------------------------------------------------------
 targets:
+  # ===== OpenAI（2026現行。temperature=0 を受ける chat 系を選定） =====
   - id: openai-4omini-naked
     label: "GPT-4o-mini / 素のAPI"
     label_en: "GPT-4o-mini / Naked API"
@@ -48,67 +49,76 @@ targets:
     guardrail: none
     rag: true
 
-  - id: openai-4omini-keyword
-    label: "GPT-4o-mini + 強プロンプト + キーワードGR"
-    label_en: "GPT-4o-mini + Hardened + Keyword GR"
+  - id: openai-41mini-keyword
+    label: "GPT-4.1-mini + 強プロンプト + キーワードGR"
+    label_en: "GPT-4.1-mini + Hardened + Keyword GR"
     provider: openai
-    model: gpt-4o-mini
+    model: gpt-4.1-mini
     prompt_strength: high
     guardrail: keyword
     rag: true
 
-  - id: openai-4o-llmgr
-    label: "GPT-4o + 強プロンプト + LLMガードレール"
-    label_en: "GPT-4o + Hardened + LLM guardrail"
+  - id: openai-41-llmgr
+    label: "GPT-4.1 + 強プロンプト + LLMガードレール"
+    label_en: "GPT-4.1 + Hardened + LLM guardrail"
     provider: openai
-    model: gpt-4o
+    model: gpt-4.1
     prompt_strength: high
     guardrail: llm
     rag: true
 
+  # ===== Anthropic（Claude 4.x 系へ刷新＋Opusフラグシップ追加） =====
   - id: anthropic-haiku-keyword
-    label: "Claude Haiku + 強プロンプト + キーワードGR"
-    label_en: "Claude Haiku + Hardened + Keyword GR"
+    label: "Claude Haiku 4.5 + 強プロンプト + キーワードGR"
+    label_en: "Claude Haiku 4.5 + Hardened + Keyword GR"
     provider: anthropic
-    model: claude-3-5-haiku-latest
+    model: claude-haiku-4-5
     prompt_strength: high
     guardrail: keyword
     rag: true
 
   - id: anthropic-sonnet-llmgr
-    label: "Claude Sonnet + 強プロンプト + LLMガードレール"
-    label_en: "Claude Sonnet + Hardened + LLM guardrail"
+    label: "Claude Sonnet 4.6 + 強プロンプト + LLMガードレール"
+    label_en: "Claude Sonnet 4.6 + Hardened + LLM guardrail"
     provider: anthropic
-    model: claude-3-5-sonnet-latest
+    model: claude-sonnet-4-6
     prompt_strength: high
     guardrail: llm
     rag: true
 
+  - id: anthropic-opus-naked
+    label: "Claude Opus 4.8 / 素のAPI"
+    label_en: "Claude Opus 4.8 / Naked API"
+    provider: anthropic
+    model: claude-opus-4-8
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  # ===== Google Gemini（2.5 系へ刷新） =====
   - id: gemini-flash-naked
-    label: "Gemini 1.5 Flash / 素のAPI"
-    label_en: "Gemini 1.5 Flash / Naked API"
+    label: "Gemini 2.5 Flash / 素のAPI"
+    label_en: "Gemini 2.5 Flash / Naked API"
     provider: gemini
-    model: gemini-1.5-flash
+    model: gemini-2.5-flash
     prompt_strength: low
     guardrail: none
     rag: true
 
   - id: gemini-pro-keyword
-    label: "Gemini 1.5 Pro + 強プロンプト + キーワードGR"
-    label_en: "Gemini 1.5 Pro + Hardened + Keyword GR"
+    label: "Gemini 2.5 Pro + 強プロンプト + キーワードGR"
+    label_en: "Gemini 2.5 Pro + Hardened + Keyword GR"
     provider: gemini
-    model: gemini-1.5-pro
+    model: gemini-2.5-pro
     prompt_strength: high
     guardrail: keyword
     rag: true
 
   # ===================================================================
-  # OSS / グローバルモデル（OpenAI互換ホスト経由）
-  #   既定では OpenRouter（1キーで gpt-oss / Qwen / Llama を横断）を使用。
-  #   Together/Groq に切り替える場合は base_url と api_key_env を差し替える。
-  #     Together: base_url=https://api.together.xyz/v1  api_key_env=TOGETHER_API_KEY
-  #     Groq:     base_url=https://api.groq.com/openai/v1 api_key_env=GROQ_API_KEY
-  #   ※モデルID表記は採用サービスの一覧に合わせて要確認。
+  # OSS / グローバルモデル（OpenAI互換ホスト経由・既定 OpenRouter）
+  #   1キーで gpt-oss / Qwen3 / Llama 4 / DeepSeek / Mistral を横断。
+  #   Together/Groq に切替える場合は base_url と api_key_env を差し替える。
+  #   ※モデルIDは OpenRouter の現行スラッグ（2026年検証済み）。
   # ===================================================================
   - id: gptoss-120b-naked
     label: "gpt-oss-120b / 素のAPI (OpenRouter)"
@@ -132,37 +142,92 @@ targets:
     guardrail: keyword
     rag: true
 
-  - id: qwen25-72b-llmgr
-    label: "Qwen2.5-72B + 強プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "Qwen2.5-72B + Hardened + LLM guardrail (OpenRouter)"
+  - id: qwen3-235b-llmgr
+    label: "Qwen3-235B + 強プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "Qwen3-235B + Hardened + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
-    model: "qwen/qwen-2.5-72b-instruct"
+    model: "qwen/qwen3-235b-a22b-2507"
     prompt_strength: high
     guardrail: llm
     rag: true
 
-  - id: llama31-70b-keyword
-    label: "Llama 3.1 70B + 強プロンプト + キーワードGR (OpenRouter)"
-    label_en: "Llama 3.1 70B + Hardened + Keyword GR (OpenRouter)"
+  - id: qwen3-max-keyword
+    label: "Qwen3-Max + 強プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Qwen3-Max + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
-    model: "meta-llama/llama-3.1-70b-instruct"
+    model: "qwen/qwen3-max"
     prompt_strength: high
     guardrail: keyword
     rag: true
 
-  - id: llama31-8b-naked
-    label: "Llama 3.1 8B / 素のAPI (OpenRouter)"
-    label_en: "Llama 3.1 8B / Naked API (OpenRouter)"
+  - id: llama4-maverick-keyword
+    label: "Llama 4 Maverick + 強プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Llama 4 Maverick + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
-    model: "meta-llama/llama-3.1-8b-instruct"
+    model: "meta-llama/llama-4-maverick"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: llama4-scout-naked
+    label: "Llama 4 Scout / 素のAPI (OpenRouter)"
+    label_en: "Llama 4 Scout / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "meta-llama/llama-4-scout"
     prompt_strength: low
     guardrail: none
+    rag: true
+
+  - id: deepseek-v3-naked
+    label: "DeepSeek V3 / 素のAPI (OpenRouter)"
+    label_en: "DeepSeek V3 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "deepseek/deepseek-chat"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: deepseek-v32-llmgr
+    label: "DeepSeek V3.2 + 強プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "DeepSeek V3.2 + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "deepseek/deepseek-v3.2"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  - id: mistral-medium-keyword
+    label: "Mistral Medium 3.1 + 強プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Mistral Medium 3.1 + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "mistralai/mistral-medium-3.1"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: mistral-large-llmgr
+    label: "Mistral Large + 強プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "Mistral Large + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "mistralai/mistral-large-2512"
+    prompt_strength: high
+    guardrail: llm
     rag: true
 
 # ---------------------------------------------------------------------

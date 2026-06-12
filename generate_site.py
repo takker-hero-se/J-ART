@@ -490,7 +490,19 @@ const I18N = {i18n_json};
 
 // ---------- i18n（UI外装のみ。データ本文・日本語攻撃プロンプトは原文維持） ----------
 let LANG = (function() {{
-  try {{ return localStorage.getItem("jart_lang") || "ja"; }} catch (e) {{ return "ja"; }}
+  // 1) ユーザーが明示的に選んだ言語があれば最優先で尊重
+  try {{
+    const saved = localStorage.getItem("jart_lang");
+    if (saved === "ja" || saved === "en") return saved;
+  }} catch (e) {{}}
+  // 2) 未選択ならブラウザ環境の言語で自動判定（日本語環境→ja / それ以外→en）
+  try {{
+    const langs = navigator.languages || [navigator.language || navigator.userLanguage || ""];
+    for (const l of langs) {{
+      if (l && l.toLowerCase().indexOf("ja") === 0) return "ja";
+    }}
+  }} catch (e) {{}}
+  return "en";
 }})();
 function t(key) {{
   const L = I18N[LANG] || I18N.ja;
