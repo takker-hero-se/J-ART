@@ -230,6 +230,39 @@ targets:
     guardrail: llm
     rag: true
 
+  # ===== 新ガードレール比較（regex 正規化フィルタ / llamaguard モデル分類器） =====
+  # 素のAPIでは突破多発の弱モデルに各ガードレールを付け、難読化への耐性を比較する。
+  - id: llama4-scout-regex
+    label: "Llama 4 Scout + 正規化フィルタGR (OpenRouter)"
+    label_en: "Llama 4 Scout + Regex-normalize GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "meta-llama/llama-4-scout"
+    prompt_strength: low
+    guardrail: regex
+    rag: true
+
+  - id: gptoss-120b-regex
+    label: "gpt-oss-120b + 正規化フィルタGR (OpenRouter)"
+    label_en: "gpt-oss-120b + Regex-normalize GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-oss-120b"
+    prompt_strength: low
+    guardrail: regex
+    rag: true
+
+  - id: gpt-4omini-llamaguard
+    label: "GPT-4o-mini + Llama Guard 分類器GR"
+    label_en: "GPT-4o-mini + Llama Guard classifier GR"
+    provider: openai
+    model: gpt-4o-mini
+    prompt_strength: low
+    guardrail: llamaguard
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)

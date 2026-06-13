@@ -93,6 +93,10 @@ def build_i18n():
             "guide_gr_keyword_body": '禁止語（「無視」「合言葉」等）の一致で入力を遮断する<b class="text-slate-300">単純フィルタ</b>。低コストだが、ギャル文字・改行挿入などの<b class="text-rose-300">難読化に弱い</b>。',
             "badge_gr_llm": "LLMガードレール",
             "guide_gr_llm_body": '<b class="text-slate-300">別のLLMが入力・出力を検閲</b>して攻撃を判定。高精度だが、追加のトークンコストが発生する。',
+            "badge_gr_regex": "正規化フィルタGR",
+            "guide_gr_regex_body": '難読化（ゼロ幅スペース/Base64/leet記号）を<b class="text-slate-300">正規化で解除</b>してから禁止語を照合する決定論的フィルタ。<b class="text-emerald-300">コスト0</b>で難読化に強い。',
+            "badge_gr_llamaguard": "Llama Guard 分類器GR",
+            "guide_gr_llamaguard_body": '<b class="text-slate-300">専用の安全性分類モデル(Llama Guard)</b>で入力を攻撃/良性に分類。高い検出率だが、追加のAPIコストが発生する。',
             "guide_rag_note": '※ さらに <span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">RAG有</span> は、外部文書を検索・注入する構成（間接プロンプトインジェクションの検証対象）であることを示します。各行のバッジにマウスを乗せると説明が出ます。',
             "board_title": "🏆 リーダーボード",
             "board_subtitle": "— 列見出しで並び替え / 行クリックで攻撃ログを展開",
@@ -121,6 +125,10 @@ def build_i18n():
             "gr_keyword_tip": "キーワードGR：禁止語の一致で入力を遮断する単純フィルタ。難読化に弱い。",
             "gr_llm_label": "GR: LLM審査",
             "gr_llm_tip": "LLMガードレール：別のLLMが入力/出力を検閲して攻撃を判定。高精度だが追加コスト。",
+            "gr_regex_label": "GR: 正規化フィルタ",
+            "gr_regex_tip": "正規化フィルタ：難読化（ゼロ幅/Base64/leet）を解除してから禁止語を照合。決定論的でコスト0。",
+            "gr_llamaguard_label": "GR: Llama Guard",
+            "gr_llamaguard_tip": "Llama Guard 分類器：専用の安全性分類モデルで入力を攻撃/良性に分類。高い検出率。",
             "prompt_high_label": "強プロンプト",
             "prompt_high_tip": "システムプロンプトで防御ルールを強く指示した状態",
             "prompt_naked_label": "素のAPI",
@@ -181,6 +189,10 @@ def build_i18n():
             "guide_gr_keyword_body": 'A <b class="text-slate-300">simple filter</b> that blocks input on banned-word matches. Cheap, but <b class="text-rose-300">weak against obfuscation</b> such as gyaru script or inserted line breaks.',
             "badge_gr_llm": "LLM guardrail",
             "guide_gr_llm_body": '<b class="text-slate-300">A separate LLM screens input/output</b> to judge attacks. Accurate, but incurs extra token cost.',
+            "badge_gr_regex": "Regex-normalize GR",
+            "guide_gr_regex_body": 'A deterministic filter that <b class="text-slate-300">strips obfuscation</b> (zero-width, Base64, leet) then checks banned keywords. <b class="text-emerald-300">Zero cost</b>, strong against obfuscation.',
+            "badge_gr_llamaguard": "Llama Guard classifier GR",
+            "guide_gr_llamaguard_body": 'A <b class="text-slate-300">dedicated safety-classification model (Llama Guard)</b> that screens input for attacks vs benign content. High detection, but adds API cost.',
             "guide_rag_note": '※ <span class="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700">RAG</span> additionally marks configs that retrieve/inject external documents (the target of indirect prompt-injection tests). Hover a row badge for details.',
             "board_title": "🏆 Leaderboard",
             "board_subtitle": "— sort by a column header / click a row to expand its attack logs",
@@ -209,6 +221,10 @@ def build_i18n():
             "gr_keyword_tip": "Keyword GR: a simple filter that blocks input on banned-word matches; weak against obfuscation.",
             "gr_llm_label": "GR: LLM review",
             "gr_llm_tip": "LLM guardrail: a separate LLM screens input/output to judge attacks; accurate but adds cost.",
+            "gr_regex_label": "GR: Regex-normalize",
+            "gr_regex_tip": "Regex-normalize filter: strips obfuscation (zero-width/Base64/leet) then checks banned keywords; deterministic, zero cost.",
+            "gr_llamaguard_label": "GR: Llama Guard",
+            "gr_llamaguard_tip": "Llama Guard classifier: a dedicated safety-classification model that screens input; high detection rate.",
             "prompt_high_label": "Hardened",
             "prompt_high_tip": "System prompt strongly instructs defensive rules.",
             "prompt_naked_label": "Naked API",
@@ -409,6 +425,14 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
             <span class="shrink-0 px-2 py-0.5 h-fit rounded-md border bg-emerald-500/15 text-emerald-300 border-emerald-500/30" data-i18n="badge_gr_llm">LLMガードレール</span>
             <span class="text-slate-400" data-i18n-html="guide_gr_llm_body"><b class="text-slate-300">別のLLMが入力・出力を検閲</b>して攻撃を判定。高精度だが、追加のトークンコストが発生する。</span>
           </li>
+          <li class="flex gap-2.5">
+            <span class="shrink-0 px-2 py-0.5 h-fit rounded-md border bg-purple-500/15 text-purple-300 border-purple-500/30" data-i18n="badge_gr_regex">正規化フィルタGR</span>
+            <span class="text-slate-400" data-i18n-html="guide_gr_regex_body">難読化（ゼロ幅スペース/Base64/leet記号）を<b class="text-slate-300">正規化で解除</b>してから禁止語を照合する決定論的フィルタ。<b class="text-emerald-300">コスト0</b>で難読化に強い。</span>
+          </li>
+          <li class="flex gap-2.5">
+            <span class="shrink-0 px-2 py-0.5 h-fit rounded-md border bg-cyan-500/15 text-cyan-300 border-cyan-500/30" data-i18n="badge_gr_llamaguard">Llama Guard 分類器GR</span>
+            <span class="text-slate-400" data-i18n-html="guide_gr_llamaguard_body"><b class="text-slate-300">専用の安全性分類モデル(Llama Guard)</b>で入力を攻撃/良性に分類。高い検出率だが、追加のAPIコストが発生する。</span>
+          </li>
         </ul>
       </div>
 
@@ -548,9 +572,11 @@ function fmtUSD(x) {{ return "$" + Number(x).toLocaleString("en-US", {{maximumFr
 
 function guardrailBadge(g) {{
   const m = {{
-    none:    ["bg-rose-500/15 text-rose-300 border-rose-500/30", "gr_none_label", "gr_none_tip"],
-    keyword: ["bg-amber-500/15 text-amber-300 border-amber-500/30", "gr_keyword_label", "gr_keyword_tip"],
-    llm:     ["bg-emerald-500/15 text-emerald-300 border-emerald-500/30", "gr_llm_label", "gr_llm_tip"]
+    none:       ["bg-rose-500/15 text-rose-300 border-rose-500/30", "gr_none_label", "gr_none_tip"],
+    keyword:    ["bg-amber-500/15 text-amber-300 border-amber-500/30", "gr_keyword_label", "gr_keyword_tip"],
+    llm:        ["bg-emerald-500/15 text-emerald-300 border-emerald-500/30", "gr_llm_label", "gr_llm_tip"],
+    regex:      ["bg-purple-500/15 text-purple-300 border-purple-500/30", "gr_regex_label", "gr_regex_tip"],
+    llamaguard: ["bg-cyan-500/15 text-cyan-300 border-cyan-500/30", "gr_llamaguard_label", "gr_llamaguard_tip"]
   }};
   const e = m[g];
   const cls   = e ? e[0] : "bg-slate-700/40 text-slate-300 border-slate-600";
@@ -578,13 +604,17 @@ function statusBadge(r) {{
     <span class="w-1.5 h-1.5 rounded-full ${{s.dot}}"></span>${{s.label}}</span>`;
 }}
 
-function rateBar(r) {{
+function rateBar(s) {{
+  const r = s.success_rate;
   const color = r >= 90 ? "bg-emerald-500" : r >= 60 ? "bg-amber-500" : "bg-rose-500";
   const txt   = r >= 90 ? "text-emerald-300" : r >= 60 ? "text-amber-300" : "text-rose-300";
+  const ci = (s.ci_low != null && s.ci_high != null)
+    ? `<span class="text-[10px] text-slate-500 ml-1 font-normal">CI[${{Number(s.ci_low).toFixed(1)}}–${{Number(s.ci_high).toFixed(1)}}]</span>`
+    : "";
   return `<div class="flex items-center gap-2 justify-end">
       <div class="w-24 h-1.5 rounded-full bg-slate-700/70 overflow-hidden">
         <div class="h-full ${{color}} rounded-full" style="width:${{r}}%"></div></div>
-      <span class="tabular-nums w-14 text-right font-semibold ${{txt}}">${{r.toFixed(1)}}%</span></div>`;
+      <span class="tabular-nums w-14 text-right font-semibold ${{txt}}">${{r.toFixed(1)}}%</span>${{ci}}</div>`;
 }}
 
 function transformBadge(name) {{
@@ -607,7 +637,8 @@ function panelContent(targetId) {{
                          .sort((a,b) => (b.breached?1:0) - (a.breached?1:0));
   if (!rows.length) return `<p class="text-slate-500 text-sm px-1 py-3">${{esc(t("panel_empty"))}}</p>`;
   const breached = rows.filter(d => d.breached).length;
-  const summary = t("panel_summary").replace("{{total}}", rows.length).replace("{{breached}}", breached);
+  const totalTrials = rows.reduce((s,d) => s + (d.trials||1), 0);
+  const summary = t("panel_summary").replace("{{total}}", totalTrials).replace("{{breached}}", breached);
   const head = `<div class="text-xs text-slate-500 mb-3">${{esc(summary)}}</div>`;
   return head + rows.map(d => logCard(d)).join("");
 }}
@@ -630,7 +661,7 @@ function logCard(d) {{
         <span class="text-slate-400 text-xs font-mono">${{esc(d.atlas_id)}}</span>
         <span class="text-slate-500 text-xs font-mono">${{esc(d.attack_id)}}</span>
         ${{transformBadge(d.transformation)}}
-        <span class="text-slate-600 text-[11px] ml-auto font-mono">in ${{d.input_tokens}} / out ${{d.output_tokens}} tok · ${{fmtUSD(d.cost_usd)}}</span>
+        <span class="text-slate-600 text-[11px] ml-auto font-mono">${{d.trials>1 ? d.breaches+"/"+d.trials+" breached · " : ""}}in ${{d.input_tokens}} / out ${{d.output_tokens}} tok · ${{fmtUSD(d.cost_usd)}}</span>
       </summary>
       <div class="fade-in px-4 pb-4 text-sm space-y-3">
         <div class="text-xs">
@@ -683,7 +714,7 @@ function renderBoard() {{
           <span class="mx-1 text-slate-700">|</span>${{sub}}
         </div>
       </td>
-      <td class="px-4 py-4 text-right">${{rateBar(s.success_rate)}}</td>
+      <td class="px-4 py-4 text-right">${{rateBar(s)}}</td>
       <td class="px-4 py-4 text-right tabular-nums text-slate-300 font-mono">${{fmtUSD(s.cost_per_million_usd)}}</td>
       <td class="px-4 py-4 text-right">
         <span class="text-lg font-extrabold text-emerald-300 tabular-nums">${{Number(s.cospa_score).toLocaleString()}}</span>
