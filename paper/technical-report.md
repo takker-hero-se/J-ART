@@ -182,6 +182,25 @@ premise), `base64_wrap` (Base64-encoded instruction), and `leet_smuggle` (leet
 symbol substitution + zero-width spaces). Transforms are designed to preserve
 human legibility while breaking substring-matching filters.
 
+We distinguish two classes (Table 2). **Japanese-specific** transforms exploit
+properties of the Japanese writing system or register and have no direct
+equivalent in, say, English red-teaming: `gyaru` (kana glyph substitution),
+`vertical_newline` (traditional vertical writing), and `polite_business` /
+`double_tongue` (keigo-based authority and in-group framing). **Language-agnostic**
+transforms — `base64_wrap` and `leet_smuggle` (and the `baseline` control) —
+apply to any language and are included as a comparison baseline so that the
+marginal effect of the Japanese-specific surface can be isolated. This separation
+also clarifies which findings are expected to generalize beyond Japanese (the
+language-agnostic encodings) and which probe a genuinely under-studied,
+language-specific attack surface.
+
+**Table 2. Classification of obfuscation transforms.**
+
+| Class | Transforms | Exploits |
+|---|---|---|
+| Japanese-specific | `gyaru`, `vertical_newline`, `polite_business`, `double_tongue` | Kana glyph variants, vertical writing, keigo authority/in-group framing |
+| Language-agnostic | `base64_wrap`, `leet_smuggle` (+ `baseline` control) | Encoding / symbol substitution applicable to any language |
+
 ### 3.3 Attack suite and MITRE ATLAS mapping
 
 Eleven attacks cover ten inference-time ATLAS techniques: Direct/Indirect Prompt

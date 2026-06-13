@@ -163,6 +163,28 @@ $\times$ rag $\in \{\text{true}, \text{false}\}$。簡易RAG文脈（良性の�
 \code{leet\_smuggle}（leet記号置換＋ゼロ幅スペース）。変形は人間可読性を保ちつつ、部分文字列
 一致のフィルタを破壊するよう設計される。
 
+変形は2クラスに区別する（表~\ref{tab:transforms}）。\emph{日本語固有}の変形は日本語の
+表記体系や待遇表現を悪用し、英語などに直接の対応物を持たない：\code{gyaru}（仮名字形置換）、
+\code{vertical\_newline}（縦書き）、\code{polite\_business}/\code{double\_tongue}（敬語に
+よる権威付けと内集団フレーミング）。\emph{言語非依存}の変形 ——
+\code{base64\_wrap}・\code{leet\_smuggle}（および対照の \code{baseline}）—— は任意の言語に
+適用でき、日本語固有面の限界効果を切り分けるための比較基準として含める。これにより、
+日本語を越えて般化が見込める知見（言語非依存の符号化）を明確化する。
+
+\begin{table}[t]
+\centering\small
+\caption{難読化変形の分類。}
+\label{tab:transforms}
+\begin{tabular}{@{}p{2.4cm}p{4.0cm}p{4.6cm}@{}}
+\toprule
+クラス & 変形 & 悪用する性質 \\
+\midrule
+日本語固有 & \code{gyaru}, \code{vertical\_newline}, \code{polite\_business}, \code{double\_tongue} & 仮名字形の異形・縦書き・敬語による権威/内集団フレーミング \\
+言語非依存 & \code{base64\_wrap}, \code{leet\_smuggle}（＋\code{baseline}） & 任意の言語に適用できる符号化/記号置換 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{攻撃スイートと MITRE ATLAS 対応.}
 11の攻撃が10の推論時 ATLAS 技術を網羅する：直接/間接プロンプトインジェクション
 (AML.T0051.000/.001)、LLMジェイルブレイク (AML.T0054)、LLMデータ漏洩 (AML.T0057)、

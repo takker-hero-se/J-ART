@@ -196,6 +196,31 @@ sandbox/authorization premise), \code{base64\_wrap} (Base64-encoded instruction)
 and \code{leet\_smuggle} (leet symbol substitution + zero-width spaces).
 Transforms preserve human legibility while breaking substring-matching filters.
 
+We distinguish two classes (Table~\ref{tab:transforms}).
+\emph{Japanese-specific} transforms exploit the Japanese writing system or
+register and have no direct English equivalent: \code{gyaru} (kana glyph
+substitution), \code{vertical\_newline} (vertical writing), and
+\code{polite\_business}/\code{double\_tongue} (keigo authority and in-group
+framing). \emph{Language-agnostic} transforms --- \code{base64\_wrap} and
+\code{leet\_smuggle}, plus the \code{baseline} control --- apply to any language
+and serve as a comparison baseline so the marginal effect of the
+Japanese-specific surface can be isolated, clarifying which findings are expected
+to generalize beyond Japanese.
+
+\begin{table}[t]
+\centering\small
+\caption{Classification of obfuscation transforms.}
+\label{tab:transforms}
+\begin{tabular}{@{}p{2.6cm}p{4.0cm}p{4.6cm}@{}}
+\toprule
+Class & Transforms & Exploits \\
+\midrule
+Japanese-specific & \code{gyaru}, \code{vertical\_newline}, \code{polite\_business}, \code{double\_tongue} & Kana glyph variants, vertical writing, keigo authority/in-group framing \\
+Language-agnostic & \code{base64\_wrap}, \code{leet\_smuggle} (+ \code{baseline}) & Encoding / symbol substitution applicable to any language \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Attack suite and MITRE ATLAS mapping.}
 Eleven attacks cover ten inference-time ATLAS techniques: Direct/Indirect Prompt
 Injection (AML.T0051.000/.001), LLM Jailbreak (AML.T0054), LLM Data Leakage
