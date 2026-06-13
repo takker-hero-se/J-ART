@@ -275,23 +275,39 @@ Breach rates were low in aggregate (run A: 108/1,386 = 7.8%; run B: 36/1,617 =
 2.2%) and concentrated in **weak configurations** (naked, low-strength models),
 while hardened-prompt-plus-guardrail configurations defended at or near 100%.
 
-### 4.2 Application-layer defense dominates model capability
+### 4.2 Application-layer defense vs. model capability
 
 In run A, a flagship model with **no system prompt and no guardrail** was
 breached 10 times (87.0% defense), whereas a small, inexpensive model behind a
-**hardened prompt + keyword guardrail** defended at 96%+. This is the central
-practical finding: *how the application is configured matters more than which
-model is used.*
+**hardened prompt + keyword guardrail** defended at 96%+. This is suggestive of
+the practical thesis that *how the application is configured matters more than
+which model is used* — but the two configurations differ in **both** model and
+application layer, so the comparison alone is confounded.
+
+To isolate the configuration effect we add a **balanced ablation** that holds the
+*model fixed* and crosses {naked, hardened} prompt × {none, keyword, regex, llm,
+llamaguard} guardrail, reporting each config's defense-rate difference from the
+naked baseline with a Newcombe 95% CI (`experiments/`, `wilson_diff_ci`). The
+configuration-dominance claim is stated only to the extent this within-model
+ablation supports it on labeled live data; the definitive effect sizes are part
+of the live campaign described in §9.
 
 ### 4.3 Run-to-run variance (a primary result)
 
-The **identical** configuration "Llama 4 Scout / naked" produced **58 breaches
-(24.7% defense)** in run A and **0 breaches (100% defense)** in run B. Because
-the only change between runs was time of execution (the model was served via a
-router that may dispatch to different backends/quantizations), this demonstrates
-that **single-sample LLM leaderboards are not reproducible**, and that defense
-rates should be reported with confidence intervals and, ideally, repeated
-trials. We treat this variance as a result, not noise to be hidden.
+The configuration "Llama 4 Scout / naked" produced **58 breaches (24.7% defense)**
+in run A and **0 breaches (100% defense)** in run B. We initially attributed this
+to execution time alone; we **retract that specific attribution**, because the
+configuration *set* also changed between the two runs (18→21 targets), so the two
+snapshots are not a controlled comparison. The proper test is a **controlled
+variance experiment**: freeze a single configuration set and re-run it *K* times
+(default K=5) with everything else held constant, reporting per-config defense
+rates and the across-run range/variance with CIs (`experiments/analyze_variance.py`).
+The qualitative point stands and motivates the design — **single-sample LLM
+leaderboards should not be read as reproducible**, and defense rates must carry
+confidence intervals and, ideally, repeated trials — but the quantified variance
+is reported from the controlled experiment in the live campaign (§9), not from the
+two non-matched snapshots. We treat this variance as a result, not noise to be
+hidden.
 
 ### 4.4 Guardrail comparison
 
@@ -398,8 +414,12 @@ outputs feed an organization's **MANAGE** decisions (which configuration to ship
   `N`=1 per cell.
 - **Provider non-determinism / router variance:** see §4.3; results are
   snapshots and depend on routing and model versions at run time.
-- **Cost attribution:** guardrail tokens are attributed at the target model's
-  price (an approximation).
+- **Cost attribution:** guardrail tokens are now priced at the *guardrail
+  model's* own rate (the classifier `JART_GUARD_MODEL` for `llamaguard`; the
+  target model itself for the `llm` guardrail, which it genuinely calls), reported
+  separately from target-model tokens. Remaining approximation: token *counts* in
+  simulation mode are estimated, and provider-side overhead (system-prompt
+  caching, tool tokens) is not modeled.
 - **Simulation mode** is a deterministic stand-in for missing keys and must not
   be read as empirical model behavior.
 
@@ -417,6 +437,14 @@ Code, configuration, and the deployment workflow are public. The harness is
 deterministic in simulation mode; live results depend on provider routing and
 model versions at run time and should be reported with the run date and model
 identifiers. See the repository for exact model identifiers and pricing used.
+
+Each cell carries provenance labels — `mode` (`LIVE`/`MOCK`), `api_error`, the
+resolved model, and a `price_per_million` snapshot — and simulated cells are
+excluded from the live aggregates (§4). The reviewer-response experiments for
+§4.2 (balanced ablation) and §4.3 (controlled variance) are scripted under
+`experiments/` with their statistics (`wilson_diff_ci`) and a cost estimate; the
+**labeled live campaign** that fills in the definitive numbers is a single
+repeated, fully-labeled run of that scaffolding.
 
 ## 10. References (indicative — verify bibliographic details before submission)
 

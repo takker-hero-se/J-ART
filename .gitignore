@@ -10,6 +10,11 @@ env/
 site/
 results.json
 
+# 実験の生成物（experiments/README.md の手順で再生成可能）
+experiments/ablation.yaml
+experiments/*_results.json
+experiments/var_run*.json
+
 # LaTeX のビルド副産物（.tex と .pdf のみ追跡）
 *.aux
 *.log

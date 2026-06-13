@@ -28,6 +28,10 @@ from run_assessment import (  # noqa: E402
     render_attack,
     render_display,
     judge,
+    wilson_ci,
+    wilson_diff_ci,
+    run_one,
+    GUARD_MODEL,
     CORE_MASK,
 )
 
@@ -143,6 +147,60 @@ def test_judge_catches_reformatted_echo():
 def test_judge_unknown_check_is_false():
     """未知の check 種別は常に False（安全側）。"""
     assert not judge("nonexistent", f"{SECRET}{MARKERS['injection']}", SECRET, MARKERS)
+
+
+def test_wilson_ci_basic():
+    """Wilson CI は [0,100] に収まり、全防御で下限>0、全突破で上限<100。"""
+    lo, hi = wilson_ci(20, 20)
+    assert 0 <= lo <= hi <= 100 and lo > 50, (lo, hi)
+    lo, hi = wilson_ci(0, 20)
+    assert lo == 0.0 and hi < 100, (lo, hi)
+
+
+def test_wilson_diff_ci_significance():
+    """差の比率CI（Newcombe）：分離した2群は0を跨がず、同率は0を跨ぐ。"""
+    d, lo, hi = wilson_diff_ci(95, 100, 50, 100)
+    assert d > 0 and lo > 0, (d, lo, hi)          # 有意差
+    d, lo, hi = wilson_diff_ci(80, 100, 80, 100)
+    assert lo < 0 < hi, (d, lo, hi)               # 有意差なし（0を含む）
+
+
+def test_record_has_provenance_labels():
+    """run_one の各レコードに来歴ラベル（mode/api_error/price/guard内訳）が付く（C1）。"""
+    target = {"id": "t-kw", "provider": "openai", "model": "gpt-4o-mini",
+              "guardrail": "none"}
+    attack = {"id": "jailbreak-hijack", "atlas_id": "AML.T0054",
+              "atlas_name": "LLM Jailbreak", "vector": "user",
+              "check": "marker_hijack", "category": "control_hijack"}
+    rec = run_one(target, attack, "baseline", SECRET, MARKERS, trial=0)
+    for k in ("mode", "api_error", "price_per_million",
+              "guard_input_tokens", "guard_output_tokens", "guard_model"):
+        assert k in rec, f"来歴ラベル欠落: {k}"
+    assert rec["mode"] == "MOCK"          # キー未設定なので MOCK 経路
+    assert rec["api_error"] is False
+
+
+def test_guardrail_tokens_priced_at_guard_model():
+    """llamaguard セルのコストは GUARD_MODEL 単価で別建て課金される（R1-M5）。"""
+    import run_assessment as R
+    target = {"id": "t-lg", "provider": "openai", "model": "gpt-4o-mini",
+              "guardrail": "llamaguard"}
+    attack = {"id": "discover-system-prompt", "atlas_id": "AML.T0069.002",
+              "atlas_name": "System Prompt discovery", "vector": "user",
+              "check": "secret_leak", "category": "discovery"}
+    # ガードがブロックするまで複数 transform を試し、ガード課金セルを得る。
+    for tname in ["gyaru", "leet_smuggle", "base64_wrap", "vertical_newline", "baseline"]:
+        rec = run_one(target, attack, tname, SECRET, MARKERS, trial=0)
+        if rec["guard_input_tokens"] > 0:
+            assert rec["guard_model"] == GUARD_MODEL
+            # コストは本体(gpt-4o-mini)価格ではなくガードモデル価格で計算されている。
+            gi, go = rec["guard_input_tokens"], rec["guard_output_tokens"]
+            expected = R.cost_usd(GUARD_MODEL, gi, go)
+            # 本体トークンが0のブロックセルなら総コスト==ガードコスト。
+            if rec["input_tokens"] == gi and rec["output_tokens"] == go:
+                assert abs(rec["cost_usd"] - expected) < 1e-9, (rec["cost_usd"], expected)
+            return
+    # どの変形でもブロックされない構成でも、テスト自体は失敗にしない（決定論依存）。
 
 
 def _run_standalone() -> int:

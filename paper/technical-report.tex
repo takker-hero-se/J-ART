@@ -288,21 +288,33 @@ $36/1{,}617 = 2.2\%$) and concentrated in \textbf{weak configurations} (naked,
 low-strength models); hardened-prompt-plus-guardrail configurations defended at or
 near 100\%.
 
-\paragraph{Application-layer defense dominates model capability.}
+\paragraph{Application-layer defense vs.\ model capability.}
 In run~A, a flagship model with \textbf{no system prompt and no guardrail} was
 breached 10 times (87.0\% defense), whereas a small, inexpensive model behind a
-\textbf{hardened prompt + keyword guardrail} defended at $\geq 96\%$. The central
-practical finding: \emph{how the application is configured matters more than which
-model is used.}
+\textbf{hardened prompt + keyword guardrail} defended at $\geq 96\%$. This is
+suggestive of the thesis that \emph{how the application is configured matters more
+than which model is used} --- but the two configurations differ in \textbf{both}
+model and application layer, so the comparison alone is confounded. To isolate the
+configuration effect we add a \textbf{balanced ablation} holding the \emph{model
+fixed} and crossing \{naked, hardened\}~prompt $\times$ \{none, keyword, regex,
+llm, llamaguard\}~guardrail, reporting each config's difference from the naked
+baseline with a Newcombe 95\% CI (\code{experiments/}, \code{wilson\_diff\_ci}).
+The dominance claim holds only to the extent this within-model ablation supports
+it on labeled live data (\S\ref{sec:repro}).
 
 \paragraph{Run-to-run variance (a primary result).}
-The \textbf{identical} configuration ``Llama~4 Scout / naked'' produced
-\textbf{58 breaches (24.7\% defense)} in run~A and \textbf{0 breaches (100\%
-defense)} in run~B. As the only change between runs was execution time (the model
-was served via a router that may dispatch to different backends/quantizations),
-this demonstrates that \textbf{single-sample LLM leaderboards are not
-reproducible}, and that defense rates should be reported with confidence intervals
-and, ideally, repeated trials. We treat this variance as a result, not noise.
+The configuration ``Llama~4 Scout / naked'' produced \textbf{58 breaches (24.7\%
+defense)} in run~A and \textbf{0 breaches (100\% defense)} in run~B. We initially
+attributed this to execution time alone; we \textbf{retract that specific
+attribution}, because the configuration \emph{set} also changed (18$\to$21
+targets), so the two snapshots are not a controlled comparison. The proper test is
+a \textbf{controlled variance experiment} --- freeze one configuration set and
+re-run it $K$ times (default $K=5$), reporting per-config defense rates and the
+across-run range/variance with CIs (\code{experiments/analyze\_variance.py}). The
+qualitative point stands --- \textbf{single-sample LLM leaderboards are not
+reproducible} and defense rates must carry confidence intervals --- but the
+quantified variance is reported from the controlled experiment
+(\S\ref{sec:repro}), not from the two non-matched snapshots.
 
 \paragraph{Guardrail comparison.}
 In run~B, ``GPT-4o-mini / naked'' was breached 14 times (81.8\% defense,
@@ -411,8 +423,11 @@ Obfuscation / self-replication (T0068,\,T0061) & LLM01 & MEASURE 2.7 & Art.\,55 
         transforms); default $N{=}1$ per cell.
   \item \textbf{Provider non-determinism / router variance:} results are
         snapshots and depend on routing and model versions at run time.
-  \item \textbf{Cost attribution:} guardrail tokens are attributed at the target
-        model's price (an approximation).
+  \item \textbf{Cost attribution:} guardrail tokens are now priced at the
+        \emph{guardrail model's} own rate (the classifier \code{JART\_GUARD\_MODEL}
+        for \code{llamaguard}; the target model itself for the \code{llm}
+        guardrail, which genuinely calls it) and reported separately. Remaining
+        approximation: simulated token \emph{counts} are estimated.
   \item \textbf{Simulation mode} is a deterministic stand-in for missing keys and
         must not be read as empirical model behavior.
 \end{itemize}
@@ -424,11 +439,19 @@ additional ATLAS techniques (cost-exhaustion, model extraction); per-provider
 concurrency and incremental caching with longitudinal trend tracking; and dropping
 simulation mode for a purely empirical, repeated-trial statistical report.
 
-\section{Reproducibility}
+\section{Reproducibility}\label{sec:repro}
 Code, configuration, and the deployment workflow are public. The harness is
 deterministic in simulation mode; live results depend on provider routing and
 model versions at run time and should be reported with the run date and model
 identifiers. See the repository for exact model identifiers and pricing used.
+Each cell carries provenance labels --- \code{mode} (\code{LIVE}/\code{MOCK}),
+\code{api\_error}, the resolved model, and a \code{price\_per\_million} snapshot
+--- and simulated cells are excluded from the live aggregates. The reviewer-
+response experiments for the balanced ablation and the controlled variance study
+are scripted under \code{experiments/} with their statistics
+(\code{wilson\_diff\_ci}) and a cost estimate; the \textbf{labeled live campaign}
+that fills in the definitive numbers is a single repeated, fully-labeled run of
+that scaffolding.
 
 \begin{thebibliography}{99}
 \bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
