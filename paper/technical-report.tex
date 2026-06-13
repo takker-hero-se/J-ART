@@ -344,6 +344,8 @@ environment-based auto-selection, per-model defense-rate CIs, and per-cell breac
 rates), continuously deployed.
 
 \section{Ethics and Responsible Disclosure}
+
+\paragraph{Safety by construction.}
 J-ART is safe by construction. (1)~Attacks target a \textbf{fictitious canary} and
 \textbf{benign markers}, never real harmful capabilities; no weaponizable content
 exists in the code, data, or published site. (2)~The malicious instruction
@@ -351,6 +353,48 @@ exists in the code, data, or published site. (2)~The malicious instruction
 (3)~Models are referenced for research comparison only; results are run-time
 snapshots, not certifications. The intended use is to help developers harden their
 \emph{own} deployments.
+
+\paragraph{A reusable disclosure pattern.}
+We state the design above as a transferable pattern for publishing adversarial
+safety benchmarks without releasing operational attacks:
+(i)~a \emph{harmless proxy objective} (a fictitious canary and benign markers) so
+a breach is measurable but inert;
+(ii)~a \emph{core/framework split with masking} --- publish the obfuscation
+framework that carries the research signal, mask the operational core in every
+artifact, and keep harmless cores only in code;
+(iii)~a \emph{deterministic offline mode} so results reproduce from the repository
+without distributing a working exploit corpus; and
+(iv)~\emph{audited masking} --- a unit-test invariant checks that no core (raw or
+obfuscated) reaches a published artifact. This keeps the methodology and
+aggregate findings fully open while the attack payloads stay withheld --- the
+posture we recommend for language-specific red-team datasets generally.
+
+\paragraph{Governance crosswalk.}
+Table~\ref{tab:gov} cross-references each evaluated capability to MITRE
+ATLAS~\cite{atlas}, the OWASP Top~10 for LLM Applications~\cite{owasp}, the NIST AI
+RMF~\cite{nistrmf}, the EU AI Act~\cite{euaiact}, and Japan's AI governance
+guidance~\cite{meti,aisi}. The mapping is \textbf{informational, not a compliance
+claim}; applicability depends on each deployment's risk classification.
+Operationally J-ART is a \textbf{MEASURE}-stage activity in the NIST AI RMF whose
+outputs inform an organization's \textbf{MANAGE} decisions.
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{Governance crosswalk (informational).}
+\label{tab:gov}
+\begin{tabular}{@{}p{2.9cm}p{2.6cm}p{1.7cm}p{1.7cm}p{2.1cm}@{}}
+\toprule
+J-ART capability (ATLAS) & OWASP LLM Top 10 & NIST AI RMF & EU AI Act & Japan \\
+\midrule
+Prompt injection / jailbreak (T0051,\,T0054) & LLM01 & MEASURE 2.7 & Art.\,15,\,55 & AISI; AI Biz \\
+Canary / data leakage (T0057) & LLM02 & MEASURE 2.7 & Art.\,15,\,10 & AI Biz \\
+System-prompt discovery (T0069.002) & LLM07 & MEASURE 2.7 & Art.\,15 & AISI \\
+RAG poisoning / false entry (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & Art.\,15,\,10 & AISI \\
+Trusted-output manipulation (T0067.000) & LLM09;\,LLM05 & MEASURE 2.6 & Art.\,50 & AI Biz \\
+Obfuscation / self-replication (T0068,\,T0061) & LLM01 & MEASURE 2.7 & Art.\,55 & AISI \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{Limitations}
 \label{sec:limits}
@@ -425,6 +469,13 @@ identifiers. See the repository for exact model identifiers and pricing used.
 \bibitem{judgesurvey} Gu et al. A Survey on LLM-as-a-Judge. 2024.
 \bibitem{jglue} Kurihara et al. JGLUE: Japanese General Language Understanding
   Evaluation. 2022.
+\bibitem{nistrmf} NIST. AI Risk Management Framework (AI RMF 1.0), NIST AI 100-1.
+  2023.
+\bibitem{euaiact} European Union. Regulation (EU) 2024/1689 (Artificial
+  Intelligence Act). Official Journal of the EU, 2024.
+\bibitem{meti} METI / MIC (Japan). AI Guidelines for Business, Ver.~1.0. 2024.
+\bibitem{aisi} Japan AI Safety Institute (AISI). Guide to Red Teaming Methodology
+  on AI Safety. 2024.
 \end{thebibliography}
 
 \end{document}

@@ -322,6 +322,8 @@ rates). The site is continuously deployed.
 
 ## 6. Ethics and Responsible Disclosure
 
+### 6.1 Safety by construction
+
 J-ART is designed to be safe by construction. (1) Attacks target a **fictitious
 canary** and **benign markers**, never real harmful capabilities; no
 weaponizable content exists in the code, the data, or the published site.
@@ -329,6 +331,56 @@ weaponizable content exists in the code, the data, or the published site.
 obfuscation framework is shown. (3) Models are referred to for research
 comparison only; results are run-time snapshots, not certifications. The
 intended use is to help developers harden their *own* deployments.
+
+### 6.2 A reusable disclosure pattern for safety benchmarks
+
+We argue the design above is a transferable *pattern* for publishing adversarial
+safety benchmarks without releasing operational attacks, and we state it
+generally so other languages and threat models can reuse it:
+
+1. **Harmless proxy objective.** Replace any genuinely harmful target with a
+   neutral, machine-checkable success signal — here a fictitious canary string
+   and benign injection/hijack markers — so a "breach" is *measurable* but
+   *inert*. The objective, not the wrapper, is what makes a suite safe to release.
+2. **Core/framework split with masking.** Separate each attack into a reusable
+   *obfuscation framework* (publishable; it carries the research signal) and an
+   *operational core* (the specific malicious instruction). Publish the framework,
+   mask the core in every artifact (`results.json`, the site, logs), and keep the
+   harmless cores defined only in code, never in public data.
+3. **Determinism without weaponization.** Provide a deterministic offline mode so
+   results are reproducible from the repository alone, without re-running live
+   attacks or distributing a working exploit corpus.
+4. **Audit the masking, not just assert it.** A unit-test invariant checks that no
+   core (raw or obfuscated) ever reaches a published artifact (see
+   `tests/test_guardrails.py`), turning "we masked it" into a checked property.
+
+This pattern lets the *methodology* and *aggregate findings* be fully open while
+the *attack payloads* stay withheld — the disclosure posture we recommend for
+language-specific red-team datasets generally.
+
+### 6.3 Governance crosswalk
+
+To help practitioners connect J-ART's coverage to the controls they are already
+accountable for, Table 3 cross-references each evaluated capability to MITRE
+ATLAS, the OWASP Top 10 for LLM Applications (2025), the NIST AI Risk Management
+Framework, the EU AI Act, and Japan's AI governance guidance. The mapping is
+**informational, not a compliance claim or legal advice**; standards evolve and
+applicability depends on each deployment's risk classification.
+
+**Table 3. Governance crosswalk (informational).**
+
+| J-ART capability (ATLAS) | OWASP LLM Top 10 (2025) | NIST AI RMF | EU AI Act | Japan guidance |
+|---|---|---|---|---|
+| Direct / indirect prompt injection, jailbreak (T0051, T0054) | LLM01 Prompt Injection | MEASURE 2.7 (security & resilience) | Art. 15 (robustness/cybersecurity); Art. 55 (adversarial testing of systemic-risk GPAI) | AISI red-teaming guide; AI Guidelines for Business |
+| Canary / data leakage (T0057) | LLM02 Sensitive Information Disclosure | MEASURE 2.7; MAP 5.1 | Art. 15; Art. 10 (data governance) | AI Guidelines for Business (safety/security) |
+| System-prompt discovery (T0069.002) | LLM07 System Prompt Leakage | MEASURE 2.7 | Art. 15 | AISI red-teaming guide |
+| RAG poisoning / false RAG entry (T0070, T0071) | LLM08 Vector & Embedding Weaknesses; LLM01 | MEASURE 2.7; MANAGE 2.2 | Art. 15; Art. 10 | AISI red-teaming guide |
+| Trusted-output / citation manipulation (T0067.000) | LLM09 Misinformation; LLM05 Improper Output Handling | MEASURE 2.6 (safety) | Art. 50 (transparency) | AI Guidelines for Business |
+| Prompt obfuscation / self-replication (T0068, T0061) | LLM01 | MEASURE 2.7 | Art. 55 | AISI red-teaming guide |
+
+Operationally, J-ART is best understood as a **MEASURE**-stage activity in the
+NIST AI RMF (recurring adversarial measurement of a deployed configuration) whose
+outputs feed an organization's **MANAGE** decisions (which configuration to ship).
 
 ## 7. Limitations
 
@@ -407,6 +459,15 @@ identifiers. See the repository for exact model identifiers and pricing used.
 21. Gu et al. A Survey on LLM-as-a-Judge (2024).
 22. Kurihara et al. JGLUE: Japanese General Language Understanding Evaluation
     (2022).
+23. NIST. AI Risk Management Framework (AI RMF 1.0), NIST AI 100-1 (2023).
+24. NIST. Artificial Intelligence Risk Management Framework: Generative AI
+    Profile, NIST AI 600-1 (2024).
+25. European Union. Regulation (EU) 2024/1689 (Artificial Intelligence Act),
+    Official Journal of the EU (2024).
+26. METI / MIC (Japan). AI Guidelines for Business (AI事業者ガイドライン),
+    Ver. 1.0 (2024).
+27. Japan AI Safety Institute (AISI). Guide to Red Teaming Methodology on AI
+    Safety (2024).
 
 ## Citation
 

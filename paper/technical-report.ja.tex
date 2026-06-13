@@ -289,11 +289,52 @@ GPT-4o-mini + Llama Guard        & 100.0\% & [95.2, 100]  & 0 / 77 \\
 信頼区間、セル別突破率）を生成し、継続的にデプロイする。
 
 \section{倫理と責任ある開示}
+
+\paragraph{設計による安全性.}
 J-ART は設計により安全である。(1) 攻撃は\textbf{架空のカナリア}と\textbf{無害なマーカー}を
 標的とし、実際の有害能力を扱わない。コード・データ・公開サイトのいずれにも危険物は存在しない。
 (2) 悪意ある\textbf{コア}は全成果物でマスクされ、難読化のフレームワークのみが示される。
 (3) モデルは研究比較のためにのみ参照され、結果は実行時スナップショットであって認証ではない。
 意図する用途は、開発者が\emph{自身の}デプロイを堅牢化する支援である。
+
+\paragraph{再利用可能な開示パターン.}
+上記の設計を、運用可能な攻撃を公開せずに敵対的安全性ベンチマークを公開するための
+転用可能なパターンとして一般化する：
+(i)~\emph{無害なプロキシ目標}（架空カナリアと無害マーカー）により突破を測定可能だが
+不活性にする；
+(ii)~\emph{コア/フレームワーク分離とマスキング}——研究信号を担う難読化フレームワークは
+公開し、運用コアは全成果物でマスクし、無害コアはコード内のみに保持する；
+(iii)~\emph{決定論的オフラインモード}によりリポジトリ単体で結果を再現でき、稼働する
+攻撃コーパスを配布しない；
+(iv)~\emph{マスキングの監査}——コア（生・難読化いずれも）が公開成果物に到達しないことを
+ユニットテスト不変条件で検査する。これにより手法と集計結果は完全公開しつつ、攻撃
+ペイロードは秘匿される。言語固有のレッドチームデータセット全般に推奨する姿勢である。
+
+\paragraph{ガバナンス・クロスウォーク.}
+表~\ref{tab:gov}は、評価する各能力を MITRE ATLAS~\cite{atlas}、OWASP Top~10 for LLM
+Applications~\cite{owasp}、NIST AI RMF~\cite{nistrmf}、EU AI Act~\cite{euaiact}、
+日本の AI ガバナンス指針~\cite{meti,aisi} に相互参照する。本対応は\textbf{情報提供で
+あり適合性の主張ではない}。適用可否は各デプロイのリスク分類に依存する。運用上 J-ART は
+NIST AI RMF の\textbf{MEASURE}段階の活動であり、その出力は組織の\textbf{MANAGE}判断に
+資する。
+
+\begin{table}[t]
+\centering\footnotesize
+\caption{ガバナンス・クロスウォーク（情報提供）。}
+\label{tab:gov}
+\begin{tabular}{@{}p{2.9cm}p{2.2cm}p{1.7cm}p{1.6cm}p{1.8cm}@{}}
+\toprule
+J-ART 能力 (ATLAS) & OWASP LLM Top 10 & NIST AI RMF & EU AI Act & 日本 \\
+\midrule
+プロンプト注入/脱獄 (T0051,\,T0054) & LLM01 & MEASURE 2.7 & 第15,\,55条 & AISI；AI事業者 \\
+カナリア/漏洩 (T0057) & LLM02 & MEASURE 2.7 & 第15,\,10条 & AI事業者 \\
+システムプロンプト探索 (T0069.002) & LLM07 & MEASURE 2.7 & 第15条 & AISI \\
+RAG汚染/偽エントリ (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & 第15,\,10条 & AISI \\
+信頼出力の操作 (T0067.000) & LLM09;\,LLM05 & MEASURE 2.6 & 第50条 & AI事業者 \\
+難読化/自己複製 (T0068,\,T0061) & LLM01 & MEASURE 2.7 & 第55条 & AISI \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{限界}
 \label{sec:limits}
@@ -361,6 +402,12 @@ J-ART は設計により安全である。(1) 攻撃は\textbf{架空のカナ�
 \bibitem{judgesurvey} Gu et al. A Survey on LLM-as-a-Judge. 2024.
 \bibitem{jglue} Kurihara et al. JGLUE: Japanese General Language Understanding
   Evaluation. 2022.
+\bibitem{nistrmf} NIST. AI Risk Management Framework (AI RMF 1.0), NIST AI 100-1.
+  2023.
+\bibitem{euaiact} European Union. Regulation (EU) 2024/1689 (Artificial
+  Intelligence Act). Official Journal of the EU, 2024.
+\bibitem{meti} 経済産業省・総務省. AI事業者ガイドライン Ver.~1.0. 2024.
+\bibitem{aisi} AIセーフティ・インスティテュート (AISI). レッドチーミング手法ガイド. 2024.
 \end{thebibliography}
 
 \end{document}
