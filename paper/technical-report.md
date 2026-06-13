@@ -6,6 +6,7 @@ Author: Takayuki Hirose — ORCID: [0009-0005-6735-1862](https://orcid.org/0009-
 Affiliation: Independent Researcher
 Project / code: <https://github.com/takker-hero-se/J-ART>
 Live leaderboard: <https://takker-hero-se.github.io/J-ART/>
+DOI (concept): [10.5281/zenodo.20676879](https://doi.org/10.5281/zenodo.20676879) — v0.1.0: 10.5281/zenodo.20676880
 License: report text CC-BY-4.0; code MIT.
 
 > **Status.** This is a preliminary technical report / preprint describing a
