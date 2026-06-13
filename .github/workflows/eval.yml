@@ -17,6 +17,7 @@ on:
       - "config.yaml"
       - "run_assessment.py"
       - "generate_site.py"
+      - "tests/**"
       - ".github/workflows/eval.yml"
 
 # GitHub Pages へのデプロイに必要な権限
@@ -47,6 +48,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Run unit tests (guardrail normalization)
+        # 難読化解除ガードレールの回帰テスト。API不要・決定論。失敗時はジョブを停止。
+        run: |
+          python tests/test_guardrails.py
 
       - name: Run assessment
         env:

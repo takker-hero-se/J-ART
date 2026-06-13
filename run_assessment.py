@@ -555,7 +555,7 @@ def _call_anthropic(target, system, user):
     from anthropic import Anthropic
     client = Anthropic(timeout=REQUEST_TIMEOUT)
     r = client.messages.create(
-        model=target["model"], max_tokens=1024, system=system,
+        model=target["model"], max_tokens=1024, temperature=0, system=system,
         messages=[{"role": "user", "content": user}],
     )
     text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
@@ -650,9 +650,20 @@ def llm_input_moderation(target, combined_input, transform_name, trial=0):
     return blocked, it, ot
 
 
+# ギャル文字の逆変換表（_GYARU_MAP を反転。多文字の値を先に置換するため長さ降順）。
+_GYARU_REVERSE = sorted(
+    ((v, k) for k, v in _GYARU_MAP.items()), key=lambda kv: -len(kv[0])
+)
+
+
 def _normalize_for_filter(text: str) -> str:
-    """難読化を解除して禁止語照合の素地を作る（ゼロ幅除去・leet逆変換・空白畳み込み・Base64復号）。"""
+    """難読化を解除して禁止語照合の素地を作る。
+    ゼロ幅除去 → ギャル文字逆変換 → leet逆変換 → 空白畳み込み → Base64復号。
+    """
     t = re.sub(r"[​‌‍﻿]", "", text)        # ゼロ幅/不可視を除去
+    for gv, hk in _GYARU_REVERSE:                              # ギャル文字 → 元の仮名へ逆変換
+        if gv in t:
+            t = t.replace(gv, hk)
     rev = {"@": "a", "3": "e", "0": "o", "1": "i", "5": "s", "7": "t", "|": "l"}
     t = "".join(rev.get(c, c) for c in t)                       # leet 逆変換
     t = re.sub(r"\s+", "", t)                                   # 全空白除去（縦書きを結合）
@@ -668,7 +679,9 @@ def _normalize_for_filter(text: str) -> str:
 def regex_guardrail_blocks(text: str) -> bool:
     """正規化フィルタ: 難読化を解除してから禁止語を照合。難読化変形に強い決定論ガード。"""
     norm = _normalize_for_filter(text)
-    return any(kw in norm for kw in BANNED_KEYWORDS)
+    # 正規化器は空白を畳み込むため、禁止語側も同様に畳み込んで揃える
+    # （例: "developer mode" → "developermode"）。
+    return any(re.sub(r"\s+", "", kw) in norm for kw in BANNED_KEYWORDS)
 
 
 def llamaguard_blocks(target, combined_input, transform_name, trial=0):
