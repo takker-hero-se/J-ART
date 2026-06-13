@@ -11,8 +11,8 @@ abstract: >-
 type: software
 authors:
   - given-names: "Takayuki"
-    family-names: "REPLACE-WITH-FAMILY-NAME"
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+    family-names: "Hirose"
+    orcid: "https://orcid.org/0009-0005-6735-1862"
     affiliation: "Independent Researcher"
 repository-code: "https://github.com/takker-hero-se/J-ART"
 url: "https://takker-hero-se.github.io/J-ART/"

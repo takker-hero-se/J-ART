@@ -2,7 +2,7 @@
 
 **Technical Report (v0.1, preprint)**
 
-Author: Takayuki *(replace with full name)* — ORCID: `0000-0000-0000-0000` *(replace)*
+Author: Takayuki Hirose — ORCID: [0009-0005-6735-1862](https://orcid.org/0009-0005-6735-1862)
 Affiliation: Independent Researcher
 Project / code: <https://github.com/takker-hero-se/J-ART>
 Live leaderboard: <https://takker-hero-se.github.io/J-ART/>
