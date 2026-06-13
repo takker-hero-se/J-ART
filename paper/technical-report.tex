@@ -1,0 +1,313 @@
+% =====================================================================
+%  J-ART — Technical Report (preprint)
+%  How to use on Overleaf:
+%    1. New Project -> Upload Project (or paste this file).
+%    2. Menu -> Compiler: pdfLaTeX  (this file is pdfLaTeX-ready;
+%       no .bib and no CJK fonts are required — references are inline).
+%    3. Recompile.
+%  To switch to a venue template later (ACL / IEEE), copy the body
+%  (from \section{Introduction} onward) into that template and adapt
+%  the preamble; the content is venue-agnostic.
+% =====================================================================
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{url}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{\textbf{J-ART: A Japanese Adversarial Red-Team Framework for\\
+Application-Layer LLM Security and Cost-Efficiency}\\[4pt]
+\large Technical Report (v0.1, preprint)}
+
+\author{Takayuki Hirose\thanks{Independent Researcher.
+ORCID: \href{https://orcid.org/0009-0005-6735-1862}{0009-0005-6735-1862}.
+Code: \url{https://github.com/takker-hero-se/J-ART}.
+Live leaderboard: \url{https://takker-hero-se.github.io/J-ART/}.
+Software DOI (concept): \href{https://doi.org/10.5281/zenodo.20676879}{10.5281/zenodo.20676879}.
+Report text licensed CC-BY-4.0; code MIT.}}
+
+\date{2026-06-13}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Most open red-teaming and jailbreak benchmarks for large language models (LLMs)
+are English-centric and evaluate \emph{bare models}. We present \textbf{J-ART}
+(Japanese Adversarial Red-Team framework), an open, reproducible harness that
+(i) evaluates the \textbf{application-structure layer} --- model $\times$
+system-prompt strength $\times$ guardrail $\times$ retrieval (RAG) --- rather than
+bare models; (ii) applies \textbf{Japanese-specific obfuscation transforms}
+(gyaru-moji character substitution, vertical/newline splitting, keigo
+``polite-coercion'' framing, double-talk false premises, Base64, and
+leet/zero-width smuggling) that defeat na\"ive keyword filters; (iii) grounds
+attacks in \textbf{MITRE ATLAS} (10 inference-time techniques); and (iv) reports a
+\textbf{cost-efficiency} metric alongside a defense rate with \textbf{Wilson
+95\% confidence intervals}. Attacks use \emph{harmless proxy markers} (a
+fictitious canary and benign output markers); the framework contains \textbf{no
+weaponizable content}, and the malicious ``core'' of each attack is masked in all
+published artifacts. Across 18--21 application configurations and 11 attacks
+$\times$ 7 transforms, we find that \textbf{application-layer defenses dominate
+raw model capability}, that a dedicated \textbf{input classifier (Llama Guard)
+eliminated all observed breaches} for a weak configuration at lower net cost, and
+that a simple \textbf{normalizing filter} defeats the obfuscation transforms a
+na\"ive keyword filter misses. We also document \textbf{large run-to-run
+variance} for identical configurations served via a model router (one
+configuration moved from 58 breaches to 0 breaches between two runs), which we
+argue makes single-sample leaderboards unreliable and motivates our statistical
+treatment.
+\end{abstract}
+
+\noindent\textbf{Status.} This is a preliminary technical report / preprint
+describing a proof-of-concept framework and exploratory findings. It is
+\emph{not} an official safety evaluation of any vendor's model. Numbers are
+run-time snapshots subject to the limitations in Section~\ref{sec:limits}.
+References are indicative; bibliographic details should be verified before
+formal submission.
+
+\section{Introduction}
+Public LLM red-teaming tooling (e.g., garak) and jailbreak benchmarks (e.g.,
+HarmBench, JailbreakBench) are predominantly English. Multilingual safety work
+has shown that \emph{translating} prompts into low-resource languages can bypass
+safety training, but \textbf{language-specific obfuscation} --- exploiting a
+language's own scripts, typography, and register --- remains comparatively
+underexplored. Japanese in particular offers a rich obfuscation surface (multiple
+scripts, full-width/zero-width characters, vertical writing, and conventionalized
+polite registers).
+
+Two further gaps motivate J-ART. First, \textbf{bare-model versus
+deployed-system evaluation}: practitioners deploy a model \emph{plus} a system
+prompt, \emph{plus} guardrails, often \emph{plus} retrieval; the security-relevant
+unit is the \textbf{application configuration}, not the model. Second,
+\textbf{security and cost jointly}: defenses cost tokens or latency, so we report
+a cost-efficiency score so that ``cheapest sufficiently-safe configuration'' is
+directly readable.
+
+Our contributions are: (a)~a Japanese obfuscation transform suite; (b)~an
+application-layer, MITRE-ATLAS-grounded harness with a safe proxy-marker
+methodology; (c)~a guardrail comparison including a normalizing filter and a
+model-based classifier; (d)~a statistically-reported leaderboard (Wilson CIs,
+optional repeated trials) with a cost-efficiency metric; and (e)~an empirical
+observation of large router-induced run-to-run variance.
+
+\section{Related Work}
+We build on red-teaming tooling (garak); jailbreak benchmarks (HarmBench,
+JailbreakBench, AdvBench); automated attack generation (PAIR, TAP); multilingual
+safety (low-resource-language jailbreaks); indirect prompt injection (Greshake et
+al.); guardrails and classifiers (Llama Guard, OpenAI Moderation); and taxonomies
+(MITRE ATLAS, OWASP Top~10 for LLM Applications). J-ART differs by combining a
+\emph{Japanese obfuscation} surface, an \emph{application-layer} unit of
+evaluation, a \emph{cost-efficiency} axis, and a \emph{safe proxy-marker}
+methodology in a single reproducible harness.
+
+\section{Methodology}
+
+\paragraph{Application-structure layer.}
+Each evaluated \textbf{target} is a configuration: provider/model $\times$
+prompt\_strength $\in \{\text{naked (low)}, \text{hardened (high)}\}$ $\times$
+guardrail $\in \{\text{none}, \text{keyword}, \text{regex}, \text{llm},
+\text{llamaguard}\}$ $\times$ rag $\in \{\text{true}, \text{false}\}$. A
+simplified RAG context (benign corporate documents, optionally poisoned for
+indirect-injection attacks) and a system prompt containing a secret \emph{canary}
+are assembled per trial.
+
+\paragraph{Japanese obfuscation transforms.}
+Each base attack is rendered through one of seven transforms: \code{baseline}
+(none), \code{polite\_business} (keigo authority framing), \code{vertical\_newline}
+(one-character-per-line vertical writing), \code{gyaru} (gyaru-moji glyph
+substitution + zero-width spaces), \code{double\_tongue} (false
+sandbox/authorization premise), \code{base64\_wrap} (Base64-encoded instruction),
+and \code{leet\_smuggle} (leet symbol substitution + zero-width spaces).
+Transforms preserve human legibility while breaking substring-matching filters.
+
+\paragraph{Attack suite and MITRE ATLAS mapping.}
+Eleven attacks cover ten inference-time ATLAS techniques: Direct/Indirect Prompt
+Injection (AML.T0051.000/.001), LLM Jailbreak (AML.T0054), LLM Data Leakage
+(AML.T0057), LLM Prompt Self-Replication (AML.T0061), Trusted-Output/Citations
+manipulation (AML.T0067.000), LLM Prompt Obfuscation (AML.T0068), System-Prompt
+discovery (AML.T0069.002), RAG Poisoning (AML.T0070), and False RAG Entry
+Injection (AML.T0071). Vectors are \code{user} (direct) or \code{rag} (indirect).
+
+\paragraph{Harmless proxy markers and safety-by-construction.}
+To avoid producing weaponizable content, attacks target \textbf{harmless
+proxies}: a fictitious canary passphrase embedded in the system prompt
+(data-leakage attacks) and benign string markers \code{[JART-PWNED]} /
+\code{[JART-HIJACKED]} (injection / control-hijack attacks). The malicious
+instruction \textbf{core} of each attack is defined in code, kept out of
+configuration files, and \textbf{masked} (replaced by a redaction placeholder) in
+\code{results.json} and the public site; only the obfuscation \emph{framework} is
+shown, so developers can study the structure without a usable recipe. A
+defense-in-depth client-side mask is also applied at render time.
+
+\paragraph{Deterministic judge.}
+A breach is declared by exact membership: the canary in the response
+(\code{secret\_leak}) or the marker in the response (\code{marker\_injection} /
+\code{marker\_hijack}). This judge is reproducible and cheap but conservative (it
+can miss semantically-equivalent leaks); see Section~\ref{sec:limits}.
+
+\paragraph{Guardrails.}
+Five settings are compared: \textbf{none}; \textbf{keyword} (banned-substring
+match --- fast, weak to obfuscation); \textbf{regex} (a \emph{normalizing} filter
+that strips zero-width characters, reverses leet substitutions, folds whitespace,
+and Base64-decodes long tokens \emph{before} keyword matching --- deterministic,
+zero extra API cost); \textbf{llm} (the target model self-moderates input and
+screens output); and \textbf{llamaguard} (a dedicated safety-classification model
+--- Llama Guard~4 via a model router --- classifies the input as attack/benign,
+with a graceful fallback on failure).
+
+\paragraph{Statistical treatment.}
+Each model's defense rate is reported with a \textbf{Wilson 95\% confidence
+interval} computed over its trial count. Optionally, each cell (target, attack,
+transform) is repeated $N$ times (\code{JART\_TRIALS}, default 1); details
+aggregate per cell while summary statistics and CIs use the trial-level sample. In
+simulation mode each repeated trial is an independent Bernoulli draw, which
+narrows the CI as $N$ grows (e.g., interval width $15.1 \to 7.5$ points from
+$N{=}1$ to $N{=}3$ for one configuration).
+
+\paragraph{Cost-efficiency metric.}
+We report $\mathrm{cospa} = \text{defense\_rate}(\%) \div
+\text{cost\_per\_million\_tokens (USD)}$ (the per-million cost is clamped at a
+\$0.01 floor to avoid divergence), surfacing configurations that are both safe and
+cheap.
+
+\paragraph{Execution.}
+Trials are independent and run with bounded concurrency (a thread pool, default 8
+workers) under per-request timeouts and exponential-backoff retries; determinism
+of the simulation does not depend on execution order. Targets whose API key is
+absent fall back to a deterministic simulation so a partial key set never aborts
+the run.
+
+\section{Results}
+We summarize two live runs (run~A: 18 configurations, 1{,}386 cells; run~B: 21
+configurations, 1{,}617 cells), one trial per cell.
+
+\paragraph{Overall.}
+Breach rates were low in aggregate (run~A: $108/1{,}386 = 7.8\%$; run~B:
+$36/1{,}617 = 2.2\%$) and concentrated in \textbf{weak configurations} (naked,
+low-strength models); hardened-prompt-plus-guardrail configurations defended at or
+near 100\%.
+
+\paragraph{Application-layer defense dominates model capability.}
+In run~A, a flagship model with \textbf{no system prompt and no guardrail} was
+breached 10 times (87.0\% defense), whereas a small, inexpensive model behind a
+\textbf{hardened prompt + keyword guardrail} defended at $\geq 96\%$. The central
+practical finding: \emph{how the application is configured matters more than which
+model is used.}
+
+\paragraph{Run-to-run variance (a primary result).}
+The \textbf{identical} configuration ``Llama~4 Scout / naked'' produced
+\textbf{58 breaches (24.7\% defense)} in run~A and \textbf{0 breaches (100\%
+defense)} in run~B. As the only change between runs was execution time (the model
+was served via a router that may dispatch to different backends/quantizations),
+this demonstrates that \textbf{single-sample LLM leaderboards are not
+reproducible}, and that defense rates should be reported with confidence intervals
+and, ideally, repeated trials. We treat this variance as a result, not noise.
+
+\paragraph{Guardrail comparison.}
+In run~B, ``GPT-4o-mini / naked'' was breached 14 times (81.8\% defense,
+CI[71.8--88.8]); the \textbf{same model behind a Llama-Guard input classifier} was
+breached \textbf{0 times} (100\% defense, CI[95.2--100]) at lower net cost,
+because blocked inputs skip the main model call. The \textbf{normalizing regex
+filter}, in unit tests, deterministically neutralizes the vertical-newline, leet,
+Base64, and gyaru transforms that the keyword filter misses, at zero additional
+API cost; in run~B its weak-model baselines did not breach, so its live preventive
+effect was not separable in that snapshot (Section~\ref{sec:limits}).
+Table~\ref{tab:guardrail} summarizes the Llama-Guard comparison.
+
+\begin{table}[t]
+\centering
+\caption{Guardrail effect for a weak base configuration (run~B, GPT-4o-mini).}
+\label{tab:guardrail}
+\begin{tabular}{lccc}
+\toprule
+Configuration & Defense rate & 95\% CI & Breaches \\
+\midrule
+GPT-4o-mini / naked            & 81.8\% & [71.8, 88.8] & 14 / 77 \\
+GPT-4o-mini + Llama Guard      & 100.0\% & [95.2, 100]  & 0 / 77 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Attack and transform effectiveness.}
+In run~A, the most effective attacks were Trusted-Output/Citations manipulation,
+False RAG Entry Injection, and indirect RAG exfiltration; the most effective
+transforms were vertical-newline, baseline, and polite-business, while
+\textbf{Base64} was least effective (models frequently declined to act on encoded
+instructions). The newly-added ATLAS techniques accounted for a large share of
+breaches.
+
+\section{The Leaderboard Artifact}
+The harness emits \code{results.json} and a self-contained static site (sortable
+leaderboard, per-configuration attack logs with masked prompts, JP/EN UI with
+environment-based auto-selection, per-model defense-rate CIs, and per-cell breach
+rates), continuously deployed.
+
+\section{Ethics and Responsible Disclosure}
+J-ART is safe by construction. (1)~Attacks target a \textbf{fictitious canary} and
+\textbf{benign markers}, never real harmful capabilities; no weaponizable content
+exists in the code, data, or published site. (2)~The malicious instruction
+\textbf{core} is masked in all artifacts; only the obfuscation framework is shown.
+(3)~Models are referenced for research comparison only; results are run-time
+snapshots, not certifications. The intended use is to help developers harden their
+\emph{own} deployments.
+
+\section{Limitations}
+\label{sec:limits}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{Proxy markers, not harm:} we measure instruction-violation /
+        leakage proxies rather than real-world harm.
+  \item \textbf{Exact-match judge:} semantic or transformed leaks may be
+        undercounted; a validated LLM-judge (with human agreement) is future work.
+  \item \textbf{Single-turn:} multi-turn / crescendo attacks are not yet modeled.
+  \item \textbf{Sample size:} a handcrafted suite (11 attacks $\times$ 7
+        transforms); default $N{=}1$ per cell.
+  \item \textbf{Provider non-determinism / router variance:} results are
+        snapshots and depend on routing and model versions at run time.
+  \item \textbf{Cost attribution:} guardrail tokens are attributed at the target
+        model's price (an approximation).
+  \item \textbf{Simulation mode} is a deterministic stand-in for missing keys and
+        must not be read as empirical model behavior.
+\end{itemize}
+
+\section{Future Work}
+LLM-judge with human-validated agreement; multi-turn and adaptive
+(PAIR/TAP-style) attacks; larger and partially human-curated attack sets;
+additional ATLAS techniques (cost-exhaustion, model extraction); per-provider
+concurrency and incremental caching with longitudinal trend tracking; and dropping
+simulation mode for a purely empirical, repeated-trial statistical report.
+
+\section{Reproducibility}
+Code, configuration, and the deployment workflow are public. The harness is
+deterministic in simulation mode; live results depend on provider routing and
+model versions at run time and should be reported with the run date and model
+identifiers. See the repository for exact model identifiers and pricing used.
+
+\begin{thebibliography}{99}
+\bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
+  \url{https://atlas.mitre.org}.
+\bibitem{garak} garak --- Generative AI Red-teaming \& Assessment Kit.
+\bibitem{harmbench} HarmBench: A Standardized Evaluation Framework for Automated
+  Red Teaming.
+\bibitem{jbb} JailbreakBench: An Open Robustness Benchmark for Jailbreaking LLMs.
+\bibitem{lowres} Yong, Menghini, Bach. Low-Resource Languages Jailbreak GPT-4. 2023.
+\bibitem{pair} Chao et al. Jailbreaking Black-Box LLMs in Twenty Queries (PAIR).
+\bibitem{tap} Mehrotra et al. Tree of Attacks: Jailbreaking Black-Box LLMs
+  Automatically (TAP).
+\bibitem{greshake} Greshake et al. Not What You've Signed Up For: Indirect Prompt
+  Injection. 2023.
+\bibitem{llamaguard} Inan et al. Llama Guard. Meta, 2023.
+\bibitem{owasp} OWASP Top 10 for Large Language Model Applications.
+\end{thebibliography}
+
+\end{document}

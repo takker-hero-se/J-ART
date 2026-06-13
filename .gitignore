@@ -10,6 +10,15 @@ env/
 site/
 results.json
 
+# LaTeX のビルド副産物（.tex と .pdf のみ追跡）
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
 # OS / editor
 .DS_Store
 Thumbs.db
