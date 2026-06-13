@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use J-ART, please cite this archived release."
+title: "J-ART: A Japanese Adversarial Red-Team Framework for Application-Layer LLM Security and Cost-Efficiency"
+abstract: >-
+  J-ART is an open, reproducible harness that evaluates the application-structure
+  layer of LLM deployments (model x system-prompt strength x guardrail x
+  retrieval) rather than bare models, using Japanese-specific obfuscation
+  transforms, MITRE ATLAS-grounded attacks with harmless proxy markers, a
+  five-way guardrail comparison, Wilson confidence intervals, and a
+  cost-efficiency metric.
+type: software
+authors:
+  - given-names: "Takayuki"
+    family-names: "REPLACE-WITH-FAMILY-NAME"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Independent Researcher"
+repository-code: "https://github.com/takker-hero-se/J-ART"
+url: "https://takker-hero-se.github.io/J-ART/"
+license: MIT
+version: "0.1.0"
+date-released: "2026-06-13"
+keywords:
+  - large language models
+  - LLM security
+  - red teaming
+  - jailbreak
+  - prompt injection
+  - guardrails
+  - MITRE ATLAS
+  - Japanese NLP
+  - AI safety
+  - benchmark

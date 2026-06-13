@@ -68,3 +68,25 @@ export OPENROUTER_API_KEY=...    # OSSモデル(gpt-oss/Qwen/Llama)用。Togethe
 LLMジャッジ不要のため低コスト・再現可能。MOCKモードでも同じジャッジが一貫して働きます。
 
 > 本ツールは研究・検証用のPoCであり、各社モデルの公式評価ではありません。
+
+## テクニカルレポート / 引用 (Citation)
+
+手法・結果・限界・倫理を [paper/technical-report.md](paper/technical-report.md) にまとめています（プレプリント, v0.1）。
+
+本リポジトリを引用する場合は、Zenodo で発行されるアーカイブDOIを参照してください
+（DOIは初回リリース時に付与）。引用メタデータは [CITATION.cff](CITATION.cff) と
+[.zenodo.json](.zenodo.json) にあります。
+
+```bibtex
+@software{jart2026,
+  title   = {J-ART: A Japanese Adversarial Red-Team Framework for Application-Layer LLM Security and Cost-Efficiency},
+  author  = {Takayuki},
+  year    = {2026},
+  url     = {https://github.com/takker-hero-se/J-ART},
+  note    = {Zenodo DOI: 10.5281/zenodo.XXXXXXX (minted on first release)}
+}
+```
+
+## ライセンス
+
+コードは [MIT License](LICENSE)、テクニカルレポート本文は CC-BY-4.0 とします。
