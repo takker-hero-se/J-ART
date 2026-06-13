@@ -1,5 +1,7 @@
 <p align="center"><img src="assets/icon.svg" alt="J-ART" width="96" height="96"></p>
 
+<p align="center"><b>日本語</b> | <a href="README.en.md">English</a></p>
+
 # J-ART (Japanese Adversarial Red-Team framework)
 
 **日本語環境における RAG システム / ガードレール構成の、MITRE ATLAS 準拠 脆弱性耐性リーダーボード（静的Webサイト）**
