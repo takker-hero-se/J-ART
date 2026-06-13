@@ -82,13 +82,68 @@ HarmBench, JailbreakBench）は英語が主流である。多言語安全性の�
 コスト効率指標、(e) ルーター起因の大きな実行間ばらつきの実証的観察。
 
 \section{関連研究}
-本研究は、レッドチーミングのツール（garak）、ジェイルブレイクのベンチマーク（HarmBench,
-JailbreakBench, AdvBench）、自動攻撃生成（PAIR, TAP）、多言語安全性（低資源言語による
-ジェイルブレイク）、間接的プロンプトインジェクション（Greshake ら）、ガードレール/分類器
-（Llama Guard, OpenAI Moderation）、タクソノミ（MITRE ATLAS, OWASP Top~10 for LLM
-Applications）の上に立つ。J-ART は、\emph{日本語難読化}の表面、\emph{アプリ層}の評価単位、
+J-ART は次の6系統の研究の交点に位置する。各系統を要約し、表~\ref{tab:related}に
+位置づけをまとめる。
+
+\paragraph{敵対的レッドチーミングのツール.} garak~\cite{garak} は\emph{モデル}
+単体を既知の脆弱性プローブ集合で走査する。J-ART は、配備された\emph{アプリケーション
+構成}（モデル $\times$ システムプロンプト $\times$ ガードレール $\times$ RAG）を評価単位とする。
+
+\paragraph{ジェイルブレイク・有害行動ベンチマーク.} AdvBench/GCG~\cite{gcg}、
+Jailbroken~\cite{jailbroken}、HarmBench~\cite{harmbench}、JailbreakBench~\cite{jbb}、
+実環境収集プロンプト~\cite{dan} は、\emph{どの}有害行動を\emph{どう}採点するかを標準化
+するが、その大半は英語・モデル層が対象である。J-ART はハーネスの発想を継承しつつ、有害
+誘発を安全なプロキシマーカー目標（\S\ref{sec:markers-ja}）に置き換え、スイートを公開可能にする。
+
+\paragraph{自動攻撃生成.} PAIR~\cite{pair} と TAP~\cite{tap} は攻撃プロンプトを反復
+最適化する。J-ART は再現性と安全な開示のため、\emph{固定・監査可能}な変形一式を用いる。
+
+\paragraph{多言語・低資源の安全性.} Deng ら~\cite{deng}・Yong ら~\cite{lowres} は低資源
+言語への\emph{翻訳}でアライメントが劣化することを、Wang ら~\cite{alllang} は言語横断の
+安全性般化を示す。これらは言語\emph{間}の翻訳を扱うが、J-ART は日本語固有の\emph{言語内
+字形難読化}（ギャル文字・縦書き・敬語フレーミング・かな/漢字符号化）を扱う。これは日本語が
+高資源であっても残存する。
+
+\paragraph{プロンプトインジェクション.} Perez \& Ribeiro~\cite{perez} は目標乗っ取り・
+プロンプト漏洩を、Greshake ら~\cite{greshake} は\emph{間接}注入を定式化し、Liu ら~\cite{liu}
+は LLM 統合アプリのベンチマークを与える。J-ART はこれらを\emph{アプリ構成}の関数として評価する。
+
+\paragraph{ガードレール・入力分類器.} Llama Guard~\cite{llamaguard}、NeMo
+Guardrails~\cite{nemo}、OpenAI Moderation API~\cite{moderation} はモデル/規則ベースの
+フィルタを提供する。J-ART はガードレールを\emph{差し替え可能な構成変数}として扱い、各々の
+限界防御を測る。ナイーブなキーワード検閲が取りこぼす難読化を破る決定論的正規化フィルタも含む
+（\S\ref{sec:results-ja}）。
+
+\paragraph{LLM-as-judge の妥当性.} Zheng ら~\cite{mtbench} と Gu ら~\cite{judgesurvey} は
+LLM ジャッジの偏りを記録する。J-ART は\emph{主要}指標で LLM ジャッジを避け、決定論的な
+カナリア/マーカー照合（\S\ref{sec:markers-ja}）を用いてジャッジ分散を指標から排除する。
+
+\paragraph{日本語 NLP 資源とタクソノミ.} JGLUE~\cite{jglue} のような一般日本語ベンチマーク
+は自然言語理解を対象とするが、日本語固有の難読化を狙う公開・再現可能な\emph{敵対的安全性}
+ベンチマークは管見の限り存在しない。これが J-ART の埋める空隙である。攻撃は MITRE
+ATLAS~\cite{atlas} に対応づけ、OWASP Top~10 for LLM Applications~\cite{owasp} を相互参照する。
+
+\begin{table}[t]
+\centering\small
+\caption{代表的先行研究に対する J-ART の位置づけ。}
+\label{tab:related}
+\begin{tabular}{@{}p{2.6cm}p{1.8cm}p{2.2cm}p{1.2cm}cc@{}}
+\toprule
+研究 & 言語 & 評価単位 & コスト軸 & ガード/RAG & 公開 \\
+\midrule
+garak~\cite{garak} & 英語 & モデル & 無 & 無 & 有 \\
+HarmBench / JBB~\cite{harmbench,jbb} & 英語 & モデル & 無 & 無 & 有 \\
+PAIR / TAP~\cite{pair,tap} & 英語 & モデル & 無 & 無 & 一部 \\
+多言語~\cite{lowres,deng,alllang} & 低資源 & モデル & 無 & 無 & 有 \\
+Llama Guard / NeMo~\cite{llamaguard,nemo} & 英語中心 & 分類器 & 無 & 該当無 & 有 \\
+\textbf{J-ART} & \textbf{日本語} & \textbf{アプリ構成} & \textbf{有} & \textbf{有} & \textbf{有} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+すなわち J-ART は、\emph{日本語の言語内字形難読化}の表面、\emph{アプリ構成}の評価単位、
 \emph{コスト効率}の軸、\emph{安全なプロキシマーカー}方式を、単一の再現可能なハーネスに
-統合する点で異なる。
+統合する点で他と異なる。
 
 \section{手法}
 
@@ -115,7 +170,7 @@ LLMプロンプト自己複製 (AML.T0061)、信頼出力/引用の操作 (AML.T
 難読化 (AML.T0068)、システムプロンプト探索 (AML.T0069.002)、RAG汚染 (AML.T0070)、
 偽RAGエントリ注入 (AML.T0071)。ベクトルは \code{user}（直接）または \code{rag}（間接）。
 
-\paragraph{無害なプロキシマーカーと設計による安全性.}
+\paragraph{無害なプロキシマーカーと設計による安全性.}\label{sec:markers-ja}
 危険なコンテンツの生成を避けるため、攻撃は\textbf{無害なプロキシ}を標的とする：システム
 プロンプトに埋め込んだ架空のカナリア合言葉（データ漏洩攻撃）と、無害な文字列マーカー
 \code{[JART-PWNED]} / \code{[JART-HIJACKED]}（注入/制御奪取攻撃）。各攻撃の悪意ある
@@ -154,7 +209,7 @@ $\mathrm{cospa} = \text{防御率}(\%) \div \text{100万トークンあたりコ
 指数バックオフ再試行のもとに実行する。シミュレーションの決定論は実行順に依存しない。APIキーが
 無い対象は決定論的シミュレーションにフォールバックし、鍵が一部欠けても実行全体が落ちない。
 
-\section{結果}
+\section{結果}\label{sec:results-ja}
 2回のLIVE実行を要約する（実行A：18構成・1{,}386セル、実行B：21構成・1{,}617セル、
 各セル1試行）。
 
@@ -222,8 +277,10 @@ J-ART は設計により安全である。(1) 攻撃は\textbf{架空のカナ�
 \label{sec:limits}
 \begin{itemize}[leftmargin=1.4em,itemsep=2pt]
   \item \textbf{プロキシマーカーであって実害ではない：}実害ではなく指示違反/漏洩の代理を測る。
-  \item \textbf{完全一致ジャッジ：}意味的/変形された漏洩を過小評価し得る。人手検証付きの
-        LLMジャッジは今後の課題。
+  \item \textbf{決定論ジャッジ：}カナリア/マーカーを完全一致\emph{および}軽い正規化
+        （大小文字畳み込み・空白/ゼロ幅除去）後に照合するため、整形してエコーされた漏洩も
+        突破として計上する。一方で\emph{意味的}/言い換えによる漏洩は検出できないため、
+        報告する防御率は\textbf{上界}である。人手検証付き LLM ジャッジは今後の課題。
   \item \textbf{単発（1ターン）：}多ターン/crescendo攻撃は未モデル化。
   \item \textbf{標本数：}手作りのスイート（11攻撃 $\times$ 7変形）、既定はセル当たり $N{=}1$。
   \item \textbf{プロバイダの非決定性/ルーターのばらつき：}結果はスナップショットであり、実行時の
@@ -256,8 +313,32 @@ J-ART は設計により安全である。(1) 攻撃は\textbf{架空のカナ�
   Automatically (TAP).
 \bibitem{greshake} Greshake et al. Not What You've Signed Up For: Indirect Prompt
   Injection. 2023.
-\bibitem{llamaguard} Inan et al. Llama Guard. Meta, 2023.
+\bibitem{llamaguard} Inan et al. Llama Guard: LLM-Based Input-Output Safeguard
+  for Human-AI Conversations. Meta, 2023.
 \bibitem{owasp} OWASP Top 10 for Large Language Model Applications.
+\bibitem{gcg} Zou et al. Universal and Transferable Adversarial Attacks on
+  Aligned Language Models (AdvBench/GCG). 2023.
+\bibitem{jailbroken} Wei, Haghtalab, Steinhardt. Jailbroken: How Does LLM Safety
+  Training Fail? 2023.
+\bibitem{dan} Shen et al. ``Do Anything Now'': Characterizing and Evaluating
+  In-the-Wild Jailbreak Prompts on Large Language Models. 2024.
+\bibitem{deng} Deng et al. Multilingual Jailbreak Challenges in Large Language
+  Models. 2024.
+\bibitem{alllang} Wang et al. All Languages Matter: On the Multilingual Safety of
+  Large Language Models. 2024.
+\bibitem{perez} Perez \& Ribeiro. Ignore Previous Prompt: Attack Techniques for
+  Language Models. 2022.
+\bibitem{liu} Liu et al. Prompt Injection Attack against LLM-Integrated
+  Applications. 2024.
+\bibitem{nemo} Rebedea et al. NeMo Guardrails: A Toolkit for Controllable and
+  Safe LLM Applications with Programmable Rails. 2023.
+\bibitem{moderation} Markov et al. A Holistic Approach to Undesired Content
+  Detection in the Real World (OpenAI Moderation). 2023.
+\bibitem{mtbench} Zheng et al. Judging LLM-as-a-Judge with MT-Bench and Chatbot
+  Arena. 2023.
+\bibitem{judgesurvey} Gu et al. A Survey on LLM-as-a-Judge. 2024.
+\bibitem{jglue} Kurihara et al. JGLUE: Japanese General Language Understanding
+  Evaluation. 2022.
 \end{thebibliography}
 
 \end{document}

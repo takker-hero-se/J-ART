@@ -102,14 +102,79 @@ optional repeated trials) with a cost-efficiency metric; and (e)~an empirical
 observation of large router-induced run-to-run variance.
 
 \section{Related Work}
-We build on red-teaming tooling (garak); jailbreak benchmarks (HarmBench,
-JailbreakBench, AdvBench); automated attack generation (PAIR, TAP); multilingual
-safety (low-resource-language jailbreaks); indirect prompt injection (Greshake et
-al.); guardrails and classifiers (Llama Guard, OpenAI Moderation); and taxonomies
-(MITRE ATLAS, OWASP Top~10 for LLM Applications). J-ART differs by combining a
-\emph{Japanese obfuscation} surface, an \emph{application-layer} unit of
-evaluation, a \emph{cost-efficiency} axis, and a \emph{safe proxy-marker}
-methodology in a single reproducible harness.
+J-ART sits at the intersection of six lines of work, summarized below and
+positioned in Table~\ref{tab:related}.
+
+\paragraph{Adversarial red-teaming tooling.} garak~\cite{garak} scans a
+\emph{model} with a library of vulnerability probes. J-ART instead treats the
+deployed \emph{application configuration} (model $\times$ system prompt $\times$
+guardrail $\times$ RAG) as the unit under test.
+
+\paragraph{Jailbreak and harmful-behavior benchmarks.} AdvBench/GCG~\cite{gcg},
+Jailbroken~\cite{jailbroken}, HarmBench~\cite{harmbench},
+JailbreakBench~\cite{jbb}, and in-the-wild prompts~\cite{dan} standardize
+\emph{which} harmful behaviors to elicit and \emph{how} to score them,
+predominantly in English at the model layer. J-ART reuses the harness idea but
+replaces harmful elicitation with a safe proxy-marker objective
+(\S\ref{sec:markers}) so the suite can be released publicly.
+
+\paragraph{Automated attack generation.} PAIR~\cite{pair} and TAP~\cite{tap}
+optimize jailbreak prompts against a target. J-ART uses a \emph{fixed, auditable}
+transform suite, trading attack strength for reproducibility and safe disclosure.
+
+\paragraph{Multilingual and low-resource safety.} Deng et al.~\cite{deng} and
+Yong et al.~\cite{lowres} show alignment degrades under \emph{translation} into
+low-resource languages, and Wang et al.~\cite{alllang} study cross-lingual safety
+generalization. These study \emph{translation across} languages; J-ART studies
+\emph{intra-language orthographic obfuscation} specific to Japanese (gyaru-moji,
+vertical writing, keigo framing, kana/kanji encoding), which persists even though
+Japanese is high-resource.
+
+\paragraph{Prompt injection.} Perez \& Ribeiro~\cite{perez} introduced
+goal-hijacking and prompt-leaking; Greshake et al.~\cite{greshake} formalized
+\emph{indirect} injection; Liu et al.~\cite{liu} benchmark LLM-integrated apps.
+J-ART evaluates these as a function of the \emph{application configuration}.
+
+\paragraph{Guardrails and input classifiers.} Llama Guard~\cite{llamaguard}, NeMo
+Guardrails~\cite{nemo}, and the OpenAI Moderation API~\cite{moderation} provide
+model- or rule-based filtering. J-ART treats the guardrail as a \emph{swappable
+configuration variable} and measures the marginal defense each adds, including a
+deterministic normalizing filter that defeats obfuscations a naive keyword filter
+misses (\S\ref{sec:results}).
+
+\paragraph{LLM-as-judge validation.} Zheng et al.~\cite{mtbench} and the survey of
+Gu et al.~\cite{judgesurvey} document the biases of LLM judges. J-ART avoids an
+LLM judge for its \emph{primary} outcome, using a deterministic canary/marker
+check (\S\ref{sec:markers}) so judge variance does not enter the headline metric.
+
+\paragraph{Japanese NLP resources and taxonomies.} General Japanese benchmarks
+such as JGLUE~\cite{jglue} cover NLU, but to our knowledge no open, reproducible
+\emph{adversarial-safety} benchmark targets Japanese-specific obfuscation --- the
+gap J-ART addresses. We map attacks to MITRE ATLAS~\cite{atlas} and cross-reference
+the OWASP Top~10 for LLM Applications~\cite{owasp}.
+
+\begin{table}[t]
+\centering\small
+\caption{Positioning of J-ART relative to representative prior work.}
+\label{tab:related}
+\begin{tabular}{@{}p{2.5cm}p{1.8cm}p{2.4cm}p{1.6cm}cc@{}}
+\toprule
+Work & Language & Unit of eval. & Cost axis & Guard/RAG & Public \\
+\midrule
+garak~\cite{garak} & English & Model & No & No & Yes \\
+HarmBench / JBB~\cite{harmbench,jbb} & English & Model & No & No & Yes \\
+PAIR / TAP~\cite{pair,tap} & English & Model & No & No & Partial \\
+Multiling.~\cite{lowres,deng,alllang} & Low-resource & Model & No & No & Yes \\
+Llama Guard / NeMo~\cite{llamaguard,nemo} & Eng.-centric & Classifier & No & n/a & Yes \\
+\textbf{J-ART} & \textbf{Japanese} & \textbf{App config} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+J-ART is thus distinguished by combining a \emph{Japanese intra-language
+obfuscation} surface, an \emph{application-configuration} unit of evaluation, a
+\emph{cost-efficiency} axis, and a \emph{safe proxy-marker} methodology in a
+single reproducible harness.
 
 \section{Methodology}
 
@@ -139,7 +204,7 @@ manipulation (AML.T0067.000), LLM Prompt Obfuscation (AML.T0068), System-Prompt
 discovery (AML.T0069.002), RAG Poisoning (AML.T0070), and False RAG Entry
 Injection (AML.T0071). Vectors are \code{user} (direct) or \code{rag} (indirect).
 
-\paragraph{Harmless proxy markers and safety-by-construction.}
+\paragraph{Harmless proxy markers and safety-by-construction.}\label{sec:markers}
 To avoid producing weaponizable content, attacks target \textbf{harmless
 proxies}: a fictitious canary passphrase embedded in the system prompt
 (data-leakage attacks) and benign string markers \code{[JART-PWNED]} /
@@ -188,7 +253,7 @@ of the simulation does not depend on execution order. Targets whose API key is
 absent fall back to a deterministic simulation so a partial key set never aborts
 the run.
 
-\section{Results}
+\section{Results}\label{sec:results}
 We summarize two live runs (run~A: 18 configurations, 1{,}386 cells; run~B: 21
 configurations, 1{,}617 cells), one trial per cell.
 
@@ -267,8 +332,11 @@ snapshots, not certifications. The intended use is to help developers harden the
 \begin{itemize}[leftmargin=1.4em,itemsep=2pt]
   \item \textbf{Proxy markers, not harm:} we measure instruction-violation /
         leakage proxies rather than real-world harm.
-  \item \textbf{Exact-match judge:} semantic or transformed leaks may be
-        undercounted; a validated LLM-judge (with human agreement) is future work.
+  \item \textbf{Deterministic judge:} the judge matches the canary/marker exactly
+        \emph{and} after light normalization (case-folding, whitespace/zero-width
+        removal), so a reformatted echo is counted as a breach. It cannot detect
+        \emph{semantic}/paraphrased leakage, so reported defense rates are an
+        \textbf{upper bound}; a human-validated LLM-judge is future work.
   \item \textbf{Single-turn:} multi-turn / crescendo attacks are not yet modeled.
   \item \textbf{Sample size:} a handcrafted suite (11 attacks $\times$ 7
         transforms); default $N{=}1$ per cell.
@@ -306,8 +374,32 @@ identifiers. See the repository for exact model identifiers and pricing used.
   Automatically (TAP).
 \bibitem{greshake} Greshake et al. Not What You've Signed Up For: Indirect Prompt
   Injection. 2023.
-\bibitem{llamaguard} Inan et al. Llama Guard. Meta, 2023.
+\bibitem{llamaguard} Inan et al. Llama Guard: LLM-Based Input-Output Safeguard
+  for Human-AI Conversations. Meta, 2023.
 \bibitem{owasp} OWASP Top 10 for Large Language Model Applications.
+\bibitem{gcg} Zou et al. Universal and Transferable Adversarial Attacks on
+  Aligned Language Models (AdvBench/GCG). 2023.
+\bibitem{jailbroken} Wei, Haghtalab, Steinhardt. Jailbroken: How Does LLM Safety
+  Training Fail? 2023.
+\bibitem{dan} Shen et al. ``Do Anything Now'': Characterizing and Evaluating
+  In-the-Wild Jailbreak Prompts on Large Language Models. 2024.
+\bibitem{deng} Deng et al. Multilingual Jailbreak Challenges in Large Language
+  Models. 2024.
+\bibitem{alllang} Wang et al. All Languages Matter: On the Multilingual Safety of
+  Large Language Models. 2024.
+\bibitem{perez} Perez \& Ribeiro. Ignore Previous Prompt: Attack Techniques for
+  Language Models. 2022.
+\bibitem{liu} Liu et al. Prompt Injection Attack against LLM-Integrated
+  Applications. 2024.
+\bibitem{nemo} Rebedea et al. NeMo Guardrails: A Toolkit for Controllable and
+  Safe LLM Applications with Programmable Rails. 2023.
+\bibitem{moderation} Markov et al. A Holistic Approach to Undesired Content
+  Detection in the Real World (OpenAI Moderation). 2023.
+\bibitem{mtbench} Zheng et al. Judging LLM-as-a-Judge with MT-Bench and Chatbot
+  Arena. 2023.
+\bibitem{judgesurvey} Gu et al. A Survey on LLM-as-a-Judge. 2024.
+\bibitem{jglue} Kurihara et al. JGLUE: Japanese General Language Understanding
+  Evaluation. 2022.
 \end{thebibliography}
 
 \end{document}
