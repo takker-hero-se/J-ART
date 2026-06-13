@@ -1,0 +1,263 @@
+% =====================================================================
+%  J-ART — テクニカルレポート（プレプリント・日本語版）
+%  Overleaf での使い方:
+%    1. New Project -> Upload Project（または本ファイルを貼付）。
+%    2. Menu -> Compiler: LuaLaTeX  （日本語のため LuaLaTeX 必須。
+%       ltjsarticle/luatexja がフォントを内包するので追加設定不要）。
+%    3. Recompile。
+%  英語版は technical-report.tex（pdfLaTeX）を参照。
+% =====================================================================
+\documentclass[11pt]{ltjsarticle}
+
+\usepackage{amsmath}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=blue,urlcolor=blue]{hyperref}
+\usepackage{url}
+
+\newcommand{\code}[1]{\texttt{#1}}
+
+\title{\textbf{J-ART：アプリケーション層のLLMセキュリティと\\
+コスト効率のための日本語敵対的レッドチーム評価フレームワーク}\\[4pt]
+\large テクニカルレポート（v0.1, プレプリント）}
+
+\author{廣瀬 隆之（Takayuki Hirose）\thanks{独立研究者（Independent Researcher）。
+ORCID: \href{https://orcid.org/0009-0005-6735-1862}{0009-0005-6735-1862}。
+コード: \url{https://github.com/takker-hero-se/J-ART}。
+リーダーボード: \url{https://takker-hero-se.github.io/J-ART/}。
+ソフトウェアDOI（concept）: \href{https://doi.org/10.5281/zenodo.20676879}{10.5281/zenodo.20676879}。
+本文 CC-BY-4.0、コード MIT。氏名の漢字表記は必要に応じて修正してください。}}
+
+\date{2026-06-13}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+大規模言語モデル（LLM）の公開レッドチーミング/ジェイルブレイク評価の多くは英語中心で、
+かつ\emph{素のモデル}を対象とする。本稿は \textbf{J-ART}（日本語敵対的レッドチーム評価
+フレームワーク）を提案する。J-ART は、(i) 素のモデルではなく
+\textbf{アプリケーション構造層}——モデル $\times$ システムプロンプト強度 $\times$
+ガードレール $\times$ 検索(RAG)——を評価し、(ii) ギャル文字による字形置換・縦書き/改行
+分割・慇懃無礼（keigo）な権威付け・二枚舌の偽前提・Base64・leet/ゼロ幅密輸といった
+\textbf{日本語特有の難読化変形}でナイーブなキーワード検閲を突破し、(iii) 攻撃を
+\textbf{MITRE ATLAS}（推論時10技術）に対応づけ、(iv) 防御率に \textbf{Wilson 95\%
+信頼区間}を付し \textbf{コスト効率}指標を併記する、再現可能なオープンハーネスである。
+攻撃は\emph{無害なプロキシ}（架空のカナリアと無害なマーカー）で構成され、\textbf{危険物を
+一切含まず}、各攻撃の悪意あるコアは公開物上でマスクされる。18〜21のアプリ構成と
+11攻撃 $\times$ 7変形にわたり、\textbf{アプリ層の防御がモデル素性を上回る}こと、専用の
+\textbf{入力分類器（Llama Guard）が弱構成の突破を全て遮断}し、しかも正味コストを下げた
+こと、単純な\textbf{正規化フィルタ}がナイーブなキーワード検閲の取りこぼす難読化を無効化
+することを示す。さらに、ルーター経由で提供される同一構成が実行間で大きくばらつく
+（ある構成が2回の実行で58突破→0突破に変動）ことを記録し、単一サンプルのリーダーボードが
+信頼できないこと、統計的処理が必要であることを論じる。
+\end{abstract}
+
+\noindent\textbf{ステータス.} 本稿は概念実証（PoC）と予備的知見を記述する暫定的な
+テクニカルレポート/プレプリントであり、いかなるベンダーのモデルの公式な安全性評価でも
+\emph{ない}。数値は実行時のスナップショットであり、第\ref{sec:limits}節の限界に従う。
+参考文献は暫定であり、正式投稿前に書誌情報を確認すること。
+
+\section{はじめに}
+公開LLMレッドチーミングのツール（例：garak）やジェイルブレイクのベンチマーク（例：
+HarmBench, JailbreakBench）は英語が主流である。多言語安全性の研究は、プロンプトを
+低資源言語へ\emph{翻訳}することで安全機構を回避できることを示してきたが、言語固有の
+文字・組版・敬体を悪用する\textbf{言語特有の難読化}は相対的に未開拓である。とりわけ
+日本語は、複数の文字体系、全角/ゼロ幅文字、縦書き、高度に慣習化された敬語など、豊かな
+難読化の表面を持つ。
+
+さらに2つのギャップが J-ART の動機である。第一に\textbf{素のモデル評価とデプロイ
+システム評価}の差：実務では、モデルに加えてシステムプロンプト、さらにガードレール、
+しばしば検索が組み合わさる。セキュリティ上意味のある単位は\textbf{アプリケーション構成}で
+あり、モデル単体ではない。第二に\textbf{セキュリティとコストの同時評価}：防御はトークンや
+レイテンシのコストを伴うため、コスト効率スコアを併記し「最も安価で十分に安全な構成」を
+直接読み取れるようにする。
+
+本稿の貢献は次の通り：(a) 日本語難読化変形の一式、(b) 安全なプロキシマーカー方式を備えた
+アプリ層・MITRE ATLAS準拠の評価ハーネス、(c) 正規化フィルタとモデルベース分類器を含む
+ガードレール比較、(d) 統計的に報告するリーダーボード（Wilson信頼区間・任意のN回試行）と
+コスト効率指標、(e) ルーター起因の大きな実行間ばらつきの実証的観察。
+
+\section{関連研究}
+本研究は、レッドチーミングのツール（garak）、ジェイルブレイクのベンチマーク（HarmBench,
+JailbreakBench, AdvBench）、自動攻撃生成（PAIR, TAP）、多言語安全性（低資源言語による
+ジェイルブレイク）、間接的プロンプトインジェクション（Greshake ら）、ガードレール/分類器
+（Llama Guard, OpenAI Moderation）、タクソノミ（MITRE ATLAS, OWASP Top~10 for LLM
+Applications）の上に立つ。J-ART は、\emph{日本語難読化}の表面、\emph{アプリ層}の評価単位、
+\emph{コスト効率}の軸、\emph{安全なプロキシマーカー}方式を、単一の再現可能なハーネスに
+統合する点で異なる。
+
+\section{手法}
+
+\paragraph{アプリケーション構造層.}
+評価対象（\textbf{target}）は構成である：provider/model $\times$ prompt\_strength
+$\in \{\text{naked (low)}, \text{hardened (high)}\}$ $\times$ guardrail
+$\in \{\text{none}, \text{keyword}, \text{regex}, \text{llm}, \text{llamaguard}\}$
+$\times$ rag $\in \{\text{true}, \text{false}\}$。簡易RAG文脈（良性の社内文書、間接
+インジェクション攻撃では汚染）と、秘密の\emph{カナリア}を含むシステムプロンプトを試行ごとに
+組み立てる。
+
+\paragraph{日本語難読化変形.}
+各ベース攻撃は7種の変形のいずれかでレンダリングされる：\code{baseline}（無変形）、
+\code{polite\_business}（敬語による権威付け）、\code{vertical\_newline}（1文字1行の縦書き）、
+\code{gyaru}（ギャル文字の字形置換＋ゼロ幅スペース）、\code{double\_tongue}（偽の
+サンドボックス/認可の前提）、\code{base64\_wrap}（Base64エンコードした指示）、
+\code{leet\_smuggle}（leet記号置換＋ゼロ幅スペース）。変形は人間可読性を保ちつつ、部分文字列
+一致のフィルタを破壊するよう設計される。
+
+\paragraph{攻撃スイートと MITRE ATLAS 対応.}
+11の攻撃が10の推論時 ATLAS 技術を網羅する：直接/間接プロンプトインジェクション
+(AML.T0051.000/.001)、LLMジェイルブレイク (AML.T0054)、LLMデータ漏洩 (AML.T0057)、
+LLMプロンプト自己複製 (AML.T0061)、信頼出力/引用の操作 (AML.T0067.000)、LLMプロンプト
+難読化 (AML.T0068)、システムプロンプト探索 (AML.T0069.002)、RAG汚染 (AML.T0070)、
+偽RAGエントリ注入 (AML.T0071)。ベクトルは \code{user}（直接）または \code{rag}（間接）。
+
+\paragraph{無害なプロキシマーカーと設計による安全性.}
+危険なコンテンツの生成を避けるため、攻撃は\textbf{無害なプロキシ}を標的とする：システム
+プロンプトに埋め込んだ架空のカナリア合言葉（データ漏洩攻撃）と、無害な文字列マーカー
+\code{[JART-PWNED]} / \code{[JART-HIJACKED]}（注入/制御奪取攻撃）。各攻撃の悪意ある
+\textbf{コア}はコード内に定義し、設定ファイルには残さず、\code{results.json} と公開サイトでは
+\textbf{マスク}（伏字プレースホルダへ置換）する。表示されるのは難読化の\emph{フレームワーク}
+のみであり、利用可能なレシピを与えずに構造を学べる。描画時にもクライアント側の多重マスクを
+施す。
+
+\paragraph{決定論的ジャッジ.}
+突破は完全一致で判定する：応答中のカナリア（\code{secret\_leak}）、または応答中のマーカー
+（\code{marker\_injection} / \code{marker\_hijack}）。本ジャッジは再現可能かつ安価だが
+保守的であり、意味的に等価な漏洩を取りこぼし得る（第\ref{sec:limits}節）。
+
+\paragraph{ガードレール.}
+5設定を比較する：\textbf{none}；\textbf{keyword}（禁止部分文字列一致——高速だが難読化に
+弱い）；\textbf{regex}（\emph{正規化}フィルタ。ゼロ幅文字除去・leet逆変換・空白畳み込み・
+長トークンのBase64復号を行ってから禁止語照合——決定論的でAPI追加コスト0）；\textbf{llm}
+（対象モデル自身が入力を検閲し出力も審査）；\textbf{llamaguard}（専用の安全性分類モデル
+——ルーター経由の Llama Guard~4——が入力を攻撃/良性に分類し、失敗時は安全側にフォール
+バック）。
+
+\paragraph{統計的処理.}
+各モデルの防御率は、その試行数に基づく \textbf{Wilson 95\% 信頼区間}と共に報告する。任意で
+各セル (target, attack, transform) を $N$ 回反復でき（\code{JART\_TRIALS}、既定1）、詳細は
+セル単位に集約し、要約統計と信頼区間は試行レベルの標本を用いる。シミュレーションモードでは
+各反復が独立なベルヌーイ試行であり、$N$ の増加で信頼区間が締まる（ある構成で $N{=}1 \to
+N{=}3$ により幅 $15.1 \to 7.5$ ポイント）。
+
+\paragraph{コスト効率指標.}
+$\mathrm{cospa} = \text{防御率}(\%) \div \text{100万トークンあたりコスト (USD)}$ を
+報告する（100万トークン単価は0近傍の発散を防ぐため下限\$0.01でクランプ）。これにより、
+安価かつ安全な構成が浮かび上がる。
+
+\paragraph{実行.}
+試行は独立であり、有界並列（既定8ワーカーのスレッドプール）で、リクエスト毎のタイムアウトと
+指数バックオフ再試行のもとに実行する。シミュレーションの決定論は実行順に依存しない。APIキーが
+無い対象は決定論的シミュレーションにフォールバックし、鍵が一部欠けても実行全体が落ちない。
+
+\section{結果}
+2回のLIVE実行を要約する（実行A：18構成・1{,}386セル、実行B：21構成・1{,}617セル、
+各セル1試行）。
+
+\paragraph{全体.}
+突破率は総じて低く（実行A：$108/1{,}386 = 7.8\%$、実行B：$36/1{,}617 = 2.2\%$）、
+\textbf{弱構成}（素のAPI・低強度モデル）に集中した。強プロンプト＋ガードレール構成は概ね
+100\%防御した。
+
+\paragraph{アプリ層の防御がモデル素性を上回る.}
+実行Aでは、\textbf{システムプロンプトもガードレールも無い}フラグシップモデルが10回突破され
+（防御87.0\%）、一方で\textbf{強プロンプト＋キーワードGR}を備えた安価な小型モデルは
+$\geq 96\%$ 防御した。中心的な実務知見：\emph{どのモデルかより、アプリをどう構成したかが
+効く}。
+
+\paragraph{実行間ばらつき（主要な結果）.}
+\textbf{同一}構成「Llama~4 Scout / 素のAPI」は、実行Aで\textbf{58突破（防御24.7\%）}、
+実行Bで\textbf{0突破（防御100\%）}を示した。2回の唯一の違いは実行時刻であり（モデルは
+異なるバックエンド/量子化へ振り分け得るルーター経由で提供）、これは\textbf{単一サンプルの
+LLMリーダーボードが再現しない}こと、防御率は信頼区間と——できれば——反復試行と共に報告
+すべきことを示す。本稿はこのばらつきを隠すべきノイズではなく結果として扱う。
+
+\paragraph{ガードレール比較.}
+実行Bでは「GPT-4o-mini / 素のAPI」が14回突破され（防御81.8\%、CI[71.8--88.8]）、
+\textbf{同一モデルに Llama Guard 入力分類器}を付けると\textbf{0回}（防御100\%、
+CI[95.2--100]）で、しかも正味コストはより低かった（ブロックされた入力は本体モデル呼び出しを
+省くため）。\textbf{正規化regexフィルタ}は、ユニットテストにおいてキーワードフィルタの
+取りこぼす縦書き・leet・Base64・ギャル文字の各変形を決定論的に無効化し、API追加コストは0で
+ある。実行Bでは弱構成のベースラインが突破しなかったため、その予防効果はそのスナップショット
+では分離できなかった（第\ref{sec:limits}節）。表\ref{tab:guardrail}に Llama Guard の比較を
+示す。
+
+\begin{table}[t]
+\centering
+\caption{弱いベース構成に対するガードレール効果（実行B・GPT-4o-mini）。}
+\label{tab:guardrail}
+\begin{tabular}{lccc}
+\toprule
+構成 & 防御率 & 95\% 信頼区間 & 突破 \\
+\midrule
+GPT-4o-mini / 素のAPI            & 81.8\% & [71.8, 88.8] & 14 / 77 \\
+GPT-4o-mini + Llama Guard        & 100.0\% & [95.2, 100]  & 0 / 77 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{攻撃・変形の有効性.}
+実行Aで最も有効だった攻撃は、信頼出力/引用の操作、偽RAGエントリ注入、間接RAG窃取であり、
+最も有効だった変形は縦書き改行・baseline・慇懃無礼であった。一方 \textbf{Base64} は最も
+効果が低かった（モデルがエンコードされた指示に従うのを拒むことが多い）。新規追加した ATLAS
+技術が突破の大きな割合を占めた。
+
+\section{リーダーボード成果物}
+ハーネスは \code{results.json} と自己完結の静的サイト（並び替え可能なリーダーボード、
+マスク済みプロンプト付きの構成別攻撃ログ、環境に応じて自動選択する日英UI、モデル別防御率の
+信頼区間、セル別突破率）を生成し、継続的にデプロイする。
+
+\section{倫理と責任ある開示}
+J-ART は設計により安全である。(1) 攻撃は\textbf{架空のカナリア}と\textbf{無害なマーカー}を
+標的とし、実際の有害能力を扱わない。コード・データ・公開サイトのいずれにも危険物は存在しない。
+(2) 悪意ある\textbf{コア}は全成果物でマスクされ、難読化のフレームワークのみが示される。
+(3) モデルは研究比較のためにのみ参照され、結果は実行時スナップショットであって認証ではない。
+意図する用途は、開発者が\emph{自身の}デプロイを堅牢化する支援である。
+
+\section{限界}
+\label{sec:limits}
+\begin{itemize}[leftmargin=1.4em,itemsep=2pt]
+  \item \textbf{プロキシマーカーであって実害ではない：}実害ではなく指示違反/漏洩の代理を測る。
+  \item \textbf{完全一致ジャッジ：}意味的/変形された漏洩を過小評価し得る。人手検証付きの
+        LLMジャッジは今後の課題。
+  \item \textbf{単発（1ターン）：}多ターン/crescendo攻撃は未モデル化。
+  \item \textbf{標本数：}手作りのスイート（11攻撃 $\times$ 7変形）、既定はセル当たり $N{=}1$。
+  \item \textbf{プロバイダの非決定性/ルーターのばらつき：}結果はスナップショットであり、実行時の
+        ルーティングとモデル版に依存する。
+  \item \textbf{コスト帰属：}ガードレールのトークンは対象モデルの単価で計上（近似）。
+  \item \textbf{シミュレーションモード}は鍵欠如時の決定論的代替であり、実測のモデル挙動と
+        読むべきではない。
+\end{itemize}
+
+\section{今後の課題}
+人手検証付きのLLMジャッジ、多ターン・適応的（PAIR/TAP系）攻撃、より大規模で一部人手キュレート
+した攻撃集合、ATLAS技術の追加（コスト枯渇・モデル抽出）、プロバイダ別並列と増分キャッシュ
+による経時トレンド追跡、そしてシミュレーションモードを外した純粋に実測・反復試行による統計報告。
+
+\section{再現性}
+コード・設定・デプロイ用ワークフローは公開している。ハーネスはシミュレーションモードでは決定論的
+であり、LIVE結果は実行時のプロバイダ・ルーティングとモデル版に依存するため、実行日とモデル識別子
+と共に報告すべきである。使用した正確なモデル識別子と単価はリポジトリを参照のこと。
+
+\begin{thebibliography}{99}
+\bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
+  \url{https://atlas.mitre.org}.
+\bibitem{garak} garak --- Generative AI Red-teaming \& Assessment Kit.
+\bibitem{harmbench} HarmBench: A Standardized Evaluation Framework for Automated
+  Red Teaming.
+\bibitem{jbb} JailbreakBench: An Open Robustness Benchmark for Jailbreaking LLMs.
+\bibitem{lowres} Yong, Menghini, Bach. Low-Resource Languages Jailbreak GPT-4. 2023.
+\bibitem{pair} Chao et al. Jailbreaking Black-Box LLMs in Twenty Queries (PAIR).
+\bibitem{tap} Mehrotra et al. Tree of Attacks: Jailbreaking Black-Box LLMs
+  Automatically (TAP).
+\bibitem{greshake} Greshake et al. Not What You've Signed Up For: Indirect Prompt
+  Injection. 2023.
+\bibitem{llamaguard} Inan et al. Llama Guard. Meta, 2023.
+\bibitem{owasp} OWASP Top 10 for Large Language Model Applications.
+\end{thebibliography}
+
+\end{document}
