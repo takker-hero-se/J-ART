@@ -34,16 +34,17 @@ intervals**. Attacks use *harmless proxy markers* (a fictitious canary and
 benign output markers) so the framework contains **no weaponizable content**, and
 the malicious "core" of each attack is masked in all published artifacts.
 
-Across 18–21 application configurations and 11 attacks × 7 transforms, we find
-that **application-layer defenses dominate raw model capability** (a flagship
-naked flagship was breached far more often than a hardened cheap model). In a
+Across 21 application configurations and 11 attacks × 7 transforms (live, K=5
+trials per cell), we find that **application-layer defenses dominate raw model
+capability** (a naked flagship was breached far more often than a hardened cheap
+model). In a
 balanced ablation on **three** base models with **cluster-robust** intervals, a
 **hardened prompt and the model-based guardrails significantly raise defense on
 every model**, while lightweight keyword/regex filters help most where the base
 model is weak; the effect scales inversely with the naked baseline. A simple
 **normalizing filter** defeats the obfuscation transforms a naïve keyword filter
 misses. We also document **large within-campaign variance**: in a controlled K=5
-repeat of a frozen configuration set, **9.5% of cells changed outcome across
+repeat of a frozen configuration set, **9.6% of cells changed outcome across
 identical trials**, which makes single-sample leaderboards unreliable and
 motivates the statistical treatment we adopt.
 
@@ -62,15 +63,15 @@ LLM のレッドチーミング/ジェイルブレイク評価はほぼ英語中
 **3モデル**の均衡アブレーション（クラスタ頑健CI）で**強プロンプトとモデルベースのガード
 レールは全モデルで有意に防御を引き上げ**、軽量なkeyword/regexは素の弱いモデルほど効く
 （効果は素の余地に反比例）——、**正規化フィルタが難読化を無効化**することを示す。さらに、
-構成を固定したK=5反復で**9.5%のセルが反復間で結果を変える**ことを記録し、単一サンプルの
+構成を固定したK=5反復で**9.6%のセルが反復間で結果を変える**ことを記録し、単一サンプルの
 リーダーボードが信頼できないこと、統計的処理が必要であることを論じる。
 
 ---
 
 ## 1. Introduction
 
-Public LLM red-teaming tooling (e.g., garak) and jailbreak benchmarks
-(e.g., HarmBench, JailbreakBench) are predominantly English. Multilingual safety
+Public LLM red-teaming tooling (e.g., garak [2]) and jailbreak benchmarks
+(e.g., HarmBench [3], JailbreakBench [4]) are predominantly English. Multilingual safety
 work has shown that *translating* prompts into low-resource languages can bypass
 safety training, but **language-specific obfuscation** — exploiting a language's
 own scripts, typography, and register — remains comparatively underexplored, and
@@ -325,11 +326,14 @@ names which file reproduces each table.
 
 All "defense rates" below are **lexical-leak** rates (§3.5) — upper bounds on true
 safety, reported with **cluster-robust** intervals where a difference is claimed
-(§3.7). The aggregate breach rate over clean trials was **14.5%** (1,151 / 7,916)
-and was **concentrated in weak configurations** — low-capability models with no
-system prompt and no guardrail. Every hardened-prompt or guardrailed
-configuration, on *any* model, defended in the **91–100%** band, whereas bare
-("naked") models ranged from **29.6% to 86.5%** defense (below).
+(§3.7). All evaluated configurations include the simplified RAG context of §3.1;
+**"naked" therefore means no system-prompt hardening and no guardrail, not "no
+RAG"** (so indirect-injection attacks are in scope even for the naked baselines).
+The aggregate breach rate over clean trials was **14.5%** (1,151 / 7,916) and was
+**concentrated in weak configurations** — low-capability models with no system
+prompt and no guardrail. Every hardened-prompt or guardrailed configuration, on
+*any* model, defended in the **91–100%** band, whereas bare ("naked") models
+ranged from **29.6% to 86.5%** defense (below).
 
 ### 4.2 Application-layer defense vs. model capability
 
@@ -355,10 +359,10 @@ GPT-4.1). Each holds the model fixed and crosses {naked, hardened} prompt ×
 guardrail; we report each config's difference from that model's naked baseline
 with a **cluster-robust bootstrap 95% CI** (3,000 cell-resamples; resampling cells,
 not trials, so the within-cell correlation of the ablation's K = 3 repeats does not
-inflate significance). Table 2′ summarizes the deltas; they are reproduced by
+inflate significance). Table 3 summarizes the deltas; they are reproduced by
 `experiments/analyze_ablation.py`.
 
-**Table 2′. Configuration effect (Δ vs. that model's naked baseline; cluster-robust 95% CI).**
+**Table 3. Configuration effect (Δ vs. that model's naked baseline; cluster-robust 95% CI).**
 
 | Added defense (low-prompt arm) | Llama-4-Scout (naked 38.1%) | GPT-4o-mini (naked 82.3%) | GPT-4.1 (naked 64.1%) |
 |---|---|---|---|
@@ -411,7 +415,7 @@ distinct question; the harness ships an `across_runs` analysis mode for it
 
 ### 4.4 Guardrail comparison
 
-Across the three ablation models (Table 2′), the ordering is consistent: the
+Across the three ablation models (Table 3), the ordering is consistent: the
 **LLM guardrail** and a **hardened prompt** give the largest gains, **Llama Guard**
 is next, and the **lightweight keyword/regex** filters help most on weak base
 models and little on already-strong ones. Guardrails that block an input **skip
@@ -499,13 +503,15 @@ language-specific red-team datasets generally.
 ### 6.3 Governance crosswalk
 
 To help practitioners connect J-ART's coverage to the controls they are already
-accountable for, Table 3 cross-references each evaluated capability to MITRE
-ATLAS, the OWASP Top 10 for LLM Applications (2025), the NIST AI Risk Management
-Framework, the EU AI Act, and Japan's AI governance guidance. The mapping is
-**informational, not a compliance claim or legal advice**; standards evolve and
-applicability depends on each deployment's risk classification.
+accountable for, Table 4 cross-references each evaluated capability to MITRE
+ATLAS [1], the OWASP Top 10 for LLM Applications (2025) [10], the NIST AI Risk
+Management Framework [23] and its Generative-AI Profile [24], the EU AI Act [25],
+and Japan's AI governance guidance — the AI Guidelines for Business [26] and the
+AISI red-teaming guide [27]. The mapping is **informational, not a compliance
+claim or legal advice**; standards evolve and applicability depends on each
+deployment's risk classification.
 
-**Table 3. Governance crosswalk (informational).**
+**Table 4. Governance crosswalk (informational).**
 
 | J-ART capability (ATLAS) | OWASP LLM Top 10 (2025) | NIST AI RMF | EU AI Act | Japan guidance |
 |---|---|---|---|---|
@@ -537,7 +543,7 @@ J-ART is a defensive evaluation harness, but the published transform suite is al
 a reusable *attack* wrapper, and we weigh this openly. The uplift it gives an
 attacker is low: the Japanese-script transforms are folklore among Japanese
 internet users, the encoding transforms are replications of public work
-(CipherChat, ArtPrompt), and the suite contains no harmful payloads — only the
+(CipherChat [28], ArtPrompt [29]), and the suite contains no harmful payloads — only the
 harmless proxy markers (§3.4). Against this, the defender benefit is concrete: we
 release, in the same repository, the **normalizing regex guardrail** that
 neutralizes every transform in the suite (verified by unit tests), so the
@@ -603,9 +609,9 @@ committed artifacts**, named here:
 | Table / claim | Committed artifact |
 |---|---|
 | §4.1 overall, §4.2 naked-spread table, §4.3 variance, §4.5 transforms | `experiments/var_run.json` |
-| §4.2 Table 2′ ablation — GPT-4o-mini | `experiments/ablation_results.json` |
-| §4.2 Table 2′ ablation — Llama-4-Scout | `experiments/abl_scout_results.json` |
-| §4.2 Table 2′ ablation — GPT-4.1 | `experiments/abl_gpt41_results.json` |
+| §4.2 Table 3 ablation — GPT-4o-mini | `experiments/ablation_results.json` |
+| §4.2 Table 3 ablation — Llama-4-Scout | `experiments/abl_scout_results.json` |
+| §4.2 Table 3 ablation — GPT-4.1 | `experiments/abl_gpt41_results.json` |
 | §4.4 cospa ranking | `experiments/var_run.json` (`summary[].cospa_score`) |
 
 Aggregates and CIs are recomputed by `experiments/analyze_ablation.py` and
@@ -620,7 +626,7 @@ such, so the site never silently mixes MOCK and LIVE.
 completed for camera-ready.)*
 
 1. MITRE ATLAS — Adversarial Threat Landscape for Artificial-Intelligence
-   Systems. atlas.mitre.org
+   Systems. <https://atlas.mitre.org> (accessed 2026-06-14).
 2. Derczynski et al. garak: A Framework for Security Probing Large Language
    Models (NVIDIA, 2024).
 3. Mazeika et al. HarmBench: A Standardized Evaluation Framework for Automated
@@ -635,7 +641,8 @@ completed for camera-ready.)*
    LLM-Integrated Applications with Indirect Prompt Injection (2023).
 9. Inan et al. Llama Guard: LLM-Based Input-Output Safeguard for
    Human-AI Conversations (Meta, 2023).
-10. OWASP Top 10 for Large Language Model Applications.
+10. OWASP Top 10 for Large Language Model Applications (2025).
+    <https://genai.owasp.org/llm-top-10/> (accessed 2026-06-14).
 11. Zou et al. Universal and Transferable Adversarial Attacks on Aligned
     Language Models (AdvBench / GCG, 2023).
 12. Wei, Haghtalab, Steinhardt. Jailbroken: How Does LLM Safety Training Fail?
@@ -649,7 +656,7 @@ completed for camera-ready.)*
 16. Perez & Ribeiro. Ignore Previous Prompt: Attack Techniques for Language
     Models (2022).
 17. Liu et al. Prompt Injection Attack against LLM-Integrated Applications
-    (2024).
+    (2023). arXiv:2306.05499.
 18. Rebedea et al. NeMo Guardrails: A Toolkit for Controllable and Safe LLM
     Applications with Programmable Rails (2023).
 19. Markov et al. A Holistic Approach to Undesired Content Detection in the

@@ -37,7 +37,7 @@ Live leaderboard: \url{https://takker-hero-se.github.io/J-ART/}.
 Software DOI (concept): \href{https://doi.org/10.5281/zenodo.20676879}{10.5281/zenodo.20676879}.
 Report text licensed CC-BY-4.0; code MIT.}}
 
-\date{2026-06-13}
+\date{2026-06-14}
 
 \begin{document}
 \maketitle
@@ -67,7 +67,7 @@ lightweight keyword/regex filters help most where the base model is weak (the
 effect scales inversely with the naked baseline) --- and that a simple
 \textbf{normalizing filter} defeats the obfuscation transforms a na\"ive keyword
 filter misses. We also document \textbf{large within-campaign variance}: in a
-controlled $K=5$ repeat of a frozen configuration set, \textbf{9.5\% of cells
+controlled $K=5$ repeat of a frozen configuration set, \textbf{9.6\% of cells
 changed outcome across identical trials}, which makes single-sample leaderboards
 unreliable and motivates our statistical treatment.
 \end{abstract}
@@ -81,8 +81,8 @@ named in Section~\ref{sec:repro}. References are real, canonical works; final
 venue/year/DOI formatting will be completed for camera-ready.
 
 \section{Introduction}
-Public LLM red-teaming tooling (e.g., garak) and jailbreak benchmarks (e.g.,
-HarmBench, JailbreakBench) are predominantly English. Multilingual safety work
+Public LLM red-teaming tooling (e.g., garak~\cite{garak}) and jailbreak benchmarks
+(e.g., HarmBench~\cite{harmbench}, JailbreakBench~\cite{jbb}) are predominantly English. Multilingual safety work
 has shown that \emph{translating} prompts into low-resource languages can bypass
 safety training, but \textbf{language-specific obfuscation} --- exploiting a
 language's own scripts, typography, and register --- remains comparatively
@@ -192,7 +192,7 @@ single reproducible harness.
 
 \section{Methodology}
 
-\paragraph{Application-structure layer.}
+\paragraph{Application-structure layer.}\label{sec:applayer}
 Each evaluated \textbf{target} is a configuration: provider/model $\times$
 prompt\_strength $\in \{\text{naked (low)}, \text{hardened (high)}\}$ $\times$
 guardrail $\in \{\text{none}, \text{keyword}, \text{regex}, \text{llm},
@@ -314,6 +314,9 @@ difference carries a \textbf{cluster-robust} CI (\S\ref{sec:stats}). Each \S4
 number is reproducible from committed artifacts (\S\ref{sec:repro}).
 
 \paragraph{Overall.}
+All configurations include the simplified RAG context (\S\ref{sec:applayer});
+\textbf{``naked'' means no system-prompt hardening and no guardrail, not ``no
+RAG''} (indirect-injection attacks are in scope even for the naked baselines).
 The aggregate breach rate over clean trials was \textbf{14.5\%}
 ($1{,}151/7{,}916$), \textbf{concentrated in weak configurations}. Every hardened
 or guardrailed configuration, on \emph{any} model, defended in the
@@ -449,8 +452,8 @@ posture we recommend for language-specific red-team datasets generally.
 \paragraph{Governance crosswalk.}
 Table~\ref{tab:gov} cross-references each evaluated capability to MITRE
 ATLAS~\cite{atlas}, the OWASP Top~10 for LLM Applications~\cite{owasp}, the NIST AI
-RMF~\cite{nistrmf}, the EU AI Act~\cite{euaiact}, and Japan's AI governance
-guidance~\cite{meti,aisi}. The mapping is \textbf{informational, not a compliance
+RMF~\cite{nistrmf} and its Generative-AI Profile~\cite{nistgenai}, the EU AI
+Act~\cite{euaiact}, and Japan's AI governance guidance~\cite{meti,aisi}. The mapping is \textbf{informational, not a compliance
 claim}; applicability depends on each deployment's risk classification.
 Operationally J-ART is a \textbf{MEASURE}-stage activity in the NIST AI RMF whose
 outputs inform an organization's \textbf{MANAGE} decisions.
@@ -549,7 +552,7 @@ use simulation mode and are labeled as such, so the site never mixes MOCK and LI
 
 \begin{thebibliography}{99}
 \bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
-  \url{https://atlas.mitre.org}.
+  \url{https://atlas.mitre.org} (accessed 2026-06-14).
 \bibitem{garak} garak --- Generative AI Red-teaming \& Assessment Kit.
 \bibitem{harmbench} HarmBench: A Standardized Evaluation Framework for Automated
   Red Teaming.
@@ -562,7 +565,8 @@ use simulation mode and are labeled as such, so the site never mixes MOCK and LI
   Injection. 2023.
 \bibitem{llamaguard} Inan et al. Llama Guard: LLM-Based Input-Output Safeguard
   for Human-AI Conversations. Meta, 2023.
-\bibitem{owasp} OWASP Top 10 for Large Language Model Applications.
+\bibitem{owasp} OWASP Top 10 for Large Language Model Applications (2025).
+  \url{https://genai.owasp.org/llm-top-10/} (accessed 2026-06-14).
 \bibitem{gcg} Zou et al. Universal and Transferable Adversarial Attacks on
   Aligned Language Models (AdvBench/GCG). 2023.
 \bibitem{jailbroken} Wei, Haghtalab, Steinhardt. Jailbroken: How Does LLM Safety
@@ -576,7 +580,7 @@ use simulation mode and are labeled as such, so the site never mixes MOCK and LI
 \bibitem{perez} Perez \& Ribeiro. Ignore Previous Prompt: Attack Techniques for
   Language Models. 2022.
 \bibitem{liu} Liu et al. Prompt Injection Attack against LLM-Integrated
-  Applications. 2024.
+  Applications. 2023. arXiv:2306.05499.
 \bibitem{nemo} Rebedea et al. NeMo Guardrails: A Toolkit for Controllable and
   Safe LLM Applications with Programmable Rails. 2023.
 \bibitem{moderation} Markov et al. A Holistic Approach to Undesired Content
@@ -588,6 +592,8 @@ use simulation mode and are labeled as such, so the site never mixes MOCK and LI
   Evaluation. 2022.
 \bibitem{nistrmf} NIST. AI Risk Management Framework (AI RMF 1.0), NIST AI 100-1.
   2023.
+\bibitem{nistgenai} NIST. Artificial Intelligence Risk Management Framework:
+  Generative AI Profile, NIST AI 600-1. 2024.
 \bibitem{euaiact} European Union. Regulation (EU) 2024/1689 (Artificial
   Intelligence Act). Official Journal of the EU, 2024.
 \bibitem{meti} METI / MIC (Japan). AI Guidelines for Business, Ver.~1.0. 2024.

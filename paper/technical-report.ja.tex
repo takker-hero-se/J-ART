@@ -31,7 +31,7 @@ ORCID: \href{https://orcid.org/0009-0005-6735-1862}{0009-0005-6735-1862}。
 ソフトウェアDOI（concept）: \href{https://doi.org/10.5281/zenodo.20676879}{10.5281/zenodo.20676879}。
 本文 CC-BY-4.0、コード MIT。氏名の漢字表記は必要に応じて修正してください。}}
 
-\date{2026-06-13}
+\date{2026-06-14}
 
 \begin{document}
 \maketitle
@@ -49,22 +49,25 @@ ORCID: \href{https://orcid.org/0009-0005-6735-1862}{0009-0005-6735-1862}。
 攻撃は\emph{無害なプロキシ}（架空のカナリアと無害なマーカー）で構成され、\textbf{危険物を
 一切含まず}、各攻撃の悪意あるコアは公開物上でマスクされる。21のアプリ構成と
 11攻撃 $\times$ 7変形（実LIVE・各セル$K=5$反復）にわたり、\textbf{アプリ層の防御がモデル
-素性を上回る}こと——素のモデルは防御29.6〜86.5\%とばらつくが、モデルを固定した均衡
-アブレーションでは\textbf{ガードレールや強プロンプトが防御を82\%→91〜100\%へ有意に引き
-上げる}（Newcombe CIが0を跨がない）——、単純な\textbf{正規化フィルタ}がナイーブなキーワード
-検閲の取りこぼす難読化を無効化することを示す。さらに、構成を固定した$K=5$反復で
+素性を上回る}こと——素のモデルは防御29.6〜86.5\%とばらつくが、\textbf{3モデル}の均衡
+アブレーション（\textbf{クラスタ頑健CI}）で\textbf{強プロンプトとモデルベースのガードレールは
+全モデルで有意に防御を引き上げ}、軽量なkeyword/regexは素の弱いモデルほど効く（効果は素の
+余地に反比例）——、単純な\textbf{正規化フィルタ}がナイーブなキーワード検閲の取りこぼす難読化を
+無効化することを示す。さらに、構成を固定した$K=5$反復で
 \textbf{9.6\%のセルが反復間で結果を変える}ことを記録し、単一サンプルのリーダーボードが
 信頼できないこと、統計的処理が必要であることを論じる。
 \end{abstract}
 
-\noindent\textbf{ステータス.} 本稿は概念実証（PoC）と予備的知見を記述する暫定的な
+\noindent\textbf{ステータス.} 本稿はフレームワークとその実 LIVE 知見を記述する
 テクニカルレポート/プレプリントであり、いかなるベンダーのモデルの公式な安全性評価でも
-\emph{ない}。数値は実行時のスナップショットであり、第\ref{sec:limits}節の限界に従う。
-参考文献は暫定であり、正式投稿前に書誌情報を確認すること。
+\emph{ない}。数値は実行時スナップショット（2026-06-14）で第\ref{sec:limits}節の限界に従い、
+全防御率は\emph{lexical-leak}の上界である。\S\ref{sec:results-ja}の数値は
+第\ref{sec:repro}節に明記した commit 済みアーティファクトから再現可能。参考文献は実在の
+正準的文献であり、最終的な書誌整形は camera-ready で行う。
 
 \section{はじめに}
-公開LLMレッドチーミングのツール（例：garak）やジェイルブレイクのベンチマーク（例：
-HarmBench, JailbreakBench）は英語が主流である。多言語安全性の研究は、プロンプトを
+公開LLMレッドチーミングのツール（例：garak~\cite{garak}）やジェイルブレイクのベンチマーク（例：
+HarmBench~\cite{harmbench}, JailbreakBench~\cite{jbb}）は英語が主流である。多言語安全性の研究は、プロンプトを
 低資源言語へ\emph{翻訳}することで安全機構を回避できることを示してきたが、言語固有の
 文字・組版・敬体を悪用する\textbf{言語特有の難読化}は相対的に未開拓である。とりわけ
 日本語は、複数の文字体系、全角/ゼロ幅文字、縦書き、高度に慣習化された敬語など、豊かな
@@ -155,7 +158,7 @@ Llama Guard / NeMo~\cite{llamaguard,nemo} & 英語中心 & 分類器 & 無 & 該
 
 \section{手法}
 
-\paragraph{アプリケーション構造層.}
+\paragraph{アプリケーション構造層.}\label{sec:applayer-ja}
 評価対象（\textbf{target}）は構成である：provider/model $\times$ prompt\_strength
 $\in \{\text{naked (low)}, \text{hardened (high)}\}$ $\times$ guardrail
 $\in \{\text{none}, \text{keyword}, \text{regex}, \text{llm}, \text{llamaguard}\}$
@@ -255,6 +258,8 @@ parity 再実行後は 169/8{,}085 を除外し \textbf{$7{,}916$ クリーン�
 \S4の各数値は commit 済みアーティファクトから再現可能（\S\ref{sec:repro}）。
 
 \paragraph{全体.}
+全構成は \S\ref{sec:applayer-ja} の簡易RAGコンテキストを含む。\textbf{「素」は強プロンプト
+なし・ガードなしの意であり「RAGなし」ではない}（よって間接注入攻撃は素のベースラインでも対象）。
 クリーン試行の総突破率は\textbf{14.5\%}（$1{,}151/7{,}916$）で、\textbf{弱構成}に集中した。
 強化済み/ガード付き構成は\emph{どのモデルでも}\textbf{91--100\%}帯で防御したのに対し、素の
 モデルは\textbf{29.6\%〜86.5\%}に散らばった（表\ref{tab:naked}）。
@@ -364,8 +369,8 @@ J-ART は設計により安全である。(1) 攻撃は\textbf{架空のカナ�
 
 \paragraph{ガバナンス・クロスウォーク.}
 表~\ref{tab:gov}は、評価する各能力を MITRE ATLAS~\cite{atlas}、OWASP Top~10 for LLM
-Applications~\cite{owasp}、NIST AI RMF~\cite{nistrmf}、EU AI Act~\cite{euaiact}、
-日本の AI ガバナンス指針~\cite{meti,aisi} に相互参照する。本対応は\textbf{情報提供で
+Applications~\cite{owasp}、NIST AI RMF~\cite{nistrmf} とその生成AIプロファイル~\cite{nistgenai}、
+EU AI Act~\cite{euaiact}、日本の AI ガバナンス指針~\cite{meti,aisi} に相互参照する。本対応は\textbf{情報提供で
 あり適合性の主張ではない}。適用可否は各デプロイのリスク分類に依存する。運用上 J-ART は
 NIST AI RMF の\textbf{MEASURE}段階の活動であり、その出力は組織の\textbf{MANAGE}判断に
 資する。
@@ -447,7 +452,7 @@ push 起動の CI は MOCK でラベルされるため、サイトが MOCK と L
 
 \begin{thebibliography}{99}
 \bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
-  \url{https://atlas.mitre.org}.
+  \url{https://atlas.mitre.org} (accessed 2026-06-14).
 \bibitem{garak} garak --- Generative AI Red-teaming \& Assessment Kit.
 \bibitem{harmbench} HarmBench: A Standardized Evaluation Framework for Automated
   Red Teaming.
@@ -460,7 +465,8 @@ push 起動の CI は MOCK でラベルされるため、サイトが MOCK と L
   Injection. 2023.
 \bibitem{llamaguard} Inan et al. Llama Guard: LLM-Based Input-Output Safeguard
   for Human-AI Conversations. Meta, 2023.
-\bibitem{owasp} OWASP Top 10 for Large Language Model Applications.
+\bibitem{owasp} OWASP Top 10 for Large Language Model Applications (2025).
+  \url{https://genai.owasp.org/llm-top-10/} (accessed 2026-06-14).
 \bibitem{gcg} Zou et al. Universal and Transferable Adversarial Attacks on
   Aligned Language Models (AdvBench/GCG). 2023.
 \bibitem{jailbroken} Wei, Haghtalab, Steinhardt. Jailbroken: How Does LLM Safety
@@ -474,7 +480,7 @@ push 起動の CI は MOCK でラベルされるため、サイトが MOCK と L
 \bibitem{perez} Perez \& Ribeiro. Ignore Previous Prompt: Attack Techniques for
   Language Models. 2022.
 \bibitem{liu} Liu et al. Prompt Injection Attack against LLM-Integrated
-  Applications. 2024.
+  Applications. 2023. arXiv:2306.05499.
 \bibitem{nemo} Rebedea et al. NeMo Guardrails: A Toolkit for Controllable and
   Safe LLM Applications with Programmable Rails. 2023.
 \bibitem{moderation} Markov et al. A Holistic Approach to Undesired Content
@@ -486,6 +492,8 @@ push 起動の CI は MOCK でラベルされるため、サイトが MOCK と L
   Evaluation. 2022.
 \bibitem{nistrmf} NIST. AI Risk Management Framework (AI RMF 1.0), NIST AI 100-1.
   2023.
+\bibitem{nistgenai} NIST. Artificial Intelligence Risk Management Framework:
+  Generative AI Profile, NIST AI 600-1. 2024.
 \bibitem{euaiact} European Union. Regulation (EU) 2024/1689 (Artificial
   Intelligence Act). Official Journal of the EU, 2024.
 \bibitem{meti} 経済産業省・総務省. AI事業者ガイドライン Ver.~1.0. 2024.

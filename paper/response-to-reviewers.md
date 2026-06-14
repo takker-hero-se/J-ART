@@ -41,6 +41,13 @@
 
 ## Round 1 (v0.1 → v0.2)
 
+> **Historical note.** The figures in the Round-1 and Round-2 sections below
+> ($3.74 cost, 7,466 clean trials, 142/1,477 variance, Opus 89.6%, 11 tests) are
+> the *state at those rounds*. The current, post-parity manuscript supersedes
+> them: $6.0 cost, 7,916 clean trials, 152/1,577 (9.6%) variance, Opus 86.5% at
+> n=385, 16 tests. The Round-2 header block above already uses the current
+> numbers.
+
 We thank the reviewers for the careful reading and the *Major Revision*
 assessment. The review identified three CRITICAL issues (C1–C3) and several
 methodological and code-level defects. Below we respond to each in
