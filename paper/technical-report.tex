@@ -60,7 +60,7 @@ weaponizable content}, and the malicious ``core'' of each attack is masked in al
 published artifacts. Across 21 application configurations and 11 attacks $\times$
 7 transforms (live, $K=5$ trials per cell), we find that
 \textbf{application-layer defenses dominate raw model capability} --- naked models
-range 29.6--89.6\% defense, but a balanced ablation on \textbf{three} base models
+range 29.6--86.5\% defense, but a balanced ablation on \textbf{three} base models
 with \textbf{cluster-robust} intervals shows a \textbf{hardened prompt and
 model-based guardrails significantly raise defense on every model}, while
 lightweight keyword/regex filters help most where the base model is weak (the
@@ -303,21 +303,21 @@ the run.
 We report a fully-labeled \textbf{live campaign} (21 configurations $\times$ 11
 attacks $\times$ 7 transforms $\times$ \textbf{$K=5$} trials $=8{,}085$ trials),
 executed 2026-06-14. Every cell is labeled \code{mode=LIVE} with a price snapshot;
-a trial is excluded iff \code{api\_error} (at the trial level), removing 540 of
-8,085 and leaving \textbf{$7{,}545$ clean trials}; billed cost over clean cells is
-\textbf{$\approx\$3.25$}. Two configurations remain partial after a parity re-run
---- \textbf{Opus naked} ($n{=}125$; Anthropic balance exhausted) and
-\textbf{Gemini-pro} ($n{\approx}120$; rate limits) --- and are treated as
-\emph{provisional}; no headline rests on them (\S\ref{sec:limits}). All defense
-rates are \textbf{lexical-leak} upper bounds (\S\ref{sec:markers}); every
+a trial is excluded iff \code{api\_error} (at the trial level); after parity
+re-runs this removes 169 of 8,085, leaving \textbf{$7{,}916$ clean trials}; billed
+cost over clean cells (campaign plus parity re-runs, including the expensive Opus
+flagship) is \textbf{$\approx\$6.0$}. \textbf{Opus naked is now fully measured}
+($n{=}385$, after an Anthropic top-up); \textbf{only Gemini-pro remains partial}
+($n{=}227$; per-minute rate limits) and is treated as \emph{provisional}. All
+defense rates are \textbf{lexical-leak} upper bounds (\S\ref{sec:markers}); every
 difference carries a \textbf{cluster-robust} CI (\S\ref{sec:stats}). Each \S4
 number is reproducible from committed artifacts (\S\ref{sec:repro}).
 
 \paragraph{Overall.}
-The aggregate breach rate over clean trials was \textbf{14.7\%}
-($1{,}112/7{,}545$), \textbf{concentrated in weak configurations}. Every hardened
+The aggregate breach rate over clean trials was \textbf{14.5\%}
+($1{,}151/7{,}916$), \textbf{concentrated in weak configurations}. Every hardened
 or guardrailed configuration, on \emph{any} model, defended in the
-\textbf{91--100\%} band, whereas bare models ranged from \textbf{29.6\% to 89.6\%}
+\textbf{91--100\%} band, whereas bare models ranged from \textbf{29.6\% to 86.5\%}
 (Table~\ref{tab:naked}).
 
 \paragraph{Application-layer defense vs.\ model capability.}
@@ -339,8 +339,9 @@ Configuration matters most exactly where the base model is weakest. The thesis -
 \emph{configuration matters more than model choice} --- rests on a clean,
 fully-measured comparison: a hardened cheap model (GPT-4o-mini hardened
 $\approx100\%$) \textbf{out-defends a naked flagship} (GPT-4.1 naked 64.1\%,
-$n{=}231$) by ${\sim}36$ points; we anchor this on GPT-4.1, not on provisional
-Opus-naked.
+$n{=}231$) by ${\sim}36$ points, and likewise out-defends a naked Opus
+(86.5\%, $n{=}385$). Even at full parity the strongest naked model trails a
+hardened cheap one.
 
 \begin{table}[t]
 \centering\small
@@ -355,7 +356,7 @@ Llama 4 Scout      & 37.9\% & [33.2, 42.9] & 385 \\
 Gemini 2.5 Flash   & 49.6\% & [44.6, 54.6] & 385 \\
 gpt-oss-120b       & 82.6\% & [78.5, 86.1] & 385 \\
 GPT-4o-mini        & 83.9\% & [79.9, 87.2] & 385 \\
-Claude Opus 4.x \emph{(prov.)} & 89.6\% & [83.0, 93.8] & \textbf{125} \\
+Claude Opus 4.x & 86.5\% & [82.7, 89.5] & 385 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -380,8 +381,8 @@ hardened prompt & \textbf{+47.2} [+36,+58] & \textbf{+17.7} [+10,+26] & \textbf{
 
 \paragraph{Within-campaign trial variance (a primary result).}
 Within a single campaign, every cell of a frozen configuration set is sampled
-\textbf{$K=5$} times. Over the \textbf{1{,}502 cells with all five trials clean},
-\textbf{9.5\% ($143/1{,}502$) changed outcome across the five identical repeats},
+\textbf{$K=5$} times. Over the \textbf{1{,}577 cells with all five trials clean},
+\textbf{9.6\% ($152/1{,}577$) changed outcome across the five identical repeats},
 concentrated in naked weak models. For
 ``Llama~4 Scout / naked'' --- the original cautionary example --- of its 77 cells,
 \textbf{32 (42\%) were unstable}: 14 never breached (0/5), 31 always (5/5), and 32
@@ -400,7 +401,7 @@ raising defense; the \textbf{normalizing regex filter} (verified in unit tests)
 adds $+45$ points on weak Scout at zero API cost. On the cost-efficiency metric,
 leaders are inexpensive OSS models behind a lightweight guardrail
 (gpt-oss-20b~+~keyword, $\mathrm{cospa}\approx1131$), while a flagship naked
-configuration is worst (Opus naked, $\mathrm{cospa}\approx7.4$) --- three orders of
+configuration is worst (Opus naked, $\mathrm{cospa}\approx6.8$) --- three orders of
 magnitude apart.
 
 \paragraph{Attack and transform effectiveness.}
@@ -503,15 +504,15 @@ release net-positive for defenders, consistent with \S6.2.
         transforms); default $N{=}1$ per cell.
   \item \textbf{Provider non-determinism / router variance:} results are
         snapshots and depend on routing and model versions at run time.
-  \item \textbf{Partial data / non-random missingness:} a parity re-run brought
-        Qwen3-max to $n{=}374$, but \textbf{Opus naked ($n{=}125$)} and
-        \textbf{Gemini-pro ($n{\approx}120$)} remain partial (Anthropic balance
-        exhausted; persistent rate limits). This missingness is \textbf{not
-        random} --- rate limits correlate with attack/transform, so for Opus the
-        harder attacks are under-represented and its 89.6\% is likely an
-        \emph{over-estimate}, not merely a wider-CI estimate. We mark both
-        provisional and anchor no headline on them (\S\ref{sec:results} uses
-        fully-measured GPT-4.1).
+  \item \textbf{Non-random missingness (now mostly resolved):} we flagged that an
+        earlier campaign's partial configs had \textbf{non-random} missingness ---
+        rate limits correlate with attack difficulty, under-representing Opus's
+        hardest attacks. Parity re-runs \textbf{confirmed this directly}: Opus naked
+        at full $n{=}385$ defends \textbf{86.5\%}, vs.\ the survivorship-biased
+        \textbf{89.6\%} on $n{=}125$ --- a ${\sim}3$-point over-estimate, as
+        predicted. Qwen3-max and Opus are now at parity; \textbf{only Gemini-pro
+        remains partial} ($n{=}227$; per-minute rate limits a credit top-up cannot
+        raise) and is treated as provisional, with no headline resting on it.
   \item \textbf{Cost attribution:} guardrail tokens are now priced at the
         \emph{guardrail model's} own rate (the classifier \code{JART\_GUARD\_MODEL}
         for \code{llamaguard}; the target model itself for the \code{llm}

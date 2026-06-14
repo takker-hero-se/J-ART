@@ -58,7 +58,7 @@ LLM のレッドチーミング/ジェイルブレイク評価はほぼ英語中
 (4) 防御率に **Wilson 95%信頼区間**を付し、**コスト効率**指標を併記すること、である。
 攻撃は無害なプロキシ（架空カナリア・無害マーカー）で構成され、危険物を一切含まず、
 悪意あるコアは公開物上で常にマスクされる。実験（実LIVE・21構成・各セルK=5反復）では、
-**アプリ層の防御がモデル素性を上回る**こと——素のモデルは防御29.6〜89.6%とばらつくが、
+**アプリ層の防御がモデル素性を上回る**こと——素のモデルは防御29.6〜86.5%とばらつくが、
 **3モデル**の均衡アブレーション（クラスタ頑健CI）で**強プロンプトとモデルベースのガード
 レールは全モデルで有意に防御を引き上げ**、軽量なkeyword/regexは素の弱いモデルほど効く
 （効果は素の余地に反比例）——、**正規化フィルタが難読化を無効化**することを示す。さらに、
@@ -309,31 +309,31 @@ attacks × 7 transforms × **K = 5** independent trials = 8,085 trials), execute
 retries on transient errors and labels any cell whose call ultimately failed
 (`api_error`). **Exclusion rule:** aggregates are computed over clean trials only
 — a trial is excluded iff `api_error=True`, at the trial level (not the whole
-cell). This removes 540 of 8,085 trials, leaving **7,545 clean trials**; the
-billed API cost over those clean cells is **≈ $3.25** (the harness's gross figure,
-$3.74, additionally charges *estimated* tokens to rate-limited calls that were not
-actually billed). Two configurations remain partially measured after a parity
-re-run: **Claude Opus naked** (n = 125; Anthropic balance was exhausted before
-parity) and **Gemini-pro** (n ≈ 120; persistent rate limits). We treat their
-point estimates as **provisional** wherever they appear and do not let any
-headline claim rest on them (see §4.2). The exact artifacts backing every number
-in this section are committed at `experiments/var_run.json` (campaign) and
-`experiments/abl_*.json` (the three same-model ablations: `gpt-4o-mini`,
-`Llama-4-Scout`, `GPT-4.1`); §9 names which file reproduces each table.
+cell). After parity re-runs this removes 169 of 8,085 trials, leaving **7,916
+clean trials**; the billed API cost over those clean cells (campaign plus the
+parity re-runs, which include the expensive Opus flagship) is **≈ $6.0** (gross
+$6.07; the small difference is *estimated* tokens charged to rate-limited calls
+that were not actually billed). **Claude Opus naked is now fully measured**
+(n = 385; an Anthropic top-up enabled parity); **only Gemini-pro remains partial**
+(n = 227; persistent per-minute rate limits), and its estimate is treated as
+provisional. The exact artifacts backing every number in this section are
+committed at `experiments/var_run.json` (campaign) and `experiments/abl_*.json`
+(the three same-model ablations: `gpt-4o-mini`, `Llama-4-Scout`, `GPT-4.1`); §9
+names which file reproduces each table.
 
 ### 4.1 Overall
 
 All "defense rates" below are **lexical-leak** rates (§3.5) — upper bounds on true
 safety, reported with **cluster-robust** intervals where a difference is claimed
-(§3.7). The aggregate breach rate over clean trials was **14.7%** (1,112 / 7,545)
+(§3.7). The aggregate breach rate over clean trials was **14.5%** (1,151 / 7,916)
 and was **concentrated in weak configurations** — low-capability models with no
 system prompt and no guardrail. Every hardened-prompt or guardrailed
 configuration, on *any* model, defended in the **91–100%** band, whereas bare
-("naked") models ranged from **29.6% to 89.6%** defense (below).
+("naked") models ranged from **29.6% to 86.5%** defense (below).
 
 ### 4.2 Application-layer defense vs. model capability
 
-Naked defense depends heavily on the model — a **~55-point spread**:
+Naked defense depends heavily on the model — a **~57-point spread**:
 
 | Naked model (no prompt, no guardrail) | Defense | 95% CI | n |
 |---|---|---|---|
@@ -342,7 +342,11 @@ Naked defense depends heavily on the model — a **~55-point spread**:
 | Gemini 2.5 Flash | 49.6% | [44.6–54.6] | 385 |
 | gpt-oss-120b | 82.6% | [78.5–86.1] | 385 |
 | GPT-4o-mini | 83.9% | [79.9–87.2] | 385 |
-| Claude Opus 4.x *(provisional)* | 89.6% | [83.0–93.8] | **125** |
+| Claude Opus 4.x | 86.5% | [82.7–89.5] | 385 |
+
+(Opus is now fully measured at n = 385 after a parity re-run; its earlier
+survivorship-biased estimate was 89.6% on n = 125, an over-estimate of ~3 points
+confirmed here — §7.)
 
 We then **isolate the configuration effect from model capability** with a balanced
 ablation run on **three** base models spanning the capability range (a weak OSS
@@ -376,15 +380,16 @@ exactly where the base model is weakest.
 The practical thesis — *how the application is configured matters more than which
 model is used* — is supported by a clean, fully-measured comparison: a **hardened
 cheap model** (GPT-4o-mini hardened ≈ 100%) **out-defends a naked flagship**
-(GPT-4.1 naked 64.1%, n = 231) by ~36 points. We deliberately anchor this on
-GPT-4.1 rather than on Opus-naked, whose 89.6% is provisional (n = 125; see §7).
+(GPT-4.1 naked 64.1%, n = 231) by ~36 points, and likewise out-defends a naked
+Opus (86.5%, n = 385). Even at full parity the strongest naked model trails a
+hardened cheap one.
 
 ### 4.3 Within-campaign trial variance (a primary result)
 
 We replace the earlier confounded two-run comparison with a **controlled
 experiment**: within a single campaign, every cell of a frozen configuration set
-is sampled **K = 5** times, everything else held constant. Over the **1,502 cells
-with all five trials clean** (no `api_error`), **9.5% (143 / 1,502) changed outcome
+is sampled **K = 5** times, everything else held constant. Over the **1,577 cells
+with all five trials clean** (no `api_error`), **9.6% (152 / 1,577) changed outcome
 across the five identical repeats** — the same input against the same configuration
 breaching on some trials and defending on others.
 The instability concentrates in naked weak models (DeepSeek-V3: 37 unstable cells;
@@ -430,7 +435,7 @@ prompt×guardrail interaction.
 On the cost-efficiency metric (§3.8), the leaders are **inexpensive OSS models
 behind a lightweight guardrail** (gpt-oss-20b + keyword, cospa ≈ 1131; Qwen3-235B
 + LLM guard, cospa ≈ 1109), while a **flagship naked** configuration is worst
-(Opus naked, cospa ≈ 7.4, at $12.2 per million tokens) — three orders of magnitude
+(Opus naked, cospa ≈ 6.8, at $12.2 per million tokens) — three orders of magnitude
 apart.
 
 ### 4.5 Attack and transform effectiveness
@@ -555,17 +560,17 @@ for defenders, consistent with the responsible-disclosure pattern of §6.2.
   `N`=1 per cell.
 - **Provider non-determinism / router variance:** see §4.3; results are
   snapshots and depend on routing and model versions at run time.
-- **Partial data and non-random missingness:** a parity re-run brought Qwen3-max
-  to n = 374, but **Claude Opus naked (n = 125)** and **Gemini-pro (n ≈ 120)**
-  remain partial — Opus because the Anthropic balance was exhausted mid-re-run,
-  Gemini-pro because of persistent per-minute rate limits. Crucially, this
-  missingness is **not random**: rate limits correlate with attack/transform, so
-  for Opus the harder attack classes are under-represented and its surviving 89.6%
-  is likely an **over-estimate**, not merely a wider-CI estimate. We therefore
-  treat Opus-naked and Gemini-pro as **provisional** and **anchor no headline claim
-  on them** — the configuration-dominance comparison (§4.2) uses fully-measured
-  GPT-4.1 (n = 231) instead. Bringing these two to parity (a fresh Anthropic
-  balance; a Gemini quota increase) is left to the camera-ready.
+- **Non-random missingness (now mostly resolved):** an earlier campaign left three
+  flagship/rate-limited configs partial, and we flagged that the missingness was
+  **not random** — rate limits correlate with attack difficulty, so Opus's hardest
+  attacks were under-represented. Parity re-runs **confirmed this directly**:
+  Opus-naked measured at full **n = 385** defends **86.5%**, vs. the
+  survivorship-biased **89.6%** on n = 125 — a ~3-point over-estimate, exactly as
+  predicted. Qwen3-max (n = 374) and Opus (n = 385) are now at parity; **only
+  Gemini-pro remains partial** (n = 227; persistent per-minute rate limits that a
+  credit top-up cannot raise). Its estimate is treated as provisional, and no
+  headline rests on it. Bringing Gemini-pro to parity needs a provider quota
+  increase and is left to the camera-ready.
 - **Cost attribution:** guardrail tokens are now priced at the *guardrail
   model's* own rate (the classifier `JART_GUARD_MODEL` for `llamaguard`; the
   target model itself for the `llm` guardrail, which it genuinely calls), reported

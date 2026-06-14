@@ -8,12 +8,14 @@
 > **R2-C1 — Survivorship bias in the flagship comparator.** The panel showed the
 > "cheap+hardened beats strongest naked (Opus 89.6%)" headline rested on Opus's
 > 125/385 trials, with the *hardest 7 attacks* having zero surviving Opus trials.
-> **Action:** a parity re-run brought Qwen3-max to n=374; Opus could not be
-> brought to parity (Anthropic balance exhausted) and Gemini-pro stayed
-> rate-limited, so we (a) re-anchor the thesis on **fully-measured GPT-4.1**
-> (naked 64.1%, n=231) instead of Opus, (b) mark Opus/Gemini-pro **provisional**
-> in every table, and (c) add an explicit **non-random-missingness** disclosure
-> to §7 stating Opus's 89.6% is likely an over-estimate.
+> **Action:** parity re-runs **brought Opus to full n=385**, which **directly
+> confirmed the bias**: with the hardest attacks included, Opus naked defends
+> **86.5%**, not 89.6% (a ~3-point over-estimate, exactly as the reviewer
+> predicted). Opus is no longer provisional; **only Gemini-pro remains partial**
+> (n=227; per-minute rate limits a credit top-up cannot raise). The thesis is also
+> re-anchored on fully-measured GPT-4.1 (naked 64.1%, n=231), which a hardened
+> cheap model out-defends by ~36 points — and it out-defends naked Opus too.
+> (Round-3 verification re-review confirmed this fix against the artifacts.)
 >
 > **R2-C2 — Reproducibility/provenance trap.** The committed `results.json` and
 > the public site were MOCK while §4 cited live numbers. **Action:** the exact
