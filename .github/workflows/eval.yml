@@ -11,6 +11,10 @@ on:
         description: "APIキーを使わず決定論シミュレーション(MOCK)で実行する"
         type: boolean
         default: false
+      trials:
+        description: "1セルあたりの試行回数 N（信頼区間を締めたい本番は 5 など）"
+        type: string
+        default: "1"
   push:
     branches: [ main ]
     paths:
@@ -66,8 +70,13 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          # 手動実行で force_mock=true の場合は強制MOCK
-          JART_FORCE_MOCK: ${{ github.event.inputs.force_mock == 'true' && '1' || '' }}
+          # 実行モードの方針（クレジット二重消費を避ける）:
+          #   - push        … 強制MOCK（無料。コード検証とサイト生成のみ。LIVE課金しない）
+          #   - 手動 force_mock=true … 強制MOCK
+          #   - 週次cron / 手動(既定) … LIVE（公開サイトに本物を載せる）
+          JART_FORCE_MOCK: ${{ (github.event_name == 'push' || github.event.inputs.force_mock == 'true') && '1' || '' }}
+          # 1セルあたり試行回数（手動実行で 5 等を指定可。push/cron 既定は 1）
+          JART_TRIALS: ${{ github.event.inputs.trials || '1' }}
         run: |
           python run_assessment.py --config config.yaml --out results.json
 
