@@ -1,27 +1,32 @@
 % =====================================================================
 %  J-ART — TMLR submission (DOUBLE-BLIND / anonymized)
-%  REQUIRES the official TMLR style files (tmlr.sty, tmlr.bst, fancyhdr).
-%  Easiest path:
-%    1. Open the official "TMLR" template on Overleaf
-%       (Transactions on Machine Learning Research), OR download it from
-%       https://jmlr.org/tmlr/ (Author instructions -> LaTeX template).
-%    2. Replace that template's main.tex with THIS file's content.
-%    3. Compile with pdfLaTeX. Keep \usepackage{tmlr} (submission mode =
-%       anonymous). For the camera-ready, switch to
-%       \usepackage[accepted]{tmlr} and restore author/links (see README).
-%  References are inline (thebibliography); no .bib needed.
+%  SELF-CONTAINED: the official TMLR style files (tmlr.sty, tmlr.bst,
+%  fancyhdr.sty, math_commands.tex) are bundled in this folder, so this
+%  compiles directly with pdfLaTeX (verified). To use Overleaf, upload the
+%  whole folder and compile main.tex with the pdfLaTeX compiler.
+%  Submission mode = \usepackage{tmlr} (authors auto-hidden). For the
+%  camera-ready, switch to \usepackage[accepted]{tmlr} and restore the
+%  author block + code/Zenodo links (see README.md).
+%  References are inline (thebibliography); natbib is set to numeric mode.
+%  Official style files: https://github.com/JmlrOrg/tmlr-style-file (BSD).
 % =====================================================================
-\documentclass{article}
+\documentclass[10pt]{article}
 
-% --- TMLR official style (provide tmlr.sty / tmlr.bst from the template) ---
+% --- TMLR official style (tmlr.sty / tmlr.bst / fancyhdr.sty are in this folder) ---
 \usepackage{tmlr}
 % \usepackage[accepted]{tmlr}   % <- camera-ready only (de-anonymizes)
+% \usepackage[preprint]{tmlr}   % <- de-anonymized preprint posting
 
 \usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{enumitem}
-\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{url}
+
+% tmlr loads natbib (author-year). This paper's prose uses numbered citations,
+% so switch natbib to numeric mode; \citep{key} then renders as [n].
+\setcitestyle{numbers,square}
 
 \newcommand{\code}[1]{\texttt{#1}}
 
@@ -75,8 +80,8 @@ are provided through an anonymized repository (Section~\ref{sec:repro}) and will
 released under open licenses upon acceptance.
 
 \section{Introduction}
-Public LLM red-teaming tooling (e.g., garak~\cite{garak}) and jailbreak benchmarks
-(e.g., HarmBench~\cite{harmbench}, JailbreakBench~\cite{jbb}) are predominantly English. Multilingual safety work
+Public LLM red-teaming tooling (e.g., garak~\citep{garak}) and jailbreak benchmarks
+(e.g., HarmBench~\citep{harmbench}, JailbreakBench~\citep{jbb}) are predominantly English. Multilingual safety work
 has shown that \emph{translating} prompts into low-resource languages can bypass
 safety training, but \textbf{language-specific obfuscation} --- exploiting a
 language's own scripts, typography, and register --- remains comparatively
@@ -103,63 +108,63 @@ observation of large router-induced run-to-run variance.
 J-ART sits at the intersection of six lines of work, summarized below and
 positioned in Table~\ref{tab:related}.
 
-\paragraph{Adversarial red-teaming tooling.} garak~\cite{garak} scans a
+\paragraph{Adversarial red-teaming tooling.} garak~\citep{garak} scans a
 \emph{model} with a library of vulnerability probes. J-ART instead treats the
 deployed \emph{application configuration} (model $\times$ system prompt $\times$
 guardrail $\times$ RAG) as the unit under test.
 
-\paragraph{Jailbreak and harmful-behavior benchmarks.} AdvBench/GCG~\cite{gcg},
-Jailbroken~\cite{jailbroken}, HarmBench~\cite{harmbench},
-JailbreakBench~\cite{jbb}, and in-the-wild prompts~\cite{dan} standardize
+\paragraph{Jailbreak and harmful-behavior benchmarks.} AdvBench/GCG~\citep{gcg},
+Jailbroken~\citep{jailbroken}, HarmBench~\citep{harmbench},
+JailbreakBench~\citep{jbb}, and in-the-wild prompts~\citep{dan} standardize
 \emph{which} harmful behaviors to elicit and \emph{how} to score them,
 predominantly in English at the model layer. J-ART reuses the harness idea but
 replaces harmful elicitation with a safe proxy-marker objective
 (\S\ref{sec:markers}) so the suite can be released publicly.
 
-\paragraph{Automated attack generation.} PAIR~\cite{pair} and TAP~\cite{tap}
+\paragraph{Automated attack generation.} PAIR~\citep{pair} and TAP~\citep{tap}
 optimize jailbreak prompts against a target. J-ART uses a \emph{fixed, auditable}
 transform suite, trading attack strength for reproducibility and safe disclosure.
 
-\paragraph{Multilingual and low-resource safety.} Deng et al.~\cite{deng} and
-Yong et al.~\cite{lowres} show alignment degrades under \emph{translation} into
-low-resource languages, and Wang et al.~\cite{alllang} study cross-lingual safety
+\paragraph{Multilingual and low-resource safety.} Deng et al.~\citep{deng} and
+Yong et al.~\citep{lowres} show alignment degrades under \emph{translation} into
+low-resource languages, and Wang et al.~\citep{alllang} study cross-lingual safety
 generalization. These study \emph{translation across} languages; J-ART studies
 \emph{intra-language orthographic obfuscation} specific to Japanese (gyaru-moji,
 vertical writing, keigo framing, kana/kanji encoding), which persists even though
 Japanese is high-resource.
 
 \paragraph{Encoding/typographic obfuscation.} Encoding-based jailbreaks are
-established prior art: CipherChat~\cite{cipherchat} (ciphered conversation) and
-ArtPrompt~\cite{artprompt} (ASCII-art typography). Our \code{base64\_wrap} and
+established prior art: CipherChat~\citep{cipherchat} (ciphered conversation) and
+ArtPrompt~\citep{artprompt} (ASCII-art typography). Our \code{base64\_wrap} and
 \code{leet\_smuggle} transforms are \textbf{language-agnostic replications} of this
 line, used only as a baseline; the novel surface is the Japanese-script transforms
 (\S\ref{sec:transforms}).
 
 \paragraph{Prompt injection and application-layer evaluation.} Perez \&
-Ribeiro~\cite{perez} introduced goal-hijacking; Greshake et al.~\cite{greshake}
-formalized \emph{indirect} injection; Liu et al.~\cite{liu} benchmark
-LLM-integrated apps; AgentDojo~\cite{agentdojo} is the closest application-layer
+Ribeiro~\citep{perez} introduced goal-hijacking; Greshake et al.~\citep{greshake}
+formalized \emph{indirect} injection; Liu et al.~\citep{liu} benchmark
+LLM-integrated apps; AgentDojo~\citep{agentdojo} is the closest application-layer
 evaluation (tool-using agents). J-ART instead holds the \emph{application
 configuration} (prompt $\times$ guardrail $\times$ RAG) as the explicit unit of
 evaluation against a Japanese-obfuscation surface.
 
-\paragraph{Guardrails and input classifiers.} Llama Guard~\cite{llamaguard}, NeMo
-Guardrails~\cite{nemo}, and the OpenAI Moderation API~\cite{moderation} provide
+\paragraph{Guardrails and input classifiers.} Llama Guard~\citep{llamaguard}, NeMo
+Guardrails~\citep{nemo}, and the OpenAI Moderation API~\citep{moderation} provide
 model- or rule-based filtering. J-ART treats the guardrail as a \emph{swappable
 configuration variable} and measures the marginal defense each adds, including a
 deterministic normalizing filter that defeats obfuscations a naive keyword filter
 misses (\S\ref{sec:results}).
 
-\paragraph{LLM-as-judge validation.} Zheng et al.~\cite{mtbench} and the survey of
-Gu et al.~\cite{judgesurvey} document the biases of LLM judges. J-ART avoids an
+\paragraph{LLM-as-judge validation.} Zheng et al.~\citep{mtbench} and the survey of
+Gu et al.~\citep{judgesurvey} document the biases of LLM judges. J-ART avoids an
 LLM judge for its \emph{primary} outcome, using a deterministic canary/marker
 check (\S\ref{sec:markers}) so judge variance does not enter the headline metric.
 
 \paragraph{Japanese NLP resources and taxonomies.} General Japanese benchmarks
-such as JGLUE~\cite{jglue} cover NLU, but to our knowledge no open, reproducible
+such as JGLUE~\citep{jglue} cover NLU, but to our knowledge no open, reproducible
 \emph{adversarial-safety} benchmark targets Japanese-specific obfuscation --- the
-gap J-ART addresses. We map attacks to MITRE ATLAS~\cite{atlas} and cross-reference
-the OWASP Top~10 for LLM Applications~\cite{owasp}.
+gap J-ART addresses. We map attacks to MITRE ATLAS~\citep{atlas} and cross-reference
+the OWASP Top~10 for LLM Applications~\citep{owasp}.
 
 \begin{table}[t]
 \centering\small
@@ -169,11 +174,11 @@ the OWASP Top~10 for LLM Applications~\cite{owasp}.
 \toprule
 Work & Language & Unit of eval. & Cost axis & Guard/RAG & Public \\
 \midrule
-garak~\cite{garak} & English & Model & No & No & Yes \\
-HarmBench / JBB~\cite{harmbench,jbb} & English & Model & No & No & Yes \\
-PAIR / TAP~\cite{pair,tap} & English & Model & No & No & Partial \\
-Multiling.~\cite{lowres,deng,alllang} & Low-resource & Model & No & No & Yes \\
-Llama Guard / NeMo~\cite{llamaguard,nemo} & Eng.-centric & Classifier & No & n/a & Yes \\
+garak~\citep{garak} & English & Model & No & No & Yes \\
+HarmBench / JBB~\citep{harmbench,jbb} & English & Model & No & No & Yes \\
+PAIR / TAP~\citep{pair,tap} & English & Model & No & No & Partial \\
+Multiling.~\citep{lowres,deng,alllang} & Low-resource & Model & No & No & Yes \\
+Llama Guard / NeMo~\citep{llamaguard,nemo} & Eng.-centric & Classifier & No & n/a & Yes \\
 \textbf{J-ART} & \textbf{Japanese} & \textbf{App config} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
 \bottomrule
 \end{tabular}
@@ -212,7 +217,7 @@ substitution), \code{vertical\_newline} (vertical writing), and
 framing). \emph{Language-agnostic} transforms --- \code{base64\_wrap} and
 \code{leet\_smuggle}, plus the \code{baseline} control --- are \textbf{not novel}:
 they replicate the encoding/typographic jailbreak line
-(CipherChat~\cite{cipherchat}, ArtPrompt~\cite{artprompt}) and serve only as a
+(CipherChat~\citep{cipherchat}, ArtPrompt~\citep{artprompt}) and serve only as a
 baseline so the marginal effect of the Japanese-specific surface can be isolated.
 
 \begin{table}[t]
@@ -448,9 +453,9 @@ posture we recommend for language-specific red-team datasets generally.
 
 \paragraph{Governance crosswalk.}
 Table~\ref{tab:gov} cross-references each evaluated capability to MITRE
-ATLAS~\cite{atlas}, the OWASP Top~10 for LLM Applications~\cite{owasp}, the NIST AI
-RMF~\cite{nistrmf} and its Generative-AI Profile~\cite{nistgenai}, the EU AI
-Act~\cite{euaiact}, and Japan's AI governance guidance~\cite{meti,aisi}. The mapping is \textbf{informational, not a compliance
+ATLAS~\citep{atlas}, the OWASP Top~10 for LLM Applications~\citep{owasp}, the NIST AI
+RMF~\citep{nistrmf} and its Generative-AI Profile~\citep{nistgenai}, the EU AI
+Act~\citep{euaiact}, and Japan's AI governance guidance~\citep{meti,aisi}. The mapping is \textbf{informational, not a compliance
 claim}; applicability depends on each deployment's risk classification.
 Operationally J-ART is a \textbf{MEASURE}-stage activity in the NIST AI RMF whose
 outputs inform an organization's \textbf{MANAGE} decisions.

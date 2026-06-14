@@ -7,6 +7,11 @@ author-identifying information removed.
 
 ## Files
 - `main.tex` — the anonymized manuscript (TMLR style, inline references).
+- `main.pdf` — the **compiled, verified** 9-page submission PDF (ready to upload).
+- `tmlr.sty`, `tmlr.bst`, `fancyhdr.sty`, `math_commands.tex` — the **official TMLR
+  style files** (bundled from <https://github.com/JmlrOrg/tmlr-style-file>, BSD),
+  so this folder compiles as-is.
+- `SUBMISSION-FORM.md` — copy-paste answers for the OpenReview submission form.
 
 ## What was anonymized (vs. the public preprint)
 - Author name, ORCID, affiliation → `Anonymous authors` (TMLR hides these
@@ -19,19 +24,24 @@ author-identifying information removed.
 - The **AI Writing Assistance** section is kept (TMLR requires disclosure of LLM
   use) and contains no identifying information.
 
-## How to compile (you need the official TMLR style)
-`main.tex` uses `\usepackage{tmlr}`, which is **not** bundled here. Two options:
+## How to compile (self-contained — already verified)
+The official TMLR style files are bundled here, so no template hunting is needed.
 
-1. **Overleaf (easiest).** Open the official *Transactions on Machine Learning
-   Research (TMLR)* template on Overleaf, then replace its `main.tex` with this
-   file's content and compile (pdfLaTeX).
-2. **Local.** Download the TMLR template from <https://jmlr.org/tmlr/> (Author
-   instructions → LaTeX style files), put `tmlr.sty`, `tmlr.bst`, and
-   `fancyhdr.sty` next to `main.tex`, then `pdflatex main`.
+1. **Overleaf.** Create a new project → *Upload Project* → upload **this whole
+   folder** (a zip of `tmlr-submission/`). Set the compiler to **pdfLaTeX** and
+   compile `main.tex`. (Or just upload/submit the bundled `main.pdf` directly.)
+2. **Local.** `pdflatex main.tex` (run twice for references). Already confirmed to
+   produce a clean 9-page `main.pdf` with numbered citations.
 
 Submission mode (the default, `\usepackage{tmlr}`) prints "Under review as a
 submission to TMLR" and hides authors. **For the camera-ready only**, switch to
-`\usepackage[accepted]{tmlr}` and restore the author block + the code/Zenodo links.
+`\usepackage[accepted]{tmlr}` and restore the author block + code/Zenodo links.
+
+**Citations.** `tmlr.sty` loads natbib (author-year); since this paper's prose uses
+numbered references, `main.tex` sets `\setcitestyle{numbers,square}` and uses
+`\citep{...}`, rendering "[n]". If you prefer TMLR's default author-year style for
+the camera-ready, remove that line and convert the inline `thebibliography` to a
+`.bib` file.
 
 ## Anonymous code/artifacts for reviewers
 TMLR is double-blind, so do **not** link the public GitHub/Zenodo. Instead:
