@@ -22,7 +22,7 @@
 
 \title{\textbf{J-ART：アプリケーション層のLLMセキュリティと\\
 コスト効率のための日本語敵対的レッドチーム評価フレームワーク}\\[4pt]
-\large テクニカルレポート（v0.1, プレプリント）}
+\large テクニカルレポート（v0.2, プレプリント）}
 
 \author{廣瀬 隆之（Takayuki Hirose）\thanks{独立研究者（Independent Researcher）。
 ORCID: \href{https://orcid.org/0009-0005-6735-1862}{0009-0005-6735-1862}。
@@ -105,9 +105,16 @@ Jailbroken~\cite{jailbroken}、HarmBench~\cite{harmbench}、JailbreakBench~\cite
 字形難読化}（ギャル文字・縦書き・敬語フレーミング・かな/漢字符号化）を扱う。これは日本語が
 高資源であっても残存する。
 
-\paragraph{プロンプトインジェクション.} Perez \& Ribeiro~\cite{perez} は目標乗っ取り・
-プロンプト漏洩を、Greshake ら~\cite{greshake} は\emph{間接}注入を定式化し、Liu ら~\cite{liu}
-は LLM 統合アプリのベンチマークを与える。J-ART はこれらを\emph{アプリ構成}の関数として評価する。
+\paragraph{符号化・字形難読化.} 符号化ベースの脱獄は確立した先行研究である：
+CipherChat~\cite{cipherchat}（暗号会話）と ArtPrompt~\cite{artprompt}（アスキーアート字形）。
+本作の \code{base64\_wrap}・\code{leet\_smuggle} はこの系統の\textbf{言語非依存な複製}であり
+ベースライン用途にすぎない。新規性は日本語字形の変形（\S\ref{sec:transforms-ja}）にある。
+
+\paragraph{プロンプトインジェクションとアプリ層評価.} Perez \& Ribeiro~\cite{perez} は目標
+乗っ取り・プロンプト漏洩を、Greshake ら~\cite{greshake} は\emph{間接}注入を定式化し、Liu
+ら~\cite{liu} は LLM 統合アプリのベンチマークを、AgentDojo~\cite{agentdojo} は最も近いアプリ
+層評価（ツール利用エージェント）を与える。J-ART は\emph{アプリ構成}（プロンプト $\times$
+ガード $\times$ RAG）を明示的な評価単位として日本語難読化面に対して評価する点で異なる。
 
 \paragraph{ガードレール・入力分類器.} Llama Guard~\cite{llamaguard}、NeMo
 Guardrails~\cite{nemo}、OpenAI Moderation API~\cite{moderation} はモデル/規則ベースの
@@ -156,7 +163,7 @@ $\times$ rag $\in \{\text{true}, \text{false}\}$。簡易RAG文脈（良性の�
 インジェクション攻撃では汚染）と、秘密の\emph{カナリア}を含むシステムプロンプトを試行ごとに
 組み立てる。
 
-\paragraph{日本語難読化変形.}
+\paragraph{日本語難読化変形.}\label{sec:transforms-ja}
 各ベース攻撃は7種の変形のいずれかでレンダリングされる：\code{baseline}（無変形）、
 \code{polite\_business}（敬語による権威付け）、\code{vertical\_newline}（1文字1行の縦書き）、
 \code{gyaru}（ギャル文字の字形置換＋ゼロ幅スペース）、\code{double\_tongue}（偽の
@@ -168,9 +175,9 @@ $\times$ rag $\in \{\text{true}, \text{false}\}$。簡易RAG文脈（良性の�
 表記体系や待遇表現を悪用し、英語などに直接の対応物を持たない：\code{gyaru}（仮名字形置換）、
 \code{vertical\_newline}（縦書き）、\code{polite\_business}/\code{double\_tongue}（敬語に
 よる権威付けと内集団フレーミング）。\emph{言語非依存}の変形 ——
-\code{base64\_wrap}・\code{leet\_smuggle}（および対照の \code{baseline}）—— は任意の言語に
-適用でき、日本語固有面の限界効果を切り分けるための比較基準として含める。これにより、
-日本語を越えて般化が見込める知見（言語非依存の符号化）を明確化する。
+\code{base64\_wrap}・\code{leet\_smuggle}（および対照の \code{baseline}）—— は\textbf{新規
+ではなく}、符号化/字形脱獄の系統（CipherChat~\cite{cipherchat}・ArtPrompt~\cite{artprompt}）の
+複製であり、日本語固有面の限界効果を切り分けるための比較基準としてのみ含める。
 
 \begin{table}[t]
 \centering\small
@@ -203,9 +210,10 @@ LLMプロンプト自己複製 (AML.T0061)、信頼出力/引用の操作 (AML.T
 施す。
 
 \paragraph{決定論的ジャッジ.}
-突破は完全一致で判定する：応答中のカナリア（\code{secret\_leak}）、または応答中のマーカー
-（\code{marker\_injection} / \code{marker\_hijack}）。本ジャッジは再現可能かつ安価だが
-保守的であり、意味的に等価な漏洩を取りこぼし得る（第\ref{sec:limits}節）。
+突破はカナリア/マーカーの membership で判定する——完全一致\emph{および}軽い正規化後の一致。
+本ジャッジは\emph{lexical}（字句的）な漏洩を検出するが、意味的/言い換えの漏洩は検出できない。
+よって本指標を\textbf{lexical-leak 防御率}と呼ぶ：本稿の全防御率は真の安全性の\textbf{上界}
+であり、保証ではない。人手検証付きジャッジは今後の課題。
 
 \paragraph{ガードレール.}
 5設定を比較する：\textbf{none}；\textbf{keyword}（禁止部分文字列一致——高速だが難読化に
@@ -215,17 +223,20 @@ LLMプロンプト自己複製 (AML.T0061)、信頼出力/引用の操作 (AML.T
 ——ルーター経由の Llama Guard~4——が入力を攻撃/良性に分類し、失敗時は安全側にフォール
 バック）。
 
-\paragraph{統計的処理.}
-各モデルの防御率は、その試行数に基づく \textbf{Wilson 95\% 信頼区間}と共に報告する。任意で
-各セル (target, attack, transform) を $N$ 回反復でき（\code{JART\_TRIALS}、既定1）、詳細は
-セル単位に集約し、要約統計と信頼区間は試行レベルの標本を用いる。シミュレーションモードでは
-各反復が独立なベルヌーイ試行であり、$N$ の増加で信頼区間が締まる（ある構成で $N{=}1 \to
-N{=}3$ により幅 $15.1 \to 7.5$ ポイント）。
+\paragraph{統計的処理.}\label{sec:stats-ja}
+各防御率は試行数に基づく \textbf{Wilson 95\% 信頼区間}と共に報告する。各セルは $N$ 回反復
+する（\code{JART\_TRIALS}）。ただし試行レベルの Wilson 区間はセルの $K$ 反復を独立と扱うが、
+実際は\textbf{独立でない}。したがって構成間の\emph{差}（アブレーション、\S\ref{sec:results-ja}）
+には、セルごと復元抽出する\textbf{クラスタ頑健ブートストラップ95\% CI}（\code{bootstrap\_diff\_ci}、
+3{,}000 再標本、固定シード）を報告する。これは試行レベルの Newcombe 区間より広く、全有意性
+主張の根拠となる区間である。
 
 \paragraph{コスト効率指標.}
 $\mathrm{cospa} = \text{防御率}(\%) \div \text{100万トークンあたりコスト (USD)}$ を
-報告する（100万トークン単価は0近傍の発散を防ぐため下限\$0.01でクランプ）。これにより、
-安価かつ安全な構成が浮かび上がる。
+報告する（単価は下限\$0.01でクランプ）。cospa は意図的に単純な\emph{スクリーニング比}であり
+効用モデルではない：単位は独立に意味を持たず、順位はクランプと価格スナップショットに感度を持つ。
+よって並べ替えキーとしてのみ用い、\textbf{防御 対 コストのトレードオフ}を直接提示する。クランプ
+の影響は \$0.01/Mtok 未満の構成に限られ、本フリートには該当がない。
 
 \paragraph{実行.}
 試行は独立であり、有界並列（既定8ワーカーのスレッドプール）で、リクエスト毎のタイムアウトと
@@ -233,92 +244,93 @@ $\mathrm{cospa} = \text{防御率}(\%) \div \text{100万トークンあたりコ
 無い対象は決定論的シミュレーションにフォールバックし、鍵が一部欠けても実行全体が落ちない。
 
 \section{結果}\label{sec:results-ja}
-完全ラベル付きの単一\textbf{LIVEキャンペーン}（21構成 $\times$ 11攻撃 $\times$ 7変形
-$\times$ \textbf{$K=5$} 反復 $=8{,}085$ 試行、2026-06-14 実行、総API費用 \textbf{\$3.74}）
-を報告する。各セルは \code{mode=LIVE} と価格スナップショットでラベル付けされ、最終的に呼び
-出しが失敗したセルは \code{api\_error} とラベルし\textbf{全集計から除外}する。レート制限の
-3構成（\code{gemini-pro}・\code{qwen3-max}・\code{claude-opus-4-8}）は部分データを返した
-（$8{,}085$ 中 $619$ 試行を除外）ため、\textbf{$7{,}466$ クリーン試行}が残る。下記の均衡
-アブレーション数値は同一モデルの併走実行（\code{gpt-4o-mini}・$K=3$・エラー0）による。
+完全ラベル付きの\textbf{LIVEキャンペーン}（21構成 $\times$ 11攻撃 $\times$ 7変形 $\times$
+\textbf{$K=5$} 反復 $=8{,}085$ 試行、2026-06-14 実行）を報告する。各セルは \code{mode=LIVE}
+と価格スナップショットでラベル付けし、\code{api\_error} の試行のみ（試行単位で）除外する——
+540/8{,}085 を除外し \textbf{$7{,}545$ クリーン試行}が残る。クリーンセルの実課金は
+\textbf{$\approx\$3.25$}。parity 再実行後も2構成が部分的に残る：\textbf{Opus 素}（$n{=}125$、
+Anthropic 残高切れ）と\textbf{Gemini-pro}（$n{\approx}120$、レート制限）。これらは\emph{暫定}
+とし見出しの根拠にしない（\S\ref{sec:limits}）。全防御率は\textbf{lexical-leak の上界}
+（\S\ref{sec:markers-ja}）であり、差にはすべて\textbf{クラスタ頑健CI}を付す（\S\ref{sec:stats-ja}）。
+\S4の各数値は commit 済みアーティファクトから再現可能（\S\ref{sec:repro}）。
 
 \paragraph{全体.}
-クリーン試行の総突破率は\textbf{14.8\%}（$1{,}108/7{,}466$）で、\textbf{弱構成}——素の
-低能力モデル——に集中した。一方、強化済み/ガード付き構成は\emph{どのモデルでも}
-\textbf{91--100\%}帯で防御したのに対し、素のモデルは\textbf{29.6\%〜89.6\%}に散らばった。
+クリーン試行の総突破率は\textbf{14.7\%}（$1{,}112/7{,}545$）で、\textbf{弱構成}に集中した。
+強化済み/ガード付き構成は\emph{どのモデルでも}\textbf{91--100\%}帯で防御したのに対し、素の
+モデルは\textbf{29.6\%〜89.6\%}に散らばった（表\ref{tab:naked}）。
 
 \paragraph{アプリ層の防御 対 モデル能力.}
-素の防御率はモデルに強く依存し\textbf{60ポイントの開き}がある（表\ref{tab:naked}）。
-\textbf{均衡アブレーション}はモデルを固定（\code{gpt-4o-mini}）し \{素, 強プロンプト\}~$\times$
-ガードレールを直積、各セルの素ベースライン（82.2\%、[76.8--86.6]）との差を Newcombe 95\% CI
-で検定する。\emph{すべて}の追加防御が有意（CIが0を跨がない）：keyword \textbf{+9.1\%}
-[+2.9,+15.3]、regex \textbf{+10.0\%} [+3.9,+16.1]、Llama Guard \textbf{+15.6\%}
-[+10.4,+21.2]、強プロンプト/LLMガード \textbf{+17.7\%} [+13.1,+23.2]（後二者は
-\textbf{100\%}到達）。両者を合わせると、強化した安価モデル（\code{gpt-4o-mini} 強化 $=100\%$）
-は\textbf{最強の素モデル（Opus 素 $=89.6\%$）を上回る防御}を低コストで達成する。\emph{構成は
-モデル選択より効く}という主張は、モデル固定のアブレーションと素のスプレッドの双方で支持され、
-交絡した単一比較に依らない。
+構成効果をモデル能力から切り分けるため、能力域をまたぐ\textbf{3モデル}（弱い Llama-4-Scout・
+安価な GPT-4o-mini・フラグシップ GPT-4.1）で均衡アブレーションを行う。各々モデルを固定し
+\{素, 強プロンプト\}~$\times$ ガードレールを直積、各構成の素ベースラインとの差を\textbf{クラスタ
+頑健ブートストラップ95\% CI}（試行ではなくセルを再標本化、$K{=}5$ のセル内相関で有意性が
+水増しされない）で報告する（表\ref{tab:ablation}）。3モデル共通の頑健な傾向が2つ：(1)
+\textbf{強プロンプト}と\textbf{モデルベースのガード}（Llama Guard・LLM自己検閲）は\emph{全
+モデル}で有意に防御を上げる；(2) 効果は\textbf{素のベースラインに反比例}——弱い Scout（素
+38\%）では各ガードが $+26$〜$+60$ ポイント、GPT-4o-mini（素82\%、天井近い）では軽量な
+keyword/regex はクラスタ補正で\emph{有意でない}。構成は素が弱いモデルほど効く。\emph{構成は
+モデル選択より効く}という主張は、完全測定の clean な比較に依拠する：強化した安価モデル
+（GPT-4o-mini 強化 $\approx100\%$）は\textbf{素のフラグシップ}（GPT-4.1 素 64.1\%、$n{=}231$）
+を ${\sim}36$ ポイント上回る。暫定の Opus 素ではなく GPT-4.1 を基準にする。
 
 \begin{table}[t]
 \centering\small
 \caption{素のモデルの防御率（プロンプト・ガードなし、$K=5$）。}
 \label{tab:naked}
-\begin{tabular}{lcc}
+\begin{tabular}{lccc}
 \toprule
-素のモデル & 防御率 & 95\% 信頼区間 \\
+素のモデル & 防御率 & 95\% 信頼区間 & $n$ \\
 \midrule
-DeepSeek-V3        & 29.6\% & [25.3, 34.4] \\
-Llama 4 Scout      & 37.9\% & [33.2, 42.9] \\
-Gemini 2.5 Flash   & 49.6\% & [44.6, 54.6] \\
-gpt-oss-120b       & 82.6\% & [78.5, 86.1] \\
-GPT-4o-mini        & 83.9\% & [79.9, 87.2] \\
-Claude Opus 4.x    & 89.6\% & [83.0, 93.8] \\
+DeepSeek-V3        & 29.6\% & [25.3, 34.4] & 385 \\
+Llama 4 Scout      & 37.9\% & [33.2, 42.9] & 385 \\
+Gemini 2.5 Flash   & 49.6\% & [44.6, 54.6] & 385 \\
+gpt-oss-120b       & 82.6\% & [78.5, 86.1] & 385 \\
+GPT-4o-mini        & 83.9\% & [79.9, 87.2] & 385 \\
+Claude Opus 4.x \emph{(暫定)} & 89.6\% & [83.0, 93.8] & \textbf{125} \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\paragraph{実行間ばらつき（主要な結果）.}
-交絡した2実行比較を\textbf{統制実験}に置き換える：単一の構成集合を固定し、他を一定に保った
-まま\textbf{$K=5$}反復した。\textbf{クリーンセルの9.6\%（$142/1{,}477$）が5回の同一反復で
-結果を変えた}——素の弱モデルに集中（DeepSeek-V3：37不安定セル、Llama 4 Scout：32）。旧来の
-警句例「Llama~4 Scout / 素のAPI」では、77セル中\textbf{32（42\%）が不安定}：14が無突破
-（0/5）、31が常時突破（5/5）、\textbf{32が中間}（例：2/5が7、3/5が3、4/5が13）。
-\emph{単一サンプル}のリーダーボードは、この同一構成に運次第で0\%〜100\%の防御率を割り当てて
-しまう。これが、構成集合の交絡を排した\textbf{単一サンプルのLLMリーダーボードは再現しない}
-ことの統制された証拠である。
-
-\paragraph{ガードレール比較.}
-モデル固定アブレーション（\code{gpt-4o-mini}）では、各入力ガードレールが素の82.2\%ベース
-ラインから防御を引き上げる（表\ref{tab:guardrail}）：keyword 91.3\%、regex 92.2\%、Llama
-Guard 97.8\%、LLM/強プロンプト 100\%。入力をブロックするガードは\textbf{本体モデル呼び出しを
-省く}ため、防御を上げつつ正味コストを下げ得る。\textbf{正規化regexフィルタ}は縦書き・leet・
-Base64・ギャル文字をユニットテストで決定論的に無効化し、API追加コストは0。コスト効率指標では、
-安価なOSSモデル＋軽量ガードが上位（gpt-oss-20b~+~keyword、$\mathrm{cospa}\approx1131$）、
-フラグシップ素が最下位（Opus 素、$\mathrm{cospa}\approx7.4$）で、3桁の開きがある。
 
 \begin{table}[t]
-\centering
-\caption{ガードレール効果（モデル固定・\code{gpt-4o-mini} アブレーション）。}
-\label{tab:guardrail}
-\begin{tabular}{lcc}
+\centering\small
+\caption{構成効果（$\Delta$＝そのモデルの素ベースライン比、クラスタ頑健95\% CI）。$\times$＝非有意。}
+\label{tab:ablation}
+\begin{tabular}{lccc}
 \toprule
-構成 & 防御率 & $\Delta$（素比, 95\% CI） \\
+追加防御（低プロンプト） & Scout (38.1\%) & 4o-mini (82.3\%) & GPT-4.1 (64.1\%) \\
 \midrule
-素（ベースライン）       & 82.2\% & --- \\
-＋ keyword              & 91.3\% & +9.1\% [+2.9, +15.3] \\
-＋ regex（正規化）       & 92.2\% & +10.0\% [+3.9, +16.1] \\
-＋ Llama Guard          & 97.8\% & +15.6\% [+10.4, +21.2] \\
-＋ 強プロンプト/LLM      & 100.0\% & +17.7\% [+13.1, +23.2] \\
+＋ keyword       & \textbf{+26.0} [+13,+39] & +9.1 [$-1$,+20]\,$\times$ & +13.1 [$-0.4$,+27]\,$\times$ \\
+＋ regex         & \textbf{+45.0} [+33,+56] & +10.0 [+0,+20]\,$\times$ & \textbf{+23.8} [+11,+36] \\
+＋ Llama Guard   & \textbf{+47.2} [+36,+58] & \textbf{+15.6} [+7,+25] & \textbf{+25.1} [+13,+38] \\
+＋ LLMガード     & \textbf{+59.7} [+51,+68] & \textbf{+17.7} [+10,+26] & \textbf{+35.9} [+26,+47] \\
+強プロンプト     & \textbf{+47.2} [+36,+58] & \textbf{+17.7} [+10,+26] & \textbf{+33.3} [+23,+45] \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\paragraph{実行内ばらつき（主要な結果）.}
+単一キャンペーン内で、構成を固定したまま各セルを\textbf{$K=5$}反復した。\textbf{クリーンセルの
+9.5\%（$143/1{,}502$）が5回の同一反復で結果を変えた}——素の弱モデルに集中。警句例「Llama~4
+Scout / 素のAPI」では77セル中\textbf{32（42\%）が不安定}：14が無突破（0/5）、31が常時突破
+（5/5）、32が中間。\emph{単一サンプル}のリーダーボードはこの同一構成に運次第で0\%〜100\%を
+割り当てる——構成集合の交絡を排した\textbf{単一サンプルは再現しない}ことの統制された証拠で
+ある。本主張は\emph{キャンペーン内}（プロバイダ非決定性）に限定し、跨日ドリフトは
+\code{across\_runs} に足場を用意したうえで今後の課題とする。
+
+\paragraph{ガードレール比較とコスト.}
+3モデル（表\ref{tab:ablation}）で順序は一貫する：LLMガードと強プロンプトが最大、Llama Guard
+が次、軽量な keyword/regex は素が弱いモデルほど効く。入力をブロックするガードは\textbf{本体
+呼び出しを省く}ため防御を上げつつ正味コストを下げ得る。\textbf{正規化regexフィルタ}（ユニット
+テスト検証）は弱い Scout で $+45$ ポイントを API 追加コスト0で与える。コスト効率指標では安価な
+OSS＋軽量ガードが上位（gpt-oss-20b~+~keyword、$\mathrm{cospa}\approx1131$）、フラグシップ素が
+最下位（Opus 素、$\mathrm{cospa}\approx7.4$）で3桁の開き。
+
 \paragraph{攻撃・変形の有効性.}
-最も有効だった攻撃は信頼出力/引用の操作（\textbf{突破30.2\%}）、偽RAGエントリ注入（24.1\%）、
-システムプロンプト探索（20.3\%）。変形では\emph{無変形}の \code{baseline} が最も有効
-（\textbf{22.2\%}）、次いで \code{vertical\_newline}（20.5\%）・\code{polite\_business}
-（17.7\%）で、\textbf{\code{base64\_wrap} は最弱（5.9\%）}：重い符号化はモデルに密輸するより
-拒否/解釈失敗させることが多い。最も危険な日本語変形は\emph{可読な}もの（縦書き・敬語
-フレーミング）であって、暗号的なものではない。
+最も有効だった攻撃は信頼出力/引用の操作、偽RAGエントリ注入、システムプロンプト探索。変形では
+\emph{無変形}の \code{baseline} が最も有効（\textbf{22.3\%}）、次いで \code{vertical\_newline}
+（20.2\%）・\code{polite\_business}（17.6\%）で、\textbf{\code{base64\_wrap} は最弱（5.9\%）}：
+重い符号化はモデルに密輸するより拒否/解釈失敗させることが多い。最も危険な日本語変形は
+\emph{可読な}もの（縦書き・敬語フレーミング）であって、暗号的なものではない。
 
 \section{リーダーボード成果物}
 ハーネスは \code{results.json} と自己完結の静的サイト（並び替え可能なリーダーボード、
@@ -373,6 +385,17 @@ RAG汚染/偽エントリ (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & 第15,
 \end{tabular}
 \end{table}
 
+\emph{具体例.} NIST MEASURE~2.7 の下で、組織は J-ART の行を「プロンプト注入耐性
+（T0051/T0054）、lexical-leak 防御率 93.5\%（95\% CI [90.6, 95.6]）、$n{=}385$、$K{=}5$、
+GPT-4.1-mini＋強プロンプト＋keyword ガード、2026-06-14」と記録し、事前登録した閾値（例「CI
+下限 $\geq 90\%$」）を添えられる。同じ行が AISI レッドチーム報告や EU AI Act 第15条の堅牢性
+資料が引く証跡となる。
+
+\paragraph{デュアルユース.} 公開する変形スイートは再利用可能な攻撃ラッパーでもある。攻撃者の
+利得は小さい（日本語字形変形は俗知、符号化は公開研究の複製、有害ペイロードは含まない）一方、
+防御側の便益は具体的：同じリポジトリが全変形を無効化する\textbf{正規化regexガード}（ユニット
+テスト済み）を同梱する。総合的に公開は防御側に正味プラスと判断する（\S6.2 と整合）。
+
 \section{限界}
 \label{sec:limits}
 \begin{itemize}[leftmargin=1.4em,itemsep=2pt]
@@ -385,9 +408,12 @@ RAG汚染/偽エントリ (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & 第15,
   \item \textbf{標本数：}手作りのスイート（11攻撃 $\times$ 7変形）、既定はセル当たり $N{=}1$。
   \item \textbf{プロバイダの非決定性/ルーターのばらつき：}結果はスナップショットであり、実行時の
         ルーティングとモデル版に依存する。
-  \item \textbf{レート制限構成の部分データ：}LIVEキャンペーンで3構成（Gemini-pro・Qwen3-max・
-        Opus）がプロバイダのレート制限に当たった。失敗セルは \code{api\_error} とラベルして
-        除外したため、点推定は少ない試行数（$n=116$--$295$、対 385）に基づき、CIは相応に広い。
+  \item \textbf{部分データ・非ランダム欠損：}parity 再実行で Qwen3-max は $n{=}374$ に達したが、
+        \textbf{Opus 素（$n{=}125$）}と\textbf{Gemini-pro（$n{\approx}120$）}は部分的なまま
+        （Anthropic 残高切れ・恒常的レート制限）。この欠損は\textbf{ランダムでない}——レート
+        制限が攻撃/変形と相関するため、Opus では難しい攻撃が過小代表となり 89.6\% は\emph{過大
+        推定}の可能性が高い（単に CI が広いだけではない）。両者を暫定とし見出しの根拠にせず、
+        構成優位の比較（\S\ref{sec:results-ja}）は完全測定の GPT-4.1 を用いる。
   \item \textbf{コスト帰属：}ガードレールのトークンは\emph{ガードモデル自身}の単価で計上
         するよう修正（\code{llamaguard} は分類器 \code{JART\_GUARD\_MODEL}、\code{llm} は
         実際に呼び出す本体モデル）し、本体トークンと別建てで報告する。残る近似：MOCK時の
@@ -407,9 +433,13 @@ RAG汚染/偽エントリ (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & 第15,
 と共に報告すべきである。使用した正確なモデル識別子と単価はリポジトリを参照のこと。
 各セルは来歴ラベル——\code{mode}（\code{LIVE}/\code{MOCK}）、\code{api\_error}、解決済み
 モデル、\code{price\_per\_million} スナップショット——を持ち、シミュレーションセルはLIVE集計
-から除外される。査読対応の均衡アブレーションと統制分散実験は \code{experiments/} に統計
-（\code{wilson\_diff\_ci}）とコスト見積りと共にスクリプト化してあり、定値を埋める\textbf{ラベル
-付きLIVEキャンペーン}は、その基盤を1回・反復・完全ラベル付きで実行するだけである。
+から除外される。\textbf{\S\ref{sec:results-ja}の全数値は commit 済みアーティファクトから再現
+可能}：\code{experiments/var\_run.json}（\S4.1全体・素のスプレッド・分散・変形・cospa）と、
+3つのアブレーションファイル \code{ablation\_results.json}（GPT-4o-mini）・
+\code{abl\_scout\_results.json}（Llama-4-Scout）・\code{abl\_gpt41\_results.json}（GPT-4.1、
+表\ref{tab:ablation}）。集計とクラスタ頑健CIは \code{analyze\_ablation.py} /
+\code{analyze\_variance.py} で再計算する。公開リーダーボードは手動/週次の LIVE CI で再生成し、
+push 起動の CI は MOCK でラベルされるため、サイトが MOCK と LIVE を混在させることはない。
 
 \begin{thebibliography}{99}
 \bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
@@ -456,6 +486,12 @@ RAG汚染/偽エントリ (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & 第15,
   Intelligence Act). Official Journal of the EU, 2024.
 \bibitem{meti} 経済産業省・総務省. AI事業者ガイドライン Ver.~1.0. 2024.
 \bibitem{aisi} AIセーフティ・インスティテュート (AISI). レッドチーミング手法ガイド. 2024.
+\bibitem{cipherchat} Yuan et al. GPT-4 Is Too Smart To Be Safe: Stealthy Chat with
+  LLMs via Cipher (CipherChat). 2023.
+\bibitem{artprompt} Jiang et al. ArtPrompt: ASCII Art-based Jailbreak Attacks
+  against Aligned LLMs. 2024.
+\bibitem{agentdojo} Debenedetti et al. AgentDojo: A Dynamic Environment to
+  Evaluate Attacks and Defenses for LLM Agents. 2024.
 \end{thebibliography}
 
 \end{document}

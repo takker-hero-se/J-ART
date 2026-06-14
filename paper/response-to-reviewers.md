@@ -1,4 +1,43 @@
-# Response to Reviewers — J-ART Technical Report (v0.1 → v0.2)
+# Response to Reviewers — J-ART Technical Report
+
+> **Round 2 (v0.2 → v0.3) is summarized first; the original Round-1 response
+> follows below.** A second peer-review panel re-read the v0.2 revision, verified
+> the empirical core reproduces, and returned *Major Revision* with two new
+> CRITICAL items. Both are now resolved:
+>
+> **R2-C1 — Survivorship bias in the flagship comparator.** The panel showed the
+> "cheap+hardened beats strongest naked (Opus 89.6%)" headline rested on Opus's
+> 125/385 trials, with the *hardest 7 attacks* having zero surviving Opus trials.
+> **Action:** a parity re-run brought Qwen3-max to n=374; Opus could not be
+> brought to parity (Anthropic balance exhausted) and Gemini-pro stayed
+> rate-limited, so we (a) re-anchor the thesis on **fully-measured GPT-4.1**
+> (naked 64.1%, n=231) instead of Opus, (b) mark Opus/Gemini-pro **provisional**
+> in every table, and (c) add an explicit **non-random-missingness** disclosure
+> to §7 stating Opus's 89.6% is likely an over-estimate.
+>
+> **R2-C2 — Reproducibility/provenance trap.** The committed `results.json` and
+> the public site were MOCK while §4 cited live numbers. **Action:** the exact
+> LIVE artifacts (`var_run.json` + three ablation JSONs) are now **committed**
+> (un-git-ignored; masking invariant re-verified: 100% masked prompts, 0 raw-core
+> leaks), §9 has a **table naming which file reproduces each §4 number**, the cost
+> figure is corrected $3.74 → $3.25, and CI was changed so push-triggered runs are
+> MOCK-labeled (the site never mixes MOCK/LIVE).
+>
+> **Consensus (5/5) — single-model ablation.** The ablation now runs on **three**
+> base models (Llama-4-Scout, GPT-4o-mini, GPT-4.1), new §4.2 Table 2′.
+>
+> **R2 (methodology) — clustered CIs.** K=5 repeats are correlated; we added a
+> **cluster-robust bootstrap CI** (resample cells, not trials). This *corrected*
+> the earlier "every guardrail significant" claim: a hardened prompt and the
+> model-based guardrails are robustly significant on all three models, but
+> lightweight keyword/regex are significant only where the base model is weak
+> (no headroom on GPT-4o-mini's 82% naked). Plus prior-art (CipherChat/ArtPrompt/
+> AgentDojo), cospa-as-screening-ratio, a dual-use note, a governance worked
+> example, and a lexical-leak relabel of all defense rates.
+
+---
+
+## Round 1 (v0.1 → v0.2)
 
 We thank the reviewers for the careful reading and the *Major Revision*
 assessment. The review identified three CRITICAL issues (C1–C3) and several
