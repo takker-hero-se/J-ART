@@ -18,6 +18,12 @@ import json
 import os
 import sys
 
+# Windows の既定コンソール(cp932)でも非ASCII出力で落ちないよう UTF-8 に再設定。
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from run_assessment import wilson_ci  # noqa: E402
 
