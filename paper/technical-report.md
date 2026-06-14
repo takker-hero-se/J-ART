@@ -36,14 +36,14 @@ the malicious "core" of each attack is masked in all published artifacts.
 Across 18–21 application configurations and 11 attacks × 7 transforms, we find
 that **application-layer defenses dominate raw model capability** (a flagship
 model with no system prompt or guardrail was breached more often than a small,
-cheap model behind a hardened prompt and a keyword guardrail), that a dedicated
-**input classifier (Llama Guard) eliminated all observed breaches** for a weak
-configuration at lower net cost, and that a simple **normalizing filter** defeats
-the obfuscation transforms that a naïve keyword filter misses. We also document
-**large run-to-run variance** for identical configurations served via a model
-router (one configuration moved from 58 breaches to 0 breaches between two runs),
-which we argue makes single-sample leaderboards unreliable and motivates the
-statistical treatment we adopt.
+cheap model behind a hardened prompt and a keyword guardrail). In a balanced
+ablation holding the model fixed, **every guardrail and a hardened prompt
+significantly raised defense** (from 82% to 91–100%, all Newcombe CIs excluding
+zero), and a simple **normalizing filter** defeats the obfuscation transforms a
+naïve keyword filter misses. We also document **large run-to-run variance**: in a
+controlled K=5 repeat of a frozen configuration set, **9.6% of cells changed
+outcome across identical trials**, which we argue makes single-sample leaderboards
+unreliable and motivates the statistical treatment we adopt.
 
 ### 概要（日本語）
 
@@ -55,11 +55,12 @@ LLM のレッドチーミング/ジェイルブレイク評価はほぼ英語中
 突破すること、(3) 攻撃を **MITRE ATLAS**（推論時10技術）に対応づけること、
 (4) 防御率に **Wilson 95%信頼区間**を付し、**コスト効率**指標を併記すること、である。
 攻撃は無害なプロキシ（架空カナリア・無害マーカー）で構成され、危険物を一切含まず、
-悪意あるコアは公開物上で常にマスクされる。実験では、**アプリ層の防御がモデル素性を
-上回る**こと、**専用入力分類器（Llama Guard）が弱構成の突破を全て遮断**したこと、
-**正規化フィルタが難読化を無効化**することを示す。さらに、同一構成でも実行間で大きく
-ばらつく（ある構成が58突破→0突破に変動）ことを記録し、単一サンプルのリーダーボードが
-信頼できないこと、統計的処理が必要であることを論じる。
+悪意あるコアは公開物上で常にマスクされる。実験（実LIVE・21構成・各セルK=5反復）では、
+**アプリ層の防御がモデル素性を上回る**こと——素のモデルは防御29.6〜89.6%とばらつくが、
+モデルを固定した均衡アブレーションでは**ガードレールや強プロンプトが防御を82%→91〜100%へ
+有意に引き上げる**（Newcombe CIが0を跨がない）——、**正規化フィルタが難読化を無効化**する
+ことを示す。さらに、構成を固定したK=5反復で**9.6%のセルが反復間で結果を変える**ことを
+記録し、単一サンプルのリーダーボードが信頼できないこと、統計的処理が必要であることを論じる。
 
 ---
 
@@ -266,68 +267,101 @@ simulation so a partial key set never aborts the run.
 
 ## 4. Results
 
-We summarize two live runs (run A: 18 configurations, 1,386 cells; run B: 21
-configurations, 1,617 cells), one trial per cell.
+We report a single, fully-labeled **live campaign** (21 configurations × 11
+attacks × 7 transforms × **K = 5** independent trials = 8,085 trials), executed
+2026-06-14, total API cost **$3.74**. Every cell is labeled `mode=LIVE` with a
+price snapshot; the harness retries on transient errors and labels any cell whose
+call ultimately failed (`api_error`). Three rate-limited configurations
+(`gemini-pro`, `qwen3-max`, `claude-opus-4-8`) returned partial data; their
+failed cells are **excluded from all aggregates** (619 of 8,085 trials), leaving
+**7,466 clean trials**. The balanced-ablation numbers in §4.2/§4.4 come from a
+companion same-model run (`gpt-4o-mini`, K = 3, 0 errors).
 
 ### 4.1 Overall
 
-Breach rates were low in aggregate (run A: 108/1,386 = 7.8%; run B: 36/1,617 =
-2.2%) and concentrated in **weak configurations** (naked, low-strength models),
-while hardened-prompt-plus-guardrail configurations defended at or near 100%.
+The aggregate breach rate over clean trials was **14.8%** (1,108 / 7,466) and was
+**concentrated in weak configurations** — low-capability models with no system
+prompt and no guardrail. Every hardened-prompt or guardrailed configuration, on
+*any* model, defended in the **91–100%** band, whereas bare ("naked") models
+ranged from **29.6% to 89.6%** defense (below).
 
 ### 4.2 Application-layer defense vs. model capability
 
-In run A, a flagship model with **no system prompt and no guardrail** was
-breached 10 times (87.0% defense), whereas a small, inexpensive model behind a
-**hardened prompt + keyword guardrail** defended at 96%+. This is suggestive of
-the practical thesis that *how the application is configured matters more than
-which model is used* — but the two configurations differ in **both** model and
-application layer, so the comparison alone is confounded.
+Naked defense depends heavily on the model — a **60-point spread**:
 
-To isolate the configuration effect we add a **balanced ablation** that holds the
-*model fixed* and crosses {naked, hardened} prompt × {none, keyword, regex, llm,
-llamaguard} guardrail, reporting each config's defense-rate difference from the
-naked baseline with a Newcombe 95% CI (`experiments/`, `wilson_diff_ci`). The
-configuration-dominance claim is stated only to the extent this within-model
-ablation supports it on labeled live data; the definitive effect sizes are part
-of the live campaign described in §9.
+| Naked model (no prompt, no guardrail) | Defense | 95% CI |
+|---|---|---|
+| DeepSeek-V3 | 29.6% | [25.3–34.4] |
+| Llama 4 Scout | 37.9% | [33.2–42.9] |
+| Gemini 2.5 Flash | 49.6% | [44.6–54.6] |
+| gpt-oss-120b | 82.6% | [78.5–86.1] |
+| GPT-4o-mini | 83.9% | [79.9–87.2] |
+| Claude Opus 4.x | 89.6% | [83.0–93.8] |
+
+The **balanced ablation** holds the model fixed (`gpt-4o-mini`) and crosses
+{naked, hardened} prompt × guardrail, testing each cell's difference from the
+naked baseline (82.2%, [76.8–86.6]) with a Newcombe 95% CI. **Every** added
+defense is statistically significant (CI excludes 0): keyword **+9.1%**
+[+2.9,+15.3], regex **+10.0%** [+3.9,+16.1], Llama Guard **+15.6%** [+10.4,+21.2],
+and a hardened prompt or LLM guardrail **+17.7%** [+13.1,+23.2], the last two
+reaching **100%**. With the model held constant, configuration moves defense from
+82% to 100%.
+
+Combining the two: a hardened cheap model (`gpt-4o-mini` hardened = 100%)
+**out-defends the strongest naked model** (Opus naked = 89.6%) at a fraction of
+the cost. The practical thesis — *how the application is configured matters more
+than which model is used* — is therefore supported both within a fixed model (the
+ablation) and across the naked spread, no longer by a confounded single
+comparison.
 
 ### 4.3 Run-to-run variance (a primary result)
 
-The configuration "Llama 4 Scout / naked" produced **58 breaches (24.7% defense)**
-in run A and **0 breaches (100% defense)** in run B. We initially attributed this
-to execution time alone; we **retract that specific attribution**, because the
-configuration *set* also changed between the two runs (18→21 targets), so the two
-snapshots are not a controlled comparison. The proper test is a **controlled
-variance experiment**: freeze a single configuration set and re-run it *K* times
-(default K=5) with everything else held constant, reporting per-config defense
-rates and the across-run range/variance with CIs (`experiments/analyze_variance.py`).
-The qualitative point stands and motivates the design — **single-sample LLM
-leaderboards should not be read as reproducible**, and defense rates must carry
-confidence intervals and, ideally, repeated trials — but the quantified variance
-is reported from the controlled experiment in the live campaign (§9), not from the
-two non-matched snapshots. We treat this variance as a result, not noise to be
-hidden.
+We replace the earlier confounded two-run comparison with a **controlled
+experiment**: a single frozen configuration set re-run **K = 5** times, everything
+else held constant. **9.6% of clean cells (142 / 1,477) changed outcome across the
+five identical repeats** — the same input against the same configuration breaching
+on some trials and defending on others. The instability concentrates in naked
+weak models (DeepSeek-V3: 37 unstable cells; Llama 4 Scout: 32).
+
+For "Llama 4 Scout / naked" — the original cautionary example — of its 77 cells,
+**32 (42%) were unstable**: 14 never breached (0/5), 31 always breached (5/5), and
+**32 fell in between** (e.g. seven at 2/5, three at 3/5, thirteen at 4/5). A
+*single-sample* leaderboard would assign this exact configuration anywhere from 0%
+to 100% defense depending on which trial it happened to draw. This is the
+controlled evidence — free of the configuration-set confound — that **single-sample
+LLM leaderboards are not reproducible**, and that defense rates must be reported
+with confidence intervals over repeated trials. We treat this variance as a
+result, not noise to be hidden.
 
 ### 4.4 Guardrail comparison
 
-In run B, "GPT-4o-mini / naked" was breached 14 times (81.8% defense,
-CI[71.8–88.8]); the **same model behind a Llama-Guard input classifier** was
-breached **0 times** (100% defense, CI[95.2–100]) at lower net cost, because
-blocked inputs skip the main model call. The **normalizing regex filter**, in
-unit tests, deterministically neutralizes the vertical-newline, leet, Base64,
-and gyaru transforms that the keyword filter misses, at zero additional API
-cost; in run B its weak-model baselines did not breach, so its live preventive
-effect was not separable in that snapshot (see §7).
+From the fixed-model ablation (`gpt-4o-mini`), each input guardrail raises defense
+above the 82.2% naked baseline: **keyword 91.3%**, **regex 92.2%**, **Llama Guard
+97.8%**, and **LLM / hardened-prompt 100%**. Guardrails that block an input
+**skip the main model call**, so they can *lower* net cost while raising defense.
+The **normalizing regex filter** deterministically neutralizes the
+vertical-newline, leet, Base64, and gyaru transforms that the keyword filter
+misses — verified in unit tests (`tests/test_guardrails.py`) — at zero additional
+API cost.
+
+On the cost-efficiency metric (§3.8), the leaders are **inexpensive OSS models
+behind a lightweight guardrail** (gpt-oss-20b + keyword, cospa ≈ 1131; Qwen3-235B
++ LLM guard, cospa ≈ 1109), while a **flagship naked** configuration is worst
+(Opus naked, cospa ≈ 7.4, at $12.2 per million tokens) — three orders of magnitude
+apart.
 
 ### 4.5 Attack and transform effectiveness
 
-In run A, the most effective attacks were Trusted-Output/Citations manipulation,
-False RAG Entry Injection, and indirect RAG exfiltration; the most effective
-transforms were vertical-newline, baseline, and polite-business, while
-**Base64** was least effective (models frequently declined to act on encoded
-instructions). The newly-added ATLAS techniques accounted for a large share of
-breaches, indicating the expanded taxonomy contributes signal.
+Across all clean trials, the most effective **attacks** were Trusted-Output /
+Citations manipulation (**30.2%** breach), False RAG Entry Injection (24.1%), and
+System-Prompt discovery (20.3%) — RAG-borne and output-trust vectors dominate.
+Among **transforms**, the *un-obfuscated* `baseline` was most effective (**22.2%**)
+followed by `vertical_newline` (20.5%) and `polite_business` (17.7%), while
+**`base64_wrap` was least effective (5.9%)** and `leet_smuggle` next (9.6%):
+heavy encoding makes models *refuse or fail to parse* the instruction more often
+than it smuggles it past them. This is itself a finding — the most dangerous
+Japanese transforms are the *legible* ones (vertical writing, keigo framing), not
+the cryptographic ones.
 
 ## 5. The Leaderboard Artifact
 
@@ -414,6 +448,10 @@ outputs feed an organization's **MANAGE** decisions (which configuration to ship
   `N`=1 per cell.
 - **Provider non-determinism / router variance:** see §4.3; results are
   snapshots and depend on routing and model versions at run time.
+- **Partial data for rate-limited configurations:** in the live campaign, three
+  configurations (Gemini-pro, Qwen3-max, Opus) hit provider rate limits; their
+  failed cells are labeled `api_error` and excluded, so their point estimates rest
+  on fewer trials (n = 116–295 vs. 385) and their CIs are correspondingly wider.
 - **Cost attribution:** guardrail tokens are now priced at the *guardrail
   model's* own rate (the classifier `JART_GUARD_MODEL` for `llamaguard`; the
   target model itself for the `llm` guardrail, which it genuinely calls), reported

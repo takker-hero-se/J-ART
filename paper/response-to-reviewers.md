@@ -6,13 +6,19 @@ methodological and code-level defects. Below we respond to each in
 **R**eviewer-comment → **A**ction → **C**hange format. Each change is linked to a
 commit and a location so the revision is auditable.
 
-We separate two kinds of response:
+**Update (v0.2):** the fully-labeled live campaign has now been **executed** — 21
+configurations × 11 attacks × 7 transforms × **K=5** = 8,085 trials, 2026-06-14,
+$3.74, 7,466 clean trials after excluding rate-limited cells. **All items below,
+including the three CRITICAL issues, are now [DONE]** with real measured numbers in
+§4. The headline results:
 
-- **[DONE]** — implemented and verified in this revision (code fixes, unit
-  tests, and manuscript edits that do not depend on new measurements).
-- **[PENDING-LIVE]** — requires a fresh, fully-labeled live run; the harness and
-  analysis code are in place, and only the (cost-incurring) execution and the
-  resulting numbers remain. These are the items that close C1–C3 substantively.
+- **C1**: every cell is labeled `mode/api_error/price`; §4 reports only clean LIVE
+  cells; 619 rate-limited cells are excluded, not silently counted.
+- **C2**: model-fixed ablation shows every guardrail/hardening is significant
+  (82% → 91–100%, all Newcombe Δ-CIs exclude 0); naked models alone span
+  29.6–89.6%, so a hardened cheap model out-defends the strongest naked model.
+- **C3**: in the controlled K=5 repeat, **9.6% of cells (142/1,477) flip outcome
+  across identical trials**; Llama-4-Scout-naked has 32/77 unstable cells.
 
 A one-line summary of the disposition is in the table at the end.
 
@@ -184,19 +190,20 @@ explicitly as informational. Commit `5ddee84`. **[DONE]**
 
 | # | Reviewer item | Disposition |
 |---|---|---|
-| C1 | MOCK/live provenance | Labeling **[DONE]**; numbers **[PENDING-LIVE]** |
-| C2 | App-layer confound | Design+stat **[DONE]**; effect sizes **[PENDING-LIVE]** |
-| C3 | Variance attribution | Experiment+runner **[DONE]**; K runs **[PENDING-LIVE]** |
+| C1 | MOCK/live provenance | **[DONE]** — labeled LIVE campaign; §4 clean cells only |
+| C2 | App-layer confound | **[DONE]** — model-fixed ablation, all Δ-CIs exclude 0 |
+| C3 | Variance attribution | **[DONE]** — controlled K=5; 9.6% of cells flip |
 | R1-M3 | gyaru filter + tests | **[DONE]** (`01020fe`) |
-| R1 | Anthropic temperature | **[DONE]** (`01020fe`) |
-| R1-M5 | Cost attribution | **[DONE]** (logic); cospa numbers **[PENDING-LIVE]** |
+| R1 | Anthropic temperature | **[DONE]** (`01020fe`; Opus regression fixed `d7906c1`) |
+| R1-M5 | Cost attribution | **[DONE]** — guard tokens priced separately; cospa in §4.4 |
 | Judge FN | Reformatted-echo undercount | **[DONE]** (`93c7283`) |
 | Related Work | Narrative + table + refs | **[DONE]** (`93c7283`,`5ddee84`) |
 | Transforms | JP vs language-agnostic | **[DONE]** (`e1f1a99`) |
 | Ethics/Gov | Disclosure pattern + crosswalk | **[DONE]** (`5ddee84`) |
 
-The **[PENDING-LIVE]** items share a single dependency: one fully-labeled,
-repeated live measurement campaign (the C1/C2/C3 experiments draw from the same
-runs). The harness, statistics, and manuscript scaffolding for all three are in
-place; executing the campaign and substituting the resulting numbers is the
-remaining step before resubmission.
+All reviewer items are now resolved with implemented code, unit tests, and real
+measured results from the labeled live campaign (2026-06-14). The remaining
+caveat, stated in §7, is that three configurations (Gemini-pro, Qwen3-max, Opus)
+were partially rate-limited; their failed cells are excluded and their CIs widen
+accordingly, but their point estimates rest on fewer trials (n = 116–295 rather
+than 385).
