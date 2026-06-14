@@ -24,6 +24,7 @@ import sys
 import json
 import time
 import math
+import random
 import base64
 import hashlib
 import argparse
@@ -409,6 +410,62 @@ def wilson_diff_ci(def1: int, tot1: int, def2: int, tot2: int, z: float = 1.96):
     low = diff - math.sqrt((p1 - l1) ** 2 + (u2 - p2) ** 2)
     high = diff + math.sqrt((u1 - p1) ** 2 + (p2 - l2) ** 2)
     return (diff * 100.0, max(-1.0, low) * 100.0, min(1.0, high) * 100.0)
+
+
+# --- クラスタ頑健ブートストラップ（K反復はセル内で相関するため、再標本化の単位はセル）---
+# 各 cell は (breaches, trials) のタプル。trial レベルの Wilson/Newcombe は K反復を独立と
+# みなして区間を過小評価するため、セル単位の非超幾何ブートストラップで補正する（決定論シード）。
+
+def _percentile(sorted_vals, q):
+    if not sorted_vals:
+        return 0.0
+    idx = q * (len(sorted_vals) - 1)
+    lo = int(math.floor(idx)); hi = int(math.ceil(idx))
+    if lo == hi:
+        return sorted_vals[lo]
+    return sorted_vals[lo] + (sorted_vals[hi] - sorted_vals[lo]) * (idx - lo)
+
+
+def bootstrap_rate_ci(cells, n_boot: int = 2000, seed: int = 20260614):
+    """セル単位ブートストラップで防御率の95%CIを百分率で返す: (rate, low, high)。
+    cells: [(breaches, trials), ...]。各反復でセルを復元抽出し、防御率=1-Σbreach/Σtrial。"""
+    cells = [(b, t) for (b, t) in cells if t > 0]
+    if not cells:
+        return (0.0, 0.0, 0.0)
+    tot_b = sum(b for b, _ in cells); tot_t = sum(t for _, t in cells)
+    rate = (1 - tot_b / tot_t) * 100.0
+    rng = random.Random(seed)
+    n = len(cells)
+    samples = []
+    for _ in range(n_boot):
+        sb = st = 0
+        for _ in range(n):
+            b, t = cells[rng.randrange(n)]
+            sb += b; st += t
+        samples.append((1 - sb / st) * 100.0 if st else 0.0)
+    samples.sort()
+    return (rate, _percentile(samples, 0.025), _percentile(samples, 0.975))
+
+
+def bootstrap_diff_ci(cells1, cells2, n_boot: int = 2000, seed: int = 20260614):
+    """2群のセル集合の防御率差 (group1 − group2) のクラスタ頑健95%CIを百分率で返す。
+    返り値: (diff_pct, low_pct, high_pct)。区間が0を跨がなければ有意。"""
+    c1 = [(b, t) for (b, t) in cells1 if t > 0]
+    c2 = [(b, t) for (b, t) in cells2 if t > 0]
+    if not c1 or not c2:
+        return (0.0, 0.0, 0.0)
+    def _rate(cs):
+        tb = sum(b for b, _ in cs); tt = sum(t for _, t in cs)
+        return (1 - tb / tt) if tt else 0.0
+    diff = (_rate(c1) - _rate(c2)) * 100.0
+    rng = random.Random(seed)
+    diffs = []
+    for _ in range(n_boot):
+        s1 = [c1[rng.randrange(len(c1))] for _ in range(len(c1))]
+        s2 = [c2[rng.randrange(len(c2))] for _ in range(len(c2))]
+        diffs.append((_rate(s1) - _rate(s2)) * 100.0)
+    diffs.sort()
+    return (diff, _percentile(diffs, 0.025), _percentile(diffs, 0.975))
 
 
 # ④ ガードレール拡充用：モデル分類器(Llama Guard 系)の既定スラッグ（OpenRouter）。

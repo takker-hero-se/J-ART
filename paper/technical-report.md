@@ -1,6 +1,6 @@
 # J-ART: A Japanese Adversarial Red-Team Framework for Application-Layer LLM Security and Cost-Efficiency
 
-**Technical Report (v0.1, preprint)**
+**Technical Report (v0.2, preprint)**
 
 Author: Takayuki Hirose — ORCID: [0009-0005-6735-1862](https://orcid.org/0009-0005-6735-1862)
 Affiliation: Independent Researcher
@@ -9,11 +9,12 @@ Live leaderboard: <https://takker-hero-se.github.io/J-ART/>
 DOI (concept): [10.5281/zenodo.20676879](https://doi.org/10.5281/zenodo.20676879) — v0.1.0: 10.5281/zenodo.20676880
 License: report text CC-BY-4.0; code MIT.
 
-> **Status.** This is a preliminary technical report / preprint describing a
-> proof-of-concept framework and exploratory findings. It is **not** an official
-> safety evaluation of any vendor's model. Numbers are run-time snapshots and
-> are subject to the limitations in §7. References (§10) are indicative and
-> their bibliographic details should be verified before formal submission.
+> **Status.** This is a technical report / preprint describing the framework and
+> its live findings. It is **not** an official safety evaluation of any vendor's
+> model; reported numbers are run-time snapshots (2026-06-14) subject to the
+> limitations in §7, and all "defense rates" are *lexical-leak* upper bounds
+> (§3.5). The §4 numbers are reproducible from the committed artifacts
+> `experiments/var_run.json` and `experiments/ablation_results.json` (§9).
 
 ---
 
@@ -35,15 +36,16 @@ the malicious "core" of each attack is masked in all published artifacts.
 
 Across 18–21 application configurations and 11 attacks × 7 transforms, we find
 that **application-layer defenses dominate raw model capability** (a flagship
-model with no system prompt or guardrail was breached more often than a small,
-cheap model behind a hardened prompt and a keyword guardrail). In a balanced
-ablation holding the model fixed, **every guardrail and a hardened prompt
-significantly raised defense** (from 82% to 91–100%, all Newcombe CIs excluding
-zero), and a simple **normalizing filter** defeats the obfuscation transforms a
-naïve keyword filter misses. We also document **large run-to-run variance**: in a
-controlled K=5 repeat of a frozen configuration set, **9.6% of cells changed
-outcome across identical trials**, which we argue makes single-sample leaderboards
-unreliable and motivates the statistical treatment we adopt.
+naked flagship was breached far more often than a hardened cheap model). In a
+balanced ablation on **three** base models with **cluster-robust** intervals, a
+**hardened prompt and the model-based guardrails significantly raise defense on
+every model**, while lightweight keyword/regex filters help most where the base
+model is weak; the effect scales inversely with the naked baseline. A simple
+**normalizing filter** defeats the obfuscation transforms a naïve keyword filter
+misses. We also document **large within-campaign variance**: in a controlled K=5
+repeat of a frozen configuration set, **9.5% of cells changed outcome across
+identical trials**, which makes single-sample leaderboards unreliable and
+motivates the statistical treatment we adopt.
 
 ### 概要（日本語）
 
@@ -57,10 +59,11 @@ LLM のレッドチーミング/ジェイルブレイク評価はほぼ英語中
 攻撃は無害なプロキシ（架空カナリア・無害マーカー）で構成され、危険物を一切含まず、
 悪意あるコアは公開物上で常にマスクされる。実験（実LIVE・21構成・各セルK=5反復）では、
 **アプリ層の防御がモデル素性を上回る**こと——素のモデルは防御29.6〜89.6%とばらつくが、
-モデルを固定した均衡アブレーションでは**ガードレールや強プロンプトが防御を82%→91〜100%へ
-有意に引き上げる**（Newcombe CIが0を跨がない）——、**正規化フィルタが難読化を無効化**する
-ことを示す。さらに、構成を固定したK=5反復で**9.6%のセルが反復間で結果を変える**ことを
-記録し、単一サンプルのリーダーボードが信頼できないこと、統計的処理が必要であることを論じる。
+**3モデル**の均衡アブレーション（クラスタ頑健CI）で**強プロンプトとモデルベースのガード
+レールは全モデルで有意に防御を引き上げ**、軽量なkeyword/regexは素の弱いモデルほど効く
+（効果は素の余地に反比例）——、**正規化フィルタが難読化を無効化**することを示す。さらに、
+構成を固定したK=5反復で**9.5%のセルが反復間で結果を変える**ことを記録し、単一サンプルの
+リーダーボードが信頼できないこと、統計的処理が必要であることを論じる。
 
 ---
 
@@ -123,11 +126,23 @@ orthographic obfuscation* specific to Japanese — gyaru-moji glyph substitution
 vertical/newline writing, keigo framing, and kana/kanji encoding — which persists
 even though Japanese is itself high-resource.
 
-**Prompt injection.** Perez & Ribeiro [16] introduced goal-hijacking and
-prompt-leaking; Greshake et al. [8] formalized *indirect* injection via retrieved
-content; Liu et al. [17] provide a benchmark for LLM-integrated applications.
-J-ART evaluates these threats as a function of the *application configuration*
-(system prompt × guardrail × RAG) rather than the bare model.
+**Encoding and typographic obfuscation.** Encoding-based jailbreaks are
+established prior art: CipherChat [28] shows that conversing in ciphers evades
+safety alignment, and ArtPrompt [29] uses ASCII-art typography to smuggle banned
+words past filters. Our `base64_wrap` and `leet_smuggle` transforms are
+**language-agnostic replications of this line**, included as a comparison
+baseline, *not* as novel contributions; the novel surface in J-ART is the
+**Japanese-script** transforms (`gyaru`, `vertical_newline`, keigo framing),
+which exploit the writing system rather than a general encoding (§3.2).
+
+**Prompt injection and application-layer evaluation.** Perez & Ribeiro [16]
+introduced goal-hijacking and prompt-leaking; Greshake et al. [8] formalized
+*indirect* injection via retrieved content; Liu et al. [17] benchmark
+LLM-integrated applications; and AgentDojo [30] is the closest application-layer
+evaluation, measuring prompt-injection robustness of tool-using agents. J-ART
+differs by holding the *application configuration* (system prompt × guardrail ×
+RAG) as the explicit unit of evaluation and crossing it against a
+Japanese-obfuscation surface, rather than evaluating an agent's tool-use loop.
 
 **Guardrails and input classifiers.** Llama Guard [9] and its successors, NeMo
 Guardrails [18], and the OpenAI Moderation API [19] provide model- or rule-based
@@ -186,21 +201,25 @@ human legibility while breaking substring-matching filters.
 We distinguish two classes (Table 2). **Japanese-specific** transforms exploit
 properties of the Japanese writing system or register and have no direct
 equivalent in, say, English red-teaming: `gyaru` (kana glyph substitution),
-`vertical_newline` (traditional vertical writing), and `polite_business` /
-`double_tongue` (keigo-based authority and in-group framing). **Language-agnostic**
-transforms — `base64_wrap` and `leet_smuggle` (and the `baseline` control) —
-apply to any language and are included as a comparison baseline so that the
-marginal effect of the Japanese-specific surface can be isolated. This separation
-also clarifies which findings are expected to generalize beyond Japanese (the
-language-agnostic encodings) and which probe a genuinely under-studied,
-language-specific attack surface.
+We distinguish two classes (Table 2). The **novel** surface is the
+**Japanese-specific** transforms, which exploit the writing system or register and
+have no direct equivalent in English red-teaming: `gyaru` (kana glyph
+substitution), `vertical_newline` (traditional vertical writing), and
+`polite_business` / `double_tongue` (keigo-based authority and in-group framing).
+The **language-agnostic** transforms — `base64_wrap` and `leet_smuggle` (and the
+`baseline` control) — are **not novel**: they are replications of the
+encoding/typographic jailbreak line (CipherChat [28], ArtPrompt [29]), included
+only as a comparison baseline so the *marginal* effect of the Japanese-specific
+surface can be isolated and so we can say which findings generalize beyond
+Japanese (the encodings) versus probe a genuinely under-studied, language-specific
+attack surface (the Japanese-script transforms).
 
 **Table 2. Classification of obfuscation transforms.**
 
-| Class | Transforms | Exploits |
-|---|---|---|
-| Japanese-specific | `gyaru`, `vertical_newline`, `polite_business`, `double_tongue` | Kana glyph variants, vertical writing, keigo authority/in-group framing |
-| Language-agnostic | `base64_wrap`, `leet_smuggle` (+ `baseline` control) | Encoding / symbol substitution applicable to any language |
+| Class | Transforms | Exploits | Novelty |
+|---|---|---|---|
+| Japanese-specific | `gyaru`, `vertical_newline`, `polite_business`, `double_tongue` | Kana glyph variants, vertical writing, keigo authority/in-group framing | **Novel surface** |
+| Language-agnostic | `base64_wrap`, `leet_smuggle` (+ `baseline` control) | Encoding / symbol substitution applicable to any language | Replication baseline [28,29] |
 
 ### 3.3 Attack suite and MITRE ATLAS mapping
 
@@ -225,10 +244,14 @@ applied at render time.
 
 ### 3.5 Deterministic judge
 
-A breach is declared by exact membership: the canary in the response
-(`secret_leak`), or the marker in the response (`marker_injection` /
-`marker_hijack`). This judge is reproducible and cheap but conservative (it can
-miss semantically-equivalent leaks); see §7.
+A breach is declared by membership — the canary or marker in the response,
+matched exactly *and* after light normalization (§7). This judge is reproducible
+and cheap but conservative: it detects a *lexical* leak (the literal token
+escaping) and **cannot** detect a semantic or paraphrased leak. We therefore call
+the resulting metric a **lexical-leak defense rate**, and every "defense rate" in
+this paper is that quantity — an **upper bound** on true safety, not a certificate
+of it. Quantifying the residual false-negative rate with a human-validated judge
+is future work (§8).
 
 ### 3.6 Guardrails
 
@@ -251,11 +274,27 @@ trial-level sample. In simulation mode each repeated trial is an independent
 Bernoulli draw, which (as a sanity check) narrows the CI as `N` grows
 (e.g., interval width 15.1 → 7.5 points from `N`=1 to `N`=3 for one configuration).
 
+The trial-level Wilson interval, however, treats the `K` repeats of a cell as
+independent, which they are **not** (the same prompt against the same
+configuration). For any *difference* between configurations (the ablation, §4.2),
+we therefore report a **cluster-robust bootstrap 95% CI** that resamples whole
+*cells* with replacement (`bootstrap_diff_ci`, 3,000 resamples, fixed seed),
+so within-cell correlation cannot inflate significance. These intervals are wider
+than the trial-level Newcombe ones and are the intervals on which every
+significance claim in §4.2/§4.4 rests.
+
 ### 3.8 Cost-efficiency metric
 
 We report **cospa = defense_rate(%) ÷ cost_per_million_tokens(USD)** (the
 per-million cost is clamped at a 0.01 USD floor to avoid divergence). This
-surfaces configurations that are both safe and cheap.
+surfaces configurations that are both safe and cheap. cospa is a deliberately
+simple screening ratio, not a utility model: its units (defense-% per USD/Mtok)
+are not independently meaningful, and the ranking is sensitive to the clamp and to
+the price snapshot. We therefore treat cospa only as a *sort key* and present the
+underlying **defense-vs-cost trade-off** directly (the safe-and-cheap frontier in
+§4.4); a configuration is preferable only if it is Pareto-non-dominated on
+(defense, cost). Sensitivity to the clamp affects only sub-$0.01/Mtok
+configurations, of which there are none in our fleet.
 
 ### 3.9 Execution
 
@@ -269,80 +308,125 @@ simulation so a partial key set never aborts the run.
 
 We report a single, fully-labeled **live campaign** (21 configurations × 11
 attacks × 7 transforms × **K = 5** independent trials = 8,085 trials), executed
-2026-06-14, total API cost **$3.74**. Every cell is labeled `mode=LIVE` with a
-price snapshot; the harness retries on transient errors and labels any cell whose
-call ultimately failed (`api_error`). Three rate-limited configurations
-(`gemini-pro`, `qwen3-max`, `claude-opus-4-8`) returned partial data; their
-failed cells are **excluded from all aggregates** (619 of 8,085 trials), leaving
-**7,466 clean trials**. The balanced-ablation numbers in §4.2/§4.4 come from a
-companion same-model run (`gpt-4o-mini`, K = 3, 0 errors).
+2026-06-14. Every cell is labeled `mode=LIVE` with a price snapshot; the harness
+retries on transient errors and labels any cell whose call ultimately failed
+(`api_error`). **Exclusion rule:** aggregates are computed over clean trials only
+— a trial is excluded iff `api_error=True`, at the trial level (not the whole
+cell). This removes 540 of 8,085 trials, leaving **7,545 clean trials**; the
+billed API cost over those clean cells is **≈ $3.25** (the harness's gross figure,
+$3.74, additionally charges *estimated* tokens to rate-limited calls that were not
+actually billed). Two configurations remain partially measured after a parity
+re-run: **Claude Opus naked** (n = 125; Anthropic balance was exhausted before
+parity) and **Gemini-pro** (n ≈ 120; persistent rate limits). We treat their
+point estimates as **provisional** wherever they appear and do not let any
+headline claim rest on them (see §4.2). The exact artifacts backing every number
+in this section are committed at `experiments/var_run.json` (campaign) and
+`experiments/abl_*.json` (the three same-model ablations: `gpt-4o-mini`,
+`Llama-4-Scout`, `GPT-4.1`); §9 names which file reproduces each table.
 
 ### 4.1 Overall
 
-The aggregate breach rate over clean trials was **14.8%** (1,108 / 7,466) and was
-**concentrated in weak configurations** — low-capability models with no system
-prompt and no guardrail. Every hardened-prompt or guardrailed configuration, on
-*any* model, defended in the **91–100%** band, whereas bare ("naked") models
-ranged from **29.6% to 89.6%** defense (below).
+All "defense rates" below are **lexical-leak** rates (§3.5) — upper bounds on true
+safety, reported with **cluster-robust** intervals where a difference is claimed
+(§3.7). The aggregate breach rate over clean trials was **14.7%** (1,112 / 7,545)
+and was **concentrated in weak configurations** — low-capability models with no
+system prompt and no guardrail. Every hardened-prompt or guardrailed
+configuration, on *any* model, defended in the **91–100%** band, whereas bare
+("naked") models ranged from **29.6% to 89.6%** defense (below).
 
 ### 4.2 Application-layer defense vs. model capability
 
-Naked defense depends heavily on the model — a **60-point spread**:
+Naked defense depends heavily on the model — a **~55-point spread**:
 
-| Naked model (no prompt, no guardrail) | Defense | 95% CI |
-|---|---|---|
-| DeepSeek-V3 | 29.6% | [25.3–34.4] |
-| Llama 4 Scout | 37.9% | [33.2–42.9] |
-| Gemini 2.5 Flash | 49.6% | [44.6–54.6] |
-| gpt-oss-120b | 82.6% | [78.5–86.1] |
-| GPT-4o-mini | 83.9% | [79.9–87.2] |
-| Claude Opus 4.x | 89.6% | [83.0–93.8] |
+| Naked model (no prompt, no guardrail) | Defense | 95% CI | n |
+|---|---|---|---|
+| DeepSeek-V3 | 29.6% | [25.3–34.4] | 385 |
+| Llama 4 Scout | 37.9% | [33.2–42.9] | 385 |
+| Gemini 2.5 Flash | 49.6% | [44.6–54.6] | 385 |
+| gpt-oss-120b | 82.6% | [78.5–86.1] | 385 |
+| GPT-4o-mini | 83.9% | [79.9–87.2] | 385 |
+| Claude Opus 4.x *(provisional)* | 89.6% | [83.0–93.8] | **125** |
 
-The **balanced ablation** holds the model fixed (`gpt-4o-mini`) and crosses
-{naked, hardened} prompt × guardrail, testing each cell's difference from the
-naked baseline (82.2%, [76.8–86.6]) with a Newcombe 95% CI. **Every** added
-defense is statistically significant (CI excludes 0): keyword **+9.1%**
-[+2.9,+15.3], regex **+10.0%** [+3.9,+16.1], Llama Guard **+15.6%** [+10.4,+21.2],
-and a hardened prompt or LLM guardrail **+17.7%** [+13.1,+23.2], the last two
-reaching **100%**. With the model held constant, configuration moves defense from
-82% to 100%.
+We then **isolate the configuration effect from model capability** with a balanced
+ablation run on **three** base models spanning the capability range (a weak OSS
+model, Llama 4 Scout; a cheap proprietary model, GPT-4o-mini; and a flagship,
+GPT-4.1). Each holds the model fixed and crosses {naked, hardened} prompt ×
+guardrail; we report each config's difference from that model's naked baseline
+with a **cluster-robust bootstrap 95% CI** (resampling cells, not trials, so the
+K = 5 within-cell correlation does not inflate significance). Table 2′ summarizes
+the deltas.
 
-Combining the two: a hardened cheap model (`gpt-4o-mini` hardened = 100%)
-**out-defends the strongest naked model** (Opus naked = 89.6%) at a fraction of
-the cost. The practical thesis — *how the application is configured matters more
-than which model is used* — is therefore supported both within a fixed model (the
-ablation) and across the naked spread, no longer by a confounded single
-comparison.
+**Table 2′. Configuration effect (Δ vs. that model's naked baseline; cluster-robust 95% CI).**
 
-### 4.3 Run-to-run variance (a primary result)
+| Added defense (low-prompt arm) | Llama-4-Scout (naked 38.1%) | GPT-4o-mini (naked 82.3%) | GPT-4.1 (naked 64.1%) |
+|---|---|---|---|
+| + keyword filter | **+26.0** [+13.0,+39.4] | +9.1 [−1.3,+19.5] ✗ | +13.1 [−0.4,+26.6] ✗ |
+| + normalizing regex | **+45.0** [+33.3,+55.8] | +10.0 [+0.0,+19.9] ✗ | **+23.8** [+11.3,+36.4] |
+| + Llama Guard | **+47.2** [+35.9,+58.4] | **+15.6** [+7.4,+24.7] | **+25.1** [+12.6,+37.7] |
+| + LLM guardrail | **+59.7** [+50.6,+68.4] | **+17.7** [+10.0,+26.4] | **+35.9** [+26.0,+46.8] |
+| hardened prompt (alone) | **+47.2** [+35.5,+58.4] | **+17.7** [+10.0,+26.4] | **+33.3** [+22.9,+44.6] |
+
+Two robust patterns emerge across all three models. (1) A **hardened prompt** and
+the **model-based guardrails** (Llama Guard, LLM self-moderation) significantly
+raise defense on *every* model (all CIs exclude 0). (2) The effect **scales
+inversely with the naked baseline**: on the weak Scout (naked 38%) every guardrail
+helps by +26 to +60 points, whereas on GPT-4o-mini (naked 82%, near the ceiling)
+the *lightweight* keyword/regex filters are **not** individually significant under
+clustering — there is little headroom to recover. So configuration matters most
+exactly where the base model is weakest.
+
+The practical thesis — *how the application is configured matters more than which
+model is used* — is supported by a clean, fully-measured comparison: a **hardened
+cheap model** (GPT-4o-mini hardened ≈ 100%) **out-defends a naked flagship**
+(GPT-4.1 naked 64.1%, n = 231) by ~36 points. We deliberately anchor this on
+GPT-4.1 rather than on Opus-naked, whose 89.6% is provisional (n = 125; see §7).
+
+### 4.3 Within-campaign trial variance (a primary result)
 
 We replace the earlier confounded two-run comparison with a **controlled
-experiment**: a single frozen configuration set re-run **K = 5** times, everything
-else held constant. **9.6% of clean cells (142 / 1,477) changed outcome across the
-five identical repeats** — the same input against the same configuration breaching
-on some trials and defending on others. The instability concentrates in naked
-weak models (DeepSeek-V3: 37 unstable cells; Llama 4 Scout: 32).
+experiment**: within a single campaign, every cell of a frozen configuration set
+is sampled **K = 5** times, everything else held constant. **9.5% of clean cells
+(143 / 1,502) changed outcome across the five identical repeats** — the same input
+against the same configuration breaching on some trials and defending on others.
+The instability concentrates in naked weak models (DeepSeek-V3: 37 unstable cells;
+Llama 4 Scout: 32).
 
 For "Llama 4 Scout / naked" — the original cautionary example — of its 77 cells,
 **32 (42%) were unstable**: 14 never breached (0/5), 31 always breached (5/5), and
 **32 fell in between** (e.g. seven at 2/5, three at 3/5, thirteen at 4/5). A
 *single-sample* leaderboard would assign this exact configuration anywhere from 0%
-to 100% defense depending on which trial it happened to draw. This is the
-controlled evidence — free of the configuration-set confound — that **single-sample
-LLM leaderboards are not reproducible**, and that defense rates must be reported
-with confidence intervals over repeated trials. We treat this variance as a
-result, not noise to be hidden.
+to 100% defense depending on which trial it happened to draw. This is controlled
+evidence — free of the configuration-set confound — that **a single sample per
+cell is not reproducible**, and that defense rates must carry confidence intervals
+over repeated trials. We scope this claim precisely: it is measured *within one
+campaign* (K independent API calls per cell), which isolates provider/router
+non-determinism. Whether defense rates also drift *across days* is a related but
+distinct question; the harness ships an `across_runs` analysis mode for it
+(`experiments/analyze_variance.py`), but a multi-day study is left to future work
+(§8). We treat this variance as a result, not noise to be hidden.
 
 ### 4.4 Guardrail comparison
 
-From the fixed-model ablation (`gpt-4o-mini`), each input guardrail raises defense
-above the 82.2% naked baseline: **keyword 91.3%**, **regex 92.2%**, **Llama Guard
-97.8%**, and **LLM / hardened-prompt 100%**. Guardrails that block an input
-**skip the main model call**, so they can *lower* net cost while raising defense.
-The **normalizing regex filter** deterministically neutralizes the
-vertical-newline, leet, Base64, and gyaru transforms that the keyword filter
-misses — verified in unit tests (`tests/test_guardrails.py`) — at zero additional
-API cost.
+Across the three ablation models (Table 2′), the ordering is consistent: the
+**LLM guardrail** and a **hardened prompt** give the largest gains, **Llama Guard**
+is next, and the **lightweight keyword/regex** filters help most on weak base
+models and little on already-strong ones. Guardrails that block an input **skip
+the main model call**, so they can *lower* net cost while raising defense. The
+**normalizing regex filter** deterministically neutralizes the vertical-newline,
+leet, Base64, and gyaru transforms the keyword filter misses — verified in unit
+tests (`tests/test_guardrails.py`) — at zero additional API cost; consistent with
+this, on the weak Scout it adds **+45 points** of defense (the largest gain of any
+deterministic filter).
+
+**Ceiling caveat.** Marginal guardrail effects are cleanly identifiable only in
+the *low-prompt* (naked) arm; in the *hardened* arm the hardened prompt alone
+already reaches 100%, so 6 of the 10 ablation cells saturate at the ceiling and
+the *additional* contribution of a guardrail on top of a hardened prompt cannot be
+separated from this suite. The per-guardrail deltas above are therefore reported
+**against the naked baseline**, and should be read as "guardrail-vs-nothing on a
+weak prompt," not as marginal effects atop an already-strong prompt. A
+less-saturating attack set or a weaker base model would be needed to resolve the
+prompt×guardrail interaction.
 
 On the cost-efficiency metric (§3.8), the leaders are **inexpensive OSS models
 behind a lightweight guardrail** (gpt-oss-20b + keyword, cospa ≈ 1131; Qwen3-235B
@@ -355,9 +439,9 @@ apart.
 Across all clean trials, the most effective **attacks** were Trusted-Output /
 Citations manipulation (**30.2%** breach), False RAG Entry Injection (24.1%), and
 System-Prompt discovery (20.3%) — RAG-borne and output-trust vectors dominate.
-Among **transforms**, the *un-obfuscated* `baseline` was most effective (**22.2%**)
-followed by `vertical_newline` (20.5%) and `polite_business` (17.7%), while
-**`base64_wrap` was least effective (5.9%)** and `leet_smuggle` next (9.6%):
+Among **transforms**, the *un-obfuscated* `baseline` was most effective (**22.3%**)
+followed by `vertical_newline` (20.2%) and `polite_business` (17.6%), while
+**`base64_wrap` was least effective (5.9%)** and `leet_smuggle` next (9.3%):
 heavy encoding makes models *refuse or fail to parse* the instruction more often
 than it smuggles it past them. This is itself a finding — the most dangerous
 Japanese transforms are the *legible* ones (vertical writing, keigo framing), not
@@ -432,6 +516,28 @@ Operationally, J-ART is best understood as a **MEASURE**-stage activity in the
 NIST AI RMF (recurring adversarial measurement of a deployed configuration) whose
 outputs feed an organization's **MANAGE** decisions (which configuration to ship).
 
+*Worked example.* Under **NIST MEASURE 2.7** (AI system security and resilience),
+an organization could record a J-ART line item as: *"prompt-injection /
+jailbreak resilience (ATLAS T0051/T0054), lexical-leak defense rate
+93.5% (95% CI [90.6, 95.6]), n = 385, K = 5, model GPT-4.1-mini + hardened prompt
++ keyword guardrail, 2026-06-14"*, with a pre-registered sufficiency threshold
+(e.g. "CI lower bound ≥ 90% for the shipped configuration"). The same row is the
+evidence an AISI red-teaming report or an EU AI Act Art. 15 robustness dossier
+would cite. This shows the crosswalk is operational, not merely a label.
+
+### 6.4 Dual-use
+
+J-ART is a defensive evaluation harness, but the published transform suite is also
+a reusable *attack* wrapper, and we weigh this openly. The uplift it gives an
+attacker is low: the Japanese-script transforms are folklore among Japanese
+internet users, the encoding transforms are replications of public work
+(CipherChat, ArtPrompt), and the suite contains no harmful payloads — only the
+harmless proxy markers (§3.4). Against this, the defender benefit is concrete: we
+release, in the same repository, the **normalizing regex guardrail** that
+neutralizes every transform in the suite (verified by unit tests), so the
+mitigation ships with the disclosure. On balance we judge open release net-positive
+for defenders, consistent with the responsible-disclosure pattern of §6.2.
+
 ## 7. Limitations
 
 - **Proxy markers, not harm:** we measure instruction-violation / leakage proxies
@@ -448,10 +554,17 @@ outputs feed an organization's **MANAGE** decisions (which configuration to ship
   `N`=1 per cell.
 - **Provider non-determinism / router variance:** see §4.3; results are
   snapshots and depend on routing and model versions at run time.
-- **Partial data for rate-limited configurations:** in the live campaign, three
-  configurations (Gemini-pro, Qwen3-max, Opus) hit provider rate limits; their
-  failed cells are labeled `api_error` and excluded, so their point estimates rest
-  on fewer trials (n = 116–295 vs. 385) and their CIs are correspondingly wider.
+- **Partial data and non-random missingness:** a parity re-run brought Qwen3-max
+  to n = 374, but **Claude Opus naked (n = 125)** and **Gemini-pro (n ≈ 120)**
+  remain partial — Opus because the Anthropic balance was exhausted mid-re-run,
+  Gemini-pro because of persistent per-minute rate limits. Crucially, this
+  missingness is **not random**: rate limits correlate with attack/transform, so
+  for Opus the harder attack classes are under-represented and its surviving 89.6%
+  is likely an **over-estimate**, not merely a wider-CI estimate. We therefore
+  treat Opus-naked and Gemini-pro as **provisional** and **anchor no headline claim
+  on them** — the configuration-dominance comparison (§4.2) uses fully-measured
+  GPT-4.1 (n = 231) instead. Bringing these two to parity (a fresh Anthropic
+  balance; a Gemini quota increase) is left to the camera-ready.
 - **Cost attribution:** guardrail tokens are now priced at the *guardrail
   model's* own rate (the classifier `JART_GUARD_MODEL` for `llamaguard`; the
   target model itself for the `llm` guardrail, which it genuinely calls), reported
@@ -478,13 +591,27 @@ identifiers. See the repository for exact model identifiers and pricing used.
 
 Each cell carries provenance labels — `mode` (`LIVE`/`MOCK`), `api_error`, the
 resolved model, and a `price_per_million` snapshot — and simulated cells are
-excluded from the live aggregates (§4). The reviewer-response experiments for
-§4.2 (balanced ablation) and §4.3 (controlled variance) are scripted under
-`experiments/` with their statistics (`wilson_diff_ci`) and a cost estimate; the
-**labeled live campaign** that fills in the definitive numbers is a single
-repeated, fully-labeled run of that scaffolding.
+excluded from the live aggregates (§4). **Every number in §4 is reproducible from
+committed artifacts**, named here:
 
-## 10. References (indicative — verify bibliographic details before submission)
+| Table / claim | Committed artifact |
+|---|---|
+| §4.1 overall, §4.2 naked-spread table, §4.3 variance, §4.5 transforms | `experiments/var_run.json` |
+| §4.2 Table 2′ ablation — GPT-4o-mini | `experiments/ablation_results.json` |
+| §4.2 Table 2′ ablation — Llama-4-Scout | `experiments/abl_scout_results.json` |
+| §4.2 Table 2′ ablation — GPT-4.1 | `experiments/abl_gpt41_results.json` |
+| §4.4 cospa ranking | `experiments/var_run.json` (`summary[].cospa_score`) |
+
+Aggregates and CIs are recomputed by `experiments/analyze_ablation.py` and
+`experiments/analyze_variance.py` (cluster-robust intervals via
+`bootstrap_diff_ci`). The public leaderboard site is regenerated by a manual or
+weekly LIVE CI run; push-triggered CI runs use simulation mode and are labeled as
+such, so the site never silently mixes MOCK and LIVE.
+
+## 10. References
+
+*(All entries are real, canonical works; final venue/year/DOI formatting will be
+completed for camera-ready.)*
 
 1. MITRE ATLAS — Adversarial Threat Landscape for Artificial-Intelligence
    Systems. atlas.mitre.org
@@ -534,6 +661,12 @@ repeated, fully-labeled run of that scaffolding.
     Ver. 1.0 (2024).
 27. Japan AI Safety Institute (AISI). Guide to Red Teaming Methodology on AI
     Safety (2024).
+28. Yuan et al. GPT-4 Is Too Smart To Be Safe: Stealthy Chat with LLMs via
+    Cipher (CipherChat, 2023).
+29. Jiang et al. ArtPrompt: ASCII Art-based Jailbreak Attacks against Aligned
+    LLMs (2024).
+30. Debenedetti et al. AgentDojo: A Dynamic Environment to Evaluate Attacks and
+    Defenses for LLM Agents (2024).
 
 ## Citation
 

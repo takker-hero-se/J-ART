@@ -10,10 +10,12 @@ env/
 site/
 results.json
 
-# 実験の生成物（experiments/README.md の手順で再生成可能）
-experiments/ablation.yaml
-experiments/*_results.json
-experiments/var_run*.json
+# 実験の中間生成物（再生成可能・設定/作業用は追跡しない）
+experiments/*.yaml
+experiments/parity_run.json
+experiments/var_run_merged.json
+# ただし §4 を支える公開アーティファクト（再現性のため追跡する／P0-2）:
+#   experiments/var_run.json, ablation_results.json, abl_scout_results.json, abl_gpt41_results.json
 
 # LaTeX のビルド副産物（.tex と .pdf のみ追跡）
 *.aux

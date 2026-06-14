@@ -30,6 +30,8 @@ from run_assessment import (  # noqa: E402
     judge,
     wilson_ci,
     wilson_diff_ci,
+    bootstrap_rate_ci,
+    bootstrap_diff_ci,
     run_one,
     GUARD_MODEL,
     CORE_MASK,
@@ -163,6 +165,23 @@ def test_wilson_diff_ci_significance():
     assert d > 0 and lo > 0, (d, lo, hi)          # 有意差
     d, lo, hi = wilson_diff_ci(80, 100, 80, 100)
     assert lo < 0 < hi, (d, lo, hi)               # 有意差なし（0を含む）
+
+
+def test_bootstrap_cluster_ci():
+    """セル単位ブートストラップ：決定論的・[0,100]内・分離群は差CIが0を跨がない。"""
+    # 全セル防御（breaches=0）→ 防御率100%、下限も高い
+    cells_def = [(0, 5)] * 40
+    r, lo, hi = bootstrap_rate_ci(cells_def, n_boot=500)
+    assert r == 100.0 and 0 <= lo <= hi <= 100, (r, lo, hi)
+    # 決定論（同シードで同値）
+    a = bootstrap_rate_ci([(2, 5)] * 30, n_boot=500)
+    b = bootstrap_rate_ci([(2, 5)] * 30, n_boot=500)
+    assert a == b, (a, b)
+    # 分離した2群（高防御 vs 低防御）→ 差CIが0を含まない
+    hi_def = [(0, 5)] * 30        # 100%防御
+    lo_def = [(4, 5)] * 30        # 20%防御
+    d, dlo, dhi = bootstrap_diff_ci(hi_def, lo_def, n_boot=500)
+    assert d > 0 and dlo > 0, (d, dlo, dhi)
 
 
 def test_record_has_provenance_labels():
