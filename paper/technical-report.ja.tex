@@ -335,8 +335,8 @@ OSS＋軽量ガードが上位（gpt-oss-20b~+~keyword、$\mathrm{cospa}\approx1
 
 \paragraph{攻撃・変形の有効性.}
 最も有効だった攻撃は信頼出力/引用の操作、偽RAGエントリ注入、システムプロンプト探索。変形では
-\emph{無変形}の \code{baseline} が最も有効（\textbf{22.3\%}）、次いで \code{vertical\_newline}
-（20.2\%）・\code{polite\_business}（17.6\%）で、\textbf{\code{base64\_wrap} は最弱（5.9\%）}：
+\emph{無変形}の \code{baseline} が最も有効（\textbf{22.0\%}）、次いで \code{vertical\_newline}
+（20.0\%）・\code{polite\_business}（17.3\%）で、\textbf{\code{base64\_wrap} は最弱（5.5\%）}：
 重い符号化はモデルに密輸するより拒否/解釈失敗させることが多い。最も危険な日本語変形は
 \emph{可読な}もの（縦書き・敬語フレーミング）であって、暗号的なものではない。
 
@@ -449,6 +449,18 @@ GPT-4.1-mini＋強プロンプト＋keyword ガード、2026-06-14」と記録�
 表\ref{tab:ablation}）。集計とクラスタ頑健CIは \code{analyze\_ablation.py} /
 \code{analyze\_variance.py} で再計算する。公開リーダーボードは手動/週次の LIVE CI で再生成し、
 push 起動の CI は MOCK でラベルされるため、サイトが MOCK と LIVE を混在させることはない。
+
+\section*{AIによる執筆支援}
+著者は本稿の作成にあたり、Claude Code コマンドラインインターフェース経由で
+\textbf{Claude Opus~4（Anthropic）}を執筆・編集の補助に用いた：(1) 査読対応の3ラウンドに
+わたる本文の草稿作成と改訂、(2) 日本語アブストラクトおよび英語版（\code{technical-report.tex}）
+との二言語編集、(3) 引用エラーの点検（著者帰属・出版年・書誌の完全性）。AIが生成した文章は
+すべて著者が確認し、必要に応じて修正のうえ承認した。科学的内容——実験設計、すべての実
+LIVE API 評価、データ収集、統計計算（Wilson およびクラスタ頑健区間）、結果の解釈——は、
+AIによる生成支援なしに著者が独立に実施した。\emph{デュアルロールに関する注記：}Claude
+Opus~4.x は本稿において\emph{評価対象}モデルの一つとしても登場する（\S\ref{sec:results-ja}、
+素の防御率 86.5\%、$n{=}385$）。執筆ツールとしての役割と研究対象としての役割は別個であり、
+透明性のため双方をここに開示する。本稿の全内容について著者が単独かつ全面的に責任を負う。
 
 \begin{thebibliography}{99}
 \bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
