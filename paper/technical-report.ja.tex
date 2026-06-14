@@ -450,8 +450,10 @@ GPT-4.1-mini＋強プロンプト＋keyword ガード、2026-06-14」と記録�
 3つのアブレーションファイル \code{ablation\_results.json}（GPT-4o-mini）・
 \code{abl\_scout\_results.json}（Llama-4-Scout）・\code{abl\_gpt41\_results.json}（GPT-4.1、
 表\ref{tab:ablation}）。集計とクラスタ頑健CIは \code{analyze\_ablation.py} /
-\code{analyze\_variance.py} で再計算する。公開リーダーボードは手動/週次の LIVE CI で再生成し、
-push 起動の CI は MOCK でラベルされるため、サイトが MOCK と LIVE を混在させることはない。
+\code{analyze\_variance.py} で再計算する。\textbf{公開リーダーボードは commit 済みの LIVE
+キャンペーン成果物}（\code{var\_run.json}）を配信するため、本稿の数値とサイトが一致する。
+新規 LIVE 再測定は定期実行（および手動）で行い、push 時は課金せず commit 済み成果物を再公開
+するため、サイトが MOCK と LIVE を混在させることはない。
 
 \section*{AIによる執筆支援}
 著者は本稿の作成にあたり、Claude Code コマンドラインインターフェース経由で

@@ -58,27 +58,33 @@ jobs:
         run: |
           python tests/test_guardrails.py
 
-      - name: Run assessment
+      - name: Publish results
         env:
-          # 機密情報は GitHub Secrets から安全に読み込む（未設定のプロバイダはMOCKで実行）
+          # 機密情報は GitHub Secrets から安全に読み込む（cron/手動のLIVE実行でのみ使用）
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          # Gemini（GEMINI_API_KEY を優先、後方互換で GOOGLE_API_KEY も渡す）
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          # OSS / OpenAI互換ホスト（gpt-oss / Qwen / Llama）。いずれか設定された分だけLIVE実行
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          # 実行モードの方針（クレジット二重消費を避ける）:
-          #   - push        … 強制MOCK（無料。コード検証とサイト生成のみ。LIVE課金しない）
-          #   - 手動 force_mock=true … 強制MOCK
-          #   - 週次cron / 手動(既定) … LIVE（公開サイトに本物を載せる）
-          JART_FORCE_MOCK: ${{ (github.event_name == 'push' || github.event.inputs.force_mock == 'true') && '1' || '' }}
-          # 1セルあたり試行回数（手動実行で 5 等を指定可。push/cron 既定は 1）
+          # 手動実行で force_mock=true なら強制MOCK（cron/手動の fresh 実行に作用）。
+          JART_FORCE_MOCK: ${{ github.event.inputs.force_mock == 'true' && '1' || '' }}
+          # 1セルあたり試行回数（手動実行で 5 等を指定可。既定は 1）。
           JART_TRIALS: ${{ github.event.inputs.trials || '1' }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          python run_assessment.py --config config.yaml --out results.json
+          # 公開データの方針（クレジット二重消費・MOCK混在を避ける）:
+          #   - push  … 課金せず、commit 済みの実 LIVE キャンペーン成果物
+          #             experiments/var_run.json をそのまま公開（論文の数値と一致）。
+          #   - cron / 手動 … 新規に LIVE 評価を実行して結果を更新。
+          if [ "$EVENT_NAME" = "push" ]; then
+            echo "[push] Publishing the committed LIVE artifact (experiments/var_run.json); no API calls."
+            cp experiments/var_run.json results.json
+          else
+            echo "[$EVENT_NAME] Running a fresh assessment (LIVE unless force_mock)."
+            python run_assessment.py --config config.yaml --out results.json
+          fi
 
       - name: Generate static site
         run: |
