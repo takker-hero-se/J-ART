@@ -63,8 +63,9 @@ published artifacts. Across 21 application configurations and 11 attacks $\times
 range 29.6--86.5\% defense, but a balanced ablation on \textbf{three} base models
 with \textbf{cluster-robust} intervals shows a \textbf{hardened prompt and
 model-based guardrails significantly raise defense on every model}, while
-lightweight keyword/regex filters help most where the base model is weak (the
-effect scales inversely with the naked baseline) --- and that a simple
+lightweight keyword/regex filters help most where the base model is weak (effects
+measured against the naked baseline; the hardened arm saturates, so
+guardrail-atop-hardened is out of scope) --- and that a simple
 \textbf{normalizing filter} defeats the obfuscation transforms a na\"ive keyword
 filter misses. We also document \textbf{large within-campaign variance}: in a
 controlled $K=5$ repeat of a frozen configuration set, \textbf{9.6\% of cells
@@ -318,7 +319,10 @@ All configurations include the simplified RAG context (\S\ref{sec:applayer});
 \textbf{``naked'' means no system-prompt hardening and no guardrail, not ``no
 RAG''} (indirect-injection attacks are in scope even for the naked baselines).
 The aggregate breach rate over clean trials was \textbf{14.5\%}
-($1{,}151/7{,}916$), \textbf{concentrated in weak configurations}. Every hardened
+($1{,}151/7{,}916$), \textbf{concentrated in weak configurations}. (\code{gemini-pro}
+contributes a \emph{provisional} $n{=}227$ of defended trials to this pool,
+\S\ref{sec:limits}; excluding it raises the aggregate to 15.0\%, leaving the
+picture unchanged.) Every hardened
 or guardrailed configuration, on \emph{any} model, defended in the
 \textbf{91--100\%} band, whereas bare models ranged from \textbf{29.6\% to 86.5\%}
 (Table~\ref{tab:naked}).
@@ -512,8 +516,9 @@ release net-positive for defenders, consistent with \S6.2.
         rate limits correlate with attack difficulty, under-representing Opus's
         hardest attacks. Parity re-runs \textbf{confirmed this directly}: Opus naked
         at full $n{=}385$ defends \textbf{86.5\%}, vs.\ the survivorship-biased
-        \textbf{89.6\%} on $n{=}125$ --- a ${\sim}3$-point over-estimate, as
-        predicted. Qwen3-max and Opus are now at parity; \textbf{only Gemini-pro
+        \textbf{89.6\%} on the $n{=}125$ earlier partial snapshot (not retained as
+        an artifact; only the corrected $n{=}385$ figure is committed) --- a
+        ${\sim}3$-point over-estimate, as predicted. Qwen3-max and Opus are now at parity; \textbf{only Gemini-pro
         remains partial} ($n{=}227$; per-minute rate limits a credit top-up cannot
         raise) and is treated as provisional, with no headline resting on it.
   \item \textbf{Cost attribution:} guardrail tokens are now priced at the

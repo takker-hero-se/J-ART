@@ -41,7 +41,9 @@ model). In a
 balanced ablation on **three** base models with **cluster-robust** intervals, a
 **hardened prompt and the model-based guardrails significantly raise defense on
 every model**, while lightweight keyword/regex filters help most where the base
-model is weak; the effect scales inversely with the naked baseline. A simple
+model is weak; the effect scales inversely with the naked baseline (measured
+against the naked baseline — the hardened arm saturates, so guardrail-atop-hardened
+is out of scope). A simple
 **normalizing filter** defeats the obfuscation transforms a naïve keyword filter
 misses. We also document **large within-campaign variance**: in a controlled K=5
 repeat of a frozen configuration set, **9.6% of cells changed outcome across
@@ -331,9 +333,12 @@ safety, reported with **cluster-robust** intervals where a difference is claimed
 RAG"** (so indirect-injection attacks are in scope even for the naked baselines).
 The aggregate breach rate over clean trials was **14.5%** (1,151 / 7,916) and was
 **concentrated in weak configurations** — low-capability models with no system
-prompt and no guardrail. Every hardened-prompt or guardrailed configuration, on
-*any* model, defended in the **91–100%** band, whereas bare ("naked") models
-ranged from **29.6% to 86.5%** defense (below).
+prompt and no guardrail. (One configuration, `gemini-pro`, contributes a
+*provisional* n = 227 of defended trials to this pool — see §7; excluding it
+raises the aggregate breach rate to 15.0%, leaving the qualitative picture
+unchanged.) Every hardened-prompt or guardrailed configuration, on *any* model,
+defended in the **91–100%** band, whereas bare ("naked") models ranged from
+**29.6% to 86.5%** defense (below).
 
 ### 4.2 Application-layer defense vs. model capability
 

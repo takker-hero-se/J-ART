@@ -611,10 +611,14 @@ function rateBar(s) {{
   const ci = (s.ci_low != null && s.ci_high != null)
     ? `<span class="text-[10px] text-slate-500 ml-1 font-normal">CI[${{Number(s.ci_low).toFixed(1)}}–${{Number(s.ci_high).toFixed(1)}}]</span>`
     : "";
+  // 部分データ（レート制限等で試行が除外された）構成は暫定として明示する。
+  const prov = (s.n_api_error && s.n_api_error > 0)
+    ? `<span class="text-[10px] text-amber-400 ml-1 font-normal" title="provisional: ${{s.n_api_error}} trials excluded (rate-limited); non-random missingness — see paper §7">⚠</span>`
+    : "";
   return `<div class="flex items-center gap-2 justify-end">
       <div class="w-24 h-1.5 rounded-full bg-slate-700/70 overflow-hidden">
         <div class="h-full ${{color}} rounded-full" style="width:${{r}}%"></div></div>
-      <span class="tabular-nums w-14 text-right font-semibold ${{txt}}">${{r.toFixed(1)}}%</span>${{ci}}</div>`;
+      <span class="tabular-nums w-14 text-right font-semibold ${{txt}}">${{r.toFixed(1)}}%</span>${{ci}}${{prov}}</div>`;
 }}
 
 function transformBadge(name) {{
