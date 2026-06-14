@@ -6,8 +6,10 @@ abstract: >-
   layer of LLM deployments (model x system-prompt strength x guardrail x
   retrieval) rather than bare models, using Japanese-specific obfuscation
   transforms, MITRE ATLAS-grounded attacks with harmless proxy markers, a
-  five-way guardrail comparison, Wilson confidence intervals, and a
-  cost-efficiency metric.
+  five-way guardrail comparison, Wilson and cluster-robust confidence intervals,
+  and a cost-efficiency metric. v0.2.0 adds a fully-labeled live K=5 campaign over
+  21 application configurations, a balanced three-model ablation, committed LIVE
+  result artifacts, and an ATLAS-OWASP-NIST-EU-Japan governance crosswalk.
 type: software
 authors:
   - given-names: "Takayuki"
@@ -25,8 +27,8 @@ identifiers:
     value: "10.5281/zenodo.20676880"
     description: "Version DOI for v0.1.0"
 license: MIT
-version: "0.1.0"
-date-released: "2026-06-13"
+version: "0.2.0"
+date-released: "2026-06-14"
 keywords:
   - large language models
   - LLM security
