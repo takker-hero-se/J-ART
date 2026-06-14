@@ -572,7 +572,9 @@ for defenders, consistent with the responsible-disclosure pattern of §6.2.
   **not random** — rate limits correlate with attack difficulty, so Opus's hardest
   attacks were under-represented. Parity re-runs **confirmed this directly**:
   Opus-naked measured at full **n = 385** defends **86.5%**, vs. the
-  survivorship-biased **89.6%** on n = 125 — a ~3-point over-estimate, exactly as
+  survivorship-biased **89.6%** on the n = 125 earlier partial snapshot (not
+  retained as an artifact; only the corrected n = 385 figure is committed) — a
+  ~3-point over-estimate, exactly as
   predicted. Qwen3-max (n = 374) and Opus (n = 385) are now at parity; **only
   Gemini-pro remains partial** (n = 227; persistent per-minute rate limits that a
   credit top-up cannot raise). Its estimate is treated as provisional, and no
