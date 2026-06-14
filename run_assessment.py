@@ -557,7 +557,7 @@ def _call_openai_chat(target, system, user):
     """OpenAI および OpenAI互換ホスト(OpenRouter/Together/Groq, gpt-oss/Qwen/Llama)共通。"""
     client = _openai_client(target)
     r = client.chat.completions.create(
-        model=target["model"], temperature=0,
+        model=target["model"], temperature=0, max_tokens=512,
         messages=[{"role": "system", "content": system},
                   {"role": "user", "content": user}],
     )
@@ -576,10 +576,14 @@ def _call_openai_chat(target, system, user):
 def _call_anthropic(target, system, user):
     from anthropic import Anthropic
     client = Anthropic(timeout=REQUEST_TIMEOUT)
-    r = client.messages.create(
-        model=target["model"], max_tokens=1024, temperature=0, system=system,
-        messages=[{"role": "user", "content": user}],
-    )
+    model = target["model"]
+    params = dict(model=model, max_tokens=1024, system=system,
+                  messages=[{"role": "user", "content": user}])
+    # 決定論のため temperature=0 を付すが、一部モデル(Claude Opus 4.x)は temperature を
+    # 非対応(400 'temperature is deprecated')とするため、その系統では省略する。
+    if "opus" not in model.lower():
+        params["temperature"] = 0
+    r = client.messages.create(**params)
     text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
     return text, r.usage.input_tokens, r.usage.output_tokens
 

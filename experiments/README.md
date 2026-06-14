@@ -76,6 +76,21 @@ whose key is absent (those fall back to MOCK and are labeled as such). Live
 responses can be longer than the MOCK stand-ins, so treat these as order-of-
 magnitude figures and keep a small buffer.
 
+## Running live locally
+
+CI installs `requirements.txt`; a bare local checkout does **not** have the
+provider SDKs, and without them every live call silently falls back to MOCK
+(`No module named 'openai'` is caught and treated as an error/fallback). Before a
+local live run:
+
+```bash
+pip install -r requirements.txt   # openai, anthropic, google-generativeai, pyyaml
+```
+
+Keys are read from the process environment (the harness does not auto-load
+`.env`). Export them first, e.g. `set -a; . ./.env; set +a`, or pass them inline.
+Targets whose key is absent are evaluated in MOCK and labeled `mode=MOCK`.
+
 ## Notes
 
 - Determinism: MOCK results are reproducible from `_frac`/`_seed`; the
