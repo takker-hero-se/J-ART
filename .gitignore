@@ -13,6 +13,7 @@ results.json
 # 実験の中間生成物（再生成可能・設定/作業用は追跡しない）
 experiments/*.yaml
 experiments/parity_run.json
+experiments/parity2_run.json
 experiments/var_run_merged.json
 # ただし §4 を支える公開アーティファクト（再現性のため追跡する／P0-2）:
 #   experiments/var_run.json, ablation_results.json, abl_scout_results.json, abl_gpt41_results.json

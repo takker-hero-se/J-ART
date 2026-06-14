@@ -198,9 +198,6 @@ premise), `base64_wrap` (Base64-encoded instruction), and `leet_smuggle` (leet
 symbol substitution + zero-width spaces). Transforms are designed to preserve
 human legibility while breaking substring-matching filters.
 
-We distinguish two classes (Table 2). **Japanese-specific** transforms exploit
-properties of the Japanese writing system or register and have no direct
-equivalent in, say, English red-teaming: `gyaru` (kana glyph substitution),
 We distinguish two classes (Table 2). The **novel** surface is the
 **Japanese-specific** transforms, which exploit the writing system or register and
 have no direct equivalent in English red-teaming: `gyaru` (kana glyph
@@ -352,15 +349,16 @@ ablation run on **three** base models spanning the capability range (a weak OSS
 model, Llama 4 Scout; a cheap proprietary model, GPT-4o-mini; and a flagship,
 GPT-4.1). Each holds the model fixed and crosses {naked, hardened} prompt ×
 guardrail; we report each config's difference from that model's naked baseline
-with a **cluster-robust bootstrap 95% CI** (resampling cells, not trials, so the
-K = 5 within-cell correlation does not inflate significance). Table 2′ summarizes
-the deltas.
+with a **cluster-robust bootstrap 95% CI** (3,000 cell-resamples; resampling cells,
+not trials, so the within-cell correlation of the ablation's K = 3 repeats does not
+inflate significance). Table 2′ summarizes the deltas; they are reproduced by
+`experiments/analyze_ablation.py`.
 
 **Table 2′. Configuration effect (Δ vs. that model's naked baseline; cluster-robust 95% CI).**
 
 | Added defense (low-prompt arm) | Llama-4-Scout (naked 38.1%) | GPT-4o-mini (naked 82.3%) | GPT-4.1 (naked 64.1%) |
 |---|---|---|---|
-| + keyword filter | **+26.0** [+13.0,+39.4] | +9.1 [−1.3,+19.5] ✗ | +13.1 [−0.4,+26.6] ✗ |
+| + keyword filter | **+26.0** [+13.0,+39.4] | +9.1 [−1.3,+19.5] ✗ | +12.5 [−1.5,+26.3] ✗ |
 | + normalizing regex | **+45.0** [+33.3,+55.8] | +10.0 [+0.0,+19.9] ✗ | **+23.8** [+11.3,+36.4] |
 | + Llama Guard | **+47.2** [+35.9,+58.4] | **+15.6** [+7.4,+24.7] | **+25.1** [+12.6,+37.7] |
 | + LLM guardrail | **+59.7** [+50.6,+68.4] | **+17.7** [+10.0,+26.4] | **+35.9** [+26.0,+46.8] |
@@ -385,9 +383,10 @@ GPT-4.1 rather than on Opus-naked, whose 89.6% is provisional (n = 125; see §7)
 
 We replace the earlier confounded two-run comparison with a **controlled
 experiment**: within a single campaign, every cell of a frozen configuration set
-is sampled **K = 5** times, everything else held constant. **9.5% of clean cells
-(143 / 1,502) changed outcome across the five identical repeats** — the same input
-against the same configuration breaching on some trials and defending on others.
+is sampled **K = 5** times, everything else held constant. Over the **1,502 cells
+with all five trials clean** (no `api_error`), **9.5% (143 / 1,502) changed outcome
+across the five identical repeats** — the same input against the same configuration
+breaching on some trials and defending on others.
 The instability concentrates in naked weak models (DeepSeek-V3: 37 unstable cells;
 Llama 4 Scout: 32).
 
@@ -519,9 +518,11 @@ outputs feed an organization's **MANAGE** decisions (which configuration to ship
 *Worked example.* Under **NIST MEASURE 2.7** (AI system security and resilience),
 an organization could record a J-ART line item as: *"prompt-injection /
 jailbreak resilience (ATLAS T0051/T0054), lexical-leak defense rate
-93.5% (95% CI [90.6, 95.6]), n = 385, K = 5, model GPT-4.1-mini + hardened prompt
-+ keyword guardrail, 2026-06-14"*, with a pre-registered sufficiency threshold
-(e.g. "CI lower bound ≥ 90% for the shipped configuration"). The same row is the
+93.5% (Wilson 95% CI [90.6, 95.6] for this single configuration's rate — the
+cluster-robust interval applies to *differences* between configurations, §3.7),
+n = 385, K = 5, model GPT-4.1-mini + hardened prompt + keyword guardrail,
+2026-06-14"*, with a pre-registered sufficiency threshold (e.g. "CI lower bound
+≥ 90% for the shipped configuration"). The same row is the
 evidence an AISI red-teaming report or an EU AI Act Art. 15 robustness dossier
 would cite. This shows the crosswalk is operational, not merely a label.
 

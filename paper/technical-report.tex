@@ -326,8 +326,9 @@ on \textbf{three} base models spanning the range (weak Llama-4-Scout; cheap
 GPT-4o-mini; flagship GPT-4.1). Each holds the model fixed and crosses
 \{naked, hardened\}~prompt $\times$ guardrail; we report each config's difference
 from that model's naked baseline with a \textbf{cluster-robust bootstrap 95\% CI}
-(resampling cells, not trials, so the $K{=}5$ within-cell correlation does not
-inflate significance; Table~\ref{tab:ablation}). Two robust patterns hold across
+(3{,}000 cell-resamples; resampling cells, not trials, so the within-cell
+correlation of the ablation's $K{=}3$ repeats does not inflate significance;
+reproduced by \code{experiments/analyze\_ablation.py}; Table~\ref{tab:ablation}). Two robust patterns hold across
 all three models: (1)~a \textbf{hardened prompt} and the \textbf{model-based
 guardrails} (Llama Guard, LLM self-moderation) significantly raise defense on
 \emph{every} model; (2)~the effect \textbf{scales inversely with the naked
@@ -368,7 +369,7 @@ cluster-robust 95\% CI). $\times$ = not significant.}
 \toprule
 Added defense (low-prompt) & Scout (38.1\%) & 4o-mini (82.3\%) & GPT-4.1 (64.1\%) \\
 \midrule
-+ keyword       & \textbf{+26.0} [+13,+39] & +9.1 [$-1$,+20]\,$\times$ & +13.1 [$-0.4$,+27]\,$\times$ \\
++ keyword       & \textbf{+26.0} [+13,+39] & +9.1 [$-1$,+20]\,$\times$ & +12.5 [$-1.5$,+26]\,$\times$ \\
 + regex         & \textbf{+45.0} [+33,+56] & +10.0 [+0,+20]\,$\times$ & \textbf{+23.8} [+11,+36] \\
 + Llama Guard   & \textbf{+47.2} [+36,+58] & \textbf{+15.6} [+7,+25] & \textbf{+25.1} [+13,+38] \\
 + LLM guardrail & \textbf{+59.7} [+51,+68] & \textbf{+17.7} [+10,+26] & \textbf{+35.9} [+26,+47] \\
@@ -379,8 +380,9 @@ hardened prompt & \textbf{+47.2} [+36,+58] & \textbf{+17.7} [+10,+26] & \textbf{
 
 \paragraph{Within-campaign trial variance (a primary result).}
 Within a single campaign, every cell of a frozen configuration set is sampled
-\textbf{$K=5$} times. \textbf{9.5\% of clean cells ($143/1{,}502$) changed outcome
-across the five identical repeats}, concentrated in naked weak models. For
+\textbf{$K=5$} times. Over the \textbf{1{,}502 cells with all five trials clean},
+\textbf{9.5\% ($143/1{,}502$) changed outcome across the five identical repeats},
+concentrated in naked weak models. For
 ``Llama~4 Scout / naked'' --- the original cautionary example --- of its 77 cells,
 \textbf{32 (42\%) were unstable}: 14 never breached (0/5), 31 always (5/5), and 32
 in between. A \emph{single-sample} leaderboard would assign this configuration
@@ -472,7 +474,9 @@ Obfuscation / self-replication (T0068,\,T0061) & LLM01 & MEASURE 2.7 & Art.\,55 
 
 \emph{Worked example.} Under NIST MEASURE~2.7, an organization could record a
 J-ART line item as ``prompt-injection resilience (T0051/T0054), lexical-leak
-defense rate 93.5\% (95\% CI [90.6, 95.6]), $n{=}385$, $K{=}5$, GPT-4.1-mini +
+defense rate 93.5\% (Wilson 95\% CI [90.6, 95.6] for this single rate; the
+cluster-robust interval is for \emph{differences}, \S\ref{sec:stats}), $n{=}385$,
+$K{=}5$, GPT-4.1-mini +
 hardened prompt + keyword guardrail, 2026-06-14'' with a pre-registered threshold
 (e.g.\ ``CI lower bound $\geq 90\%$''); the same row is the evidence an AISI
 red-team report or an EU AI Act Art.~15 dossier would cite.

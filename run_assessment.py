@@ -426,7 +426,7 @@ def _percentile(sorted_vals, q):
     return sorted_vals[lo] + (sorted_vals[hi] - sorted_vals[lo]) * (idx - lo)
 
 
-def bootstrap_rate_ci(cells, n_boot: int = 2000, seed: int = 20260614):
+def bootstrap_rate_ci(cells, n_boot: int = 3000, seed: int = 20260614):
     """セル単位ブートストラップで防御率の95%CIを百分率で返す: (rate, low, high)。
     cells: [(breaches, trials), ...]。各反復でセルを復元抽出し、防御率=1-Σbreach/Σtrial。"""
     cells = [(b, t) for (b, t) in cells if t > 0]
@@ -447,7 +447,7 @@ def bootstrap_rate_ci(cells, n_boot: int = 2000, seed: int = 20260614):
     return (rate, _percentile(samples, 0.025), _percentile(samples, 0.975))
 
 
-def bootstrap_diff_ci(cells1, cells2, n_boot: int = 2000, seed: int = 20260614):
+def bootstrap_diff_ci(cells1, cells2, n_boot: int = 3000, seed: int = 20260614):
     """2群のセル集合の防御率差 (group1 − group2) のクラスタ頑健95%CIを百分率で返す。
     返り値: (diff_pct, low_pct, high_pct)。区間が0を跨がなければ有意。"""
     c1 = [(b, t) for (b, t) in cells1 if t > 0]

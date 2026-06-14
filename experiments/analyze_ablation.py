@@ -1,19 +1,26 @@
 # -*- coding: utf-8 -*-
-"""均衡アブレーション結果から構成効果を差の比率CIで検定する（査読 C2 対応）。
+"""均衡アブレーション結果から構成効果を検定する（査読 C2 / クラスタCI 対応）。
 
-同一モデルを固定した直積デザインの results.json を読み、各ハードン構成と
-「素（low + GRなし）」基準との防御率差を Newcombe 95%CI で報告する。CIが0を
-跨がなければ、その構成効果はモデルを固定した上で統計的に有意である。
+同一モデルを固定した直積デザインの results.json を読み、各構成と「素（low + GRなし）」
+基準との防御率差を報告する。K反復はセル内で相関するため、差の信頼区間は**セル単位の
+クラスタ頑健ブートストラップ**（`bootstrap_diff_ci`、既定3000再標本・固定シード）で算出する
+——これが論文 §4.2 Table 2′ に印字された区間と一致する。比較用に試行レベルの Newcombe CI
+（`wilson_diff_ci`）も併記する。
+
+api_error は**試行単位**で除外する（セル丸ごと除外しない）：各セルの clean = trials − api_errors。
 
 使い方:
-  python experiments/analyze_ablation.py experiments/ablation_results.json
+  python experiments/analyze_ablation.py experiments/abl_gpt41_results.json
 """
 import json
 import os
 import sys
+from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from run_assessment import wilson_ci, wilson_diff_ci  # noqa: E402
+from run_assessment import wilson_ci, wilson_diff_ci, bootstrap_diff_ci  # noqa: E402
+
+N_BOOT = 3000  # 論文 §3.7 と一致させる
 
 
 def load(path):
@@ -26,48 +33,68 @@ def main(argv):
         print(__doc__)
         return 2
     data = load(argv[1])
+    det = data.get("details", [])
     summ = data.get("summary", [])
-    if not summ:
-        print("[!] summary が空です。")
+    if not det:
+        print("[!] details が空です。")
         return 1
 
-    # 各 summary は (defended, total) を持つ。基準＝最も素な構成（low + none）。
-    def cfg_key(s):
-        return (s.get("prompt_strength"), s.get("guardrail"))
+    # target_id -> セル群 (breaches, clean_trials)。clean = trials - api_errors（試行単位）。
+    cells = defaultdict(list)
+    for x in det:
+        clean = x["trials"] - x.get("api_errors", 0)
+        if clean > 0:
+            cells[x["target_id"]].append((x["breaches"], clean))
 
-    by_key = {cfg_key(s): s for s in summ}
-    baseline = by_key.get(("low", "none")) or min(
-        summ, key=lambda s: s["success_rate"])
-    b_def, b_tot = baseline["defended"], baseline["total_attacks"]
+    def rate_n(cs):
+        tt = sum(t for _, t in cs)
+        return (1 - sum(b for b, _ in cs) / tt) * 100.0, tt
+
+    # 基準＝low+none（無ければ最小防御率の構成）。
+    sumby = {s["target_id"]: s for s in summ}
+    base = next((s for s in summ if s.get("prompt_strength") == "low"
+                 and s["guardrail"] == "none"),
+                min(summ, key=lambda s: s["success_rate"]))
+    base_id = base["target_id"]
+    base_cells = cells[base_id]
+    b_rate, b_n = rate_n(base_cells)
 
     model = summ[0].get("model", "?")
-    print(f"=== 均衡アブレーション（モデル固定: {model}） ===")
-    print(f"基準構成: {baseline['target_label_en']}  "
-          f"防御 {b_def}/{b_tot} = {baseline['success_rate']}% "
-          f"CI[{baseline['ci_low']}–{baseline['ci_high']}]\n")
-    print(f"{'構成':<40} {'防御率%':>8} {'95%CI':>16}  {'Δ(vs基準)':>10} {'差の95%CI':>18}  判定")
-    print("-" * 110)
+    k = max(x["trials"] for x in det)
+    print(f"=== 均衡アブレーション（モデル固定: {model}, K={k}） ===")
+    print(f"基準構成: {base.get('target_label_en', base_id)}  "
+          f"防御 {b_rate:.1f}% n={b_n}\n")
+    print(f"{'構成':<34} {'防御率%':>7} {'Δ(素比)':>8} "
+          f"{'クラスタ95%CI':>20} {'Newcombe95%CI':>18}  判定")
+    print("-" * 104)
 
-    # 防御率昇順で表示（弱い構成→強い構成）。
+    b_def_tr = round(b_rate / 100 * b_n)  # Newcombe 用の defended/total（試行レベル）
+
     for s in sorted(summ, key=lambda s: s["success_rate"]):
-        d, t = s["defended"], s["total_attacks"]
-        lo, hi = wilson_ci(d, t)
-        diff, dlo, dhi = wilson_diff_ci(d, t, b_def, b_tot)
-        if s is baseline:
+        tid = s["target_id"]
+        if tid not in cells:
+            continue
+        rate, n = rate_n(cells[tid])
+        # クラスタ頑健（セル再標本）— Table 2′ の区間
+        cd, clo, chi = bootstrap_diff_ci(cells[tid], base_cells, n_boot=N_BOOT)
+        # 試行レベル Newcombe（参考）
+        d_tr = round(rate / 100 * n)
+        wd, wlo, whi = wilson_diff_ci(d_tr, n, b_def_tr, b_n)
+        if tid == base_id:
             verdict = "（基準）"
-        elif dlo > 0:
+        elif clo > 0:
             verdict = "有意に改善"
-        elif dhi < 0:
+        elif chi < 0:
             verdict = "有意に悪化"
         else:
-            verdict = "有意差なし"
-        label = s.get("target_label_en", s["target_id"])[:39]
-        print(f"{label:<40} {s['success_rate']:>7.1f}% "
-              f"[{lo:>5.1f}–{hi:>5.1f}]  {diff:>+9.1f}% "
-              f"[{dlo:>+6.1f},{dhi:>+6.1f}]  {verdict}")
+            verdict = "有意差なし(クラスタ)"
+        label = s.get("target_label_en", tid)[:33]
+        print(f"{label:<34} {rate:>6.1f}% {cd:>+7.1f} "
+              f"[{clo:>+6.1f},{chi:>+6.1f}] [{wlo:>+6.1f},{whi:>+6.1f}]  {verdict}")
 
-    print("\n[i] 差の95%CIが0を含まなければ、モデルを固定した上で構成効果は有意。")
-    print("[i] これによりモデル能力と構成効果の交絡（C2）を切り分ける。")
+    print(f"\n[i] 判定は**クラスタ頑健CI**（セル単位ブートストラップ, n_boot={N_BOOT}）に基づく"
+          "——これが論文 §4.2 Table 2′ の区間。")
+    print("[i] Newcombe(試行レベル)は K反復を独立扱いするため過小評価で、参考表示。")
     return 0
 
 
