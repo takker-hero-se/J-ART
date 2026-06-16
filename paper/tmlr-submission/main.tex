@@ -18,6 +18,7 @@
 % \usepackage[preprint]{tmlr}   % <- de-anonymized preprint posting
 
 \usepackage{amsmath}
+\usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{enumitem}
@@ -50,22 +51,25 @@ bare models; (ii) applies \textbf{Japanese-specific obfuscation transforms}
 (gyaru-moji character substitution, vertical/newline splitting, keigo
 ``polite-coercion'' framing, double-talk false premises, Base64, and
 leet/zero-width smuggling) that defeat na\"ive keyword filters; (iii) grounds
-attacks in \textbf{MITRE ATLAS} (10 inference-time techniques); and (iv) reports a
+attacks in \textbf{MITRE ATLAS} (9 techniques, all at inference time); and (iv) reports a
 \textbf{cost-efficiency} metric alongside a defense rate with \textbf{Wilson
 95\% confidence intervals}. Attacks use \emph{harmless proxy markers} (a
 fictitious canary and benign output markers); the framework contains \textbf{no
-weaponizable content}, and the malicious ``core'' of each attack is masked in all
+weaponizable payloads}, and the malicious ``core'' of each attack is masked in all
 published artifacts. Across 21 application configurations and 11 attacks $\times$
-7 transforms (live, $K=5$ trials per cell), we find that
-\textbf{application-layer defenses dominate raw model capability} --- naked models
-range 29.6--86.5\% defense, but a balanced ablation on \textbf{three} base models
-with \textbf{cluster-robust} intervals shows a \textbf{hardened prompt and
-model-based guardrails significantly raise defense on every model}, while
-lightweight keyword/regex filters help most where the base model is weak (effects
-measured against the naked baseline; the hardened arm saturates, so
-guardrail-atop-hardened is out of scope) --- and that a simple
-\textbf{normalizing filter} defeats the obfuscation transforms a na\"ive keyword
-filter misses. We also document \textbf{large within-campaign variance}: in a
+7 transforms --- a live $K=5$ campaign for the rates and a balanced $K=3$ ablation
+on \textbf{three} base models for the difference claims --- we find that
+\textbf{application-layer configuration collapses the large naked-model spread}:
+naked models range 29.6--86.5\%, yet every hardened or guardrailed configuration on
+all three ablated models lands in the \textbf{91--100\%} band, so model choice
+matters far less once the application is configured. With \textbf{cluster-robust}
+intervals, a \textbf{hardened prompt and model-based guardrails significantly raise
+defense on each ablated model}, while lightweight keyword/regex filters help most
+where the base model is weak (and are not individually significant near the
+ceiling, where the hardened arm saturates). Defense rates are \textbf{lexical-leak
+upper bounds} that cannot fully separate genuine refusal from marker-suppression
+(\S\ref{sec:limits}). A simple \textbf{normalizing filter} defeats the obfuscation
+transforms a na\"ive keyword filter misses. We also document \textbf{large within-campaign variance}: in a
 controlled $K=5$ repeat of a frozen configuration set, \textbf{9.6\% of cells
 changed outcome across identical trials}, which makes single-sample leaderboards
 unreliable and motivates our statistical treatment.
@@ -102,7 +106,8 @@ application-layer, MITRE-ATLAS-grounded harness with a safe proxy-marker
 methodology; (c)~a guardrail comparison including a normalizing filter and a
 model-based classifier; (d)~a statistically-reported leaderboard (Wilson CIs,
 optional repeated trials) with a cost-efficiency metric; and (e)~an empirical
-observation of large router-induced run-to-run variance.
+observation of large run-to-run variance induced by model routers (which
+dispatch each request to an actual serving backend).
 
 \section{Related Work}
 J-ART sits at the intersection of six lines of work, summarized below and
@@ -135,10 +140,15 @@ Japanese is high-resource.
 
 \paragraph{Encoding/typographic obfuscation.} Encoding-based jailbreaks are
 established prior art: CipherChat~\citep{cipherchat} (ciphered conversation) and
-ArtPrompt~\citep{artprompt} (ASCII-art typography). Our \code{base64\_wrap} and
-\code{leet\_smuggle} transforms are \textbf{language-agnostic replications} of this
-line, used only as a baseline; the novel surface is the Japanese-script transforms
-(\S\ref{sec:transforms}).
+ArtPrompt~\citep{artprompt} (ASCII-art typography), and Boucher et
+al.~\citep{badchars} (``Bad Characters'') is the canonical zero-width/homoglyph
+perturbation attack --- the nearest prior art to our zero-width smuggling in
+\code{gyaru}/\code{leet\_smuggle}. Their perturbations target classifier/MT models
+\emph{imperceptibly}, whereas gyaru-moji is a \emph{human-legible},
+culturally-conventionalized Japanese script substitution. Our \code{base64\_wrap}
+and \code{leet\_smuggle} transforms are \textbf{language-agnostic replications} of
+this line, used only as a baseline; the novel surface is the Japanese-script
+transforms (\S\ref{sec:transforms}).
 
 \paragraph{Prompt injection and application-layer evaluation.} Perez \&
 Ribeiro~\citep{perez} introduced goal-hijacking; Greshake et al.~\citep{greshake}
@@ -179,7 +189,7 @@ HarmBench / JBB~\citep{harmbench,jbb} & English & Model & No & No & Yes \\
 PAIR / TAP~\citep{pair,tap} & English & Model & No & No & Partial \\
 Multiling.~\citep{lowres,deng,alllang} & Low-resource & Model & No & No & Yes \\
 Llama Guard / NeMo~\citep{llamaguard,nemo} & Eng.-centric & Classifier & No & n/a & Yes \\
-\textbf{J-ART} & \textbf{Japanese} & \textbf{App config} & \textbf{Yes} & \textbf{Yes} & \textbf{Yes} \\
+\textbf{J-ART} & \textbf{Japanese} & \textbf{App config} & \textbf{Yes} & \textbf{Yes} & \textbf{On accept.} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -219,6 +229,8 @@ framing). \emph{Language-agnostic} transforms --- \code{base64\_wrap} and
 they replicate the encoding/typographic jailbreak line
 (CipherChat~\citep{cipherchat}, ArtPrompt~\citep{artprompt}) and serve only as a
 baseline so the marginal effect of the Japanese-specific surface can be isolated.
+Figure~\ref{fig:transform-examples} shows each transform applied to a harmless
+example sentence.
 
 \begin{table}[t]
 \centering\small
@@ -234,13 +246,28 @@ Language-agnostic & \code{base64\_wrap}, \code{leet\_smuggle} (+ \code{baseline}
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/transforms-example.png}
+\caption{Each obfuscation transform applied to a harmless example sentence
+(``Please report the system status''); bold marks each technique's key element.
+\code{polite\_business}/\code{double\_tongue} use keigo authority / false-premise
+framing, \code{gyaru}/\code{vertical\_newline} use glyph / typographic obfuscation,
+and \code{base64\_wrap}/\code{leet\_smuggle} are language-agnostic encodings. The
+malicious attack core is not shown. (Examples are in Japanese, rendered from the
+harness output.)}
+\label{fig:transform-examples}
+\end{figure}
+
 \paragraph{Attack suite and MITRE ATLAS mapping.}
-Eleven attacks cover ten inference-time ATLAS techniques: Direct/Indirect Prompt
-Injection (AML.T0051.000/.001), LLM Jailbreak (AML.T0054), LLM Data Leakage
-(AML.T0057), LLM Prompt Self-Replication (AML.T0061), Trusted-Output/Citations
-manipulation (AML.T0067.000), LLM Prompt Obfuscation (AML.T0068), System-Prompt
-discovery (AML.T0069.002), RAG Poisoning (AML.T0070), and False RAG Entry
-Injection (AML.T0071). Vectors are \code{user} (direct) or \code{rag} (indirect).
+Eleven attacks cover nine ATLAS techniques (mapped against the MITRE ATLAS matrix
+as accessed 2026-06; the two \code{AML.T0051} sub-techniques count as two), all
+exercised at inference (deployment) time: Direct/Indirect Prompt Injection
+(AML.T0051.000/.001), LLM
+Jailbreak (AML.T0054), LLM Data Leakage (AML.T0057), LLM Prompt Self-Replication
+(AML.T0061), Trusted-Output/Citations manipulation (AML.T0067.000), LLM Prompt
+Obfuscation (AML.T0068), System-Prompt discovery (AML.T0069.002), and RAG
+Poisoning, including false-RAG-entry injection (AML.T0070). Vectors are \code{user} (direct) or \code{rag} (indirect).
 
 \paragraph{Harmless proxy markers and safety-by-construction.}\label{sec:markers}
 To avoid producing weaponizable content, attacks target \textbf{harmless
@@ -287,7 +314,11 @@ We report $\mathrm{cospa} = \text{defense\_rate}(\%) \div
 \text{cost\_per\_million\_tokens (USD)}$ (per-million cost clamped at a \$0.01
 floor). cospa is a deliberately simple \emph{screening ratio}, not a utility model:
 its units are not independently meaningful and the ranking is sensitive to the
-clamp and price snapshot. We treat it only as a sort key and present the underlying
+clamp and price snapshot. Because cospa rewards cheap configurations, we use it only behind a
+\textbf{sufficiency gate}: rank only configurations whose defense-rate CI lower
+bound clears a user-set floor, then sort by cost (``cheapest \emph{sufficiently
+safe}''); a high cospa from a lightweight keyword filter must not be read as
+obfuscation-robust (\S\ref{sec:results}). We present the underlying
 \textbf{defense-vs-cost trade-off} directly; the clamp affects only
 sub-\$0.01/Mtok configurations, of which our fleet has none.
 
@@ -325,28 +356,47 @@ or guardrailed configuration, on \emph{any} model, defended in the
 \textbf{91--100\%} band, whereas bare models ranged from \textbf{29.6\% to 86.5\%}
 (Table~\ref{tab:naked}).
 
-\paragraph{Application-layer defense vs.\ model capability.}
+\paragraph{Application-layer configuration vs.\ model capability.}
 We isolate the configuration effect from model capability with a balanced ablation
-on \textbf{three} base models spanning the range (weak Llama-4-Scout; cheap
+on \textbf{three} base models spanning the naked range (weak Llama-4-Scout; cheap
 GPT-4o-mini; flagship GPT-4.1). Each holds the model fixed and crosses
 \{naked, hardened\}~prompt $\times$ guardrail; we report each config's difference
 from that model's naked baseline with a \textbf{cluster-robust bootstrap 95\% CI}
 (3{,}000 cell-resamples; resampling cells, not trials, so the within-cell
 correlation of the ablation's $K{=}3$ repeats does not inflate significance;
-reproduced by \code{experiments/analyze\_ablation.py}; Table~\ref{tab:ablation}). Two robust patterns hold across
-all three models: (1)~a \textbf{hardened prompt} and the \textbf{model-based
-guardrails} (Llama Guard, LLM self-moderation) significantly raise defense on
-\emph{every} model; (2)~the effect \textbf{scales inversely with the naked
-baseline} --- on weak Scout (naked 38\%) every guardrail adds $+26$ to $+60$
-points, whereas on GPT-4o-mini (naked 82\%, near the ceiling) the lightweight
-keyword/regex filters are \emph{not} individually significant under clustering.
-Configuration matters most exactly where the base model is weakest. The thesis ---
-\emph{configuration matters more than model choice} --- rests on a clean,
-fully-measured comparison: a hardened cheap model (GPT-4o-mini hardened
-$\approx100\%$) \textbf{out-defends a naked flagship} (GPT-4.1 naked 64.1\%,
-$n{=}231$) by ${\sim}36$ points, and likewise out-defends a naked Opus
-(86.5\%, $n{=}385$). Even at full parity the strongest naked model trails a
-hardened cheap one.
+reproduced by \code{experiments/analyze\_ablation.py}; Table~\ref{tab:ablation}).
+Two patterns hold across \emph{all three ablated models}: (1)~a \textbf{hardened
+prompt} and the \textbf{model-based guardrails} (Llama Guard, LLM self-moderation)
+significantly raise defense on each; (2)~the effect \textbf{scales inversely with
+the naked baseline} --- on weak Scout (naked 38\%) every guardrail adds $+26$ to
+$+60$ points, whereas on GPT-4o-mini (naked 82\%, near the ceiling) the lightweight
+keyword/regex filters are \emph{not} individually significant under clustering. We
+caution that, because the defense rate is bounded at 100\%, part of this inverse
+scaling is a headroom (ceiling) artifact rather than a property of the defenses,
+and that once the prompt is hardened the additional guardrails add little (the
+hardened arm saturates near 100\%).
+
+The load-bearing observation is therefore not that any one defense
+``dominates'' model capability, but that \textbf{configuration collapses the large
+naked spread}: bare models range 29.6--86.5\% (Table~\ref{tab:naked}), yet every
+hardened or guardrailed configuration on all three ablated models lands in the
+\textbf{91--100\%} band, so model choice matters far less once the application is
+configured than it does for a bare model. Concretely, a hardened cheap model
+(GPT-4o-mini hardened $\approx100\%$) out-defends a \emph{naked} flagship (GPT-4.1
+naked 64.1\%, $n{=}231$) by ${\sim}36$ points and a naked Opus (86.5\%, $n{=}385$).
+Two scope limits bound this comparison. First, ``naked'' is a \textbf{zero-defense
+lower bound} (no system prompt and no guardrail --- not a configuration anyone
+deploys), so the gap is best read as \emph{configured vs.\ unconfigured}, not a
+like-for-like model contest; a deployment-realistic minimal-prompt baseline is left
+to future work. Second, the result is established for the three ablated models at
+$K{=}3$, not claimed for the full fleet. A further \textbf{construct-validity}
+caveat applies throughout: the deterministic judge matches the exact canary/marker
+string (\S\ref{sec:markers}), so a hardened prompt that instructs the model not to
+emit those tokens can raise the measured rate by suppressing the marker rather than
+by genuine refusal; our rates therefore cannot fully separate true hardening from
+marker-suppression, and a semantic-judge audit of defended responses
+(\S\ref{sec:limits}) is needed to bound this. We flag it as a limitation rather
+than resolve it here.
 
 \begin{table}[t]
 \centering\small
@@ -413,11 +463,20 @@ magnitude apart.
 The most effective attacks were Trusted-Output/Citations manipulation, False RAG
 Entry Injection, and System-Prompt discovery. Among transforms, the
 \emph{un-obfuscated} \code{baseline} was most effective (\textbf{22.0\%}), then
-\code{vertical\_newline} (20.0\%) and \code{polite\_business} (17.3\%), while
-\textbf{\code{base64\_wrap} was least effective (5.5\%)}: heavy encoding makes
-models refuse or fail to parse the instruction more often than it smuggles it past
-them. The most dangerous Japanese transforms are the \emph{legible} ones (vertical
-writing, keigo framing), not the cryptographic ones.
+\code{vertical\_newline} (20.0\%), \code{polite\_business} (17.3\%), \code{gyaru}
+(14.5\%), \code{double\_tongue} (13.3\%), \code{leet\_smuggle} (8.8\%), and
+\textbf{\code{base64\_wrap} least (5.5\%)}: heavy encoding makes models refuse or
+fail to parse the instruction more often than it smuggles it past them. Aggregated
+by class (Table~\ref{tab:transforms}), the Japanese-specific transforms retain more
+attack potency (mean ${\approx}16\%$) than the language-agnostic encodings
+(\code{base64}/\code{leet}, mean ${\approx}7\%$). We caution, however, that this is
+partly a \emph{legibility} effect that is not strictly Japanese-specific
+(\code{vertical\_newline} is a typographic split reproducible in any script, and
+keigo authority-framing overlaps with language-agnostic role-play jailbreaks): we
+do \emph{not} isolate the marginal effect of the Japanese-specific surface over a
+language-agnostic baseline, so we claim a Japanese obfuscation \emph{surface worth
+cataloguing}, not that Japanese script per se is empirically more dangerous. The
+clearest takeaway is that \emph{legible} transforms beat cryptographic ones.
 
 \section{The Leaderboard Artifact}
 The harness emits \code{results.json} and a self-contained static site (sortable
@@ -462,7 +521,8 @@ outputs inform an organization's \textbf{MANAGE} decisions.
 
 \begin{table}[t]
 \centering\footnotesize
-\caption{Governance crosswalk (informational).}
+\caption{Governance crosswalk (informational; Article references indicate the
+obligation \emph{area}, not that a given deployment is in scope).}
 \label{tab:gov}
 \begin{tabular}{@{}p{2.9cm}p{2.6cm}p{1.7cm}p{1.7cm}p{2.1cm}@{}}
 \toprule
@@ -471,7 +531,7 @@ J-ART capability (ATLAS) & OWASP LLM Top 10 & NIST AI RMF & EU AI Act & Japan \\
 Prompt injection / jailbreak (T0051,\,T0054) & LLM01 & MEASURE 2.7 & Art.\,15,\,55 & AISI; AI Biz \\
 Canary / data leakage (T0057) & LLM02 & MEASURE 2.7 & Art.\,15,\,10 & AI Biz \\
 System-prompt discovery (T0069.002) & LLM07 & MEASURE 2.7 & Art.\,15 & AISI \\
-RAG poisoning / false entry (T0070,\,T0071) & LLM08;\,LLM01 & MEASURE 2.7 & Art.\,15,\,10 & AISI \\
+RAG poisoning / false entry (T0070) & LLM08;\,LLM01 & MEASURE 2.7 & Art.\,15,\,10 & AISI \\
 Trusted-output manipulation (T0067.000) & LLM09;\,LLM05 & MEASURE 2.6 & Art.\,50 & AI Biz \\
 Obfuscation / self-replication (T0068,\,T0061) & LLM01 & MEASURE 2.7 & Art.\,55 & AISI \\
 \bottomrule
@@ -485,13 +545,19 @@ cluster-robust interval is for \emph{differences}, \S\ref{sec:stats}), $n{=}385$
 $K{=}5$, GPT-4.1-mini +
 hardened prompt + keyword guardrail, 2026-06-14'' with a pre-registered threshold
 (e.g.\ ``CI lower bound $\geq 90\%$''); the same row is the evidence an AISI
-red-team report or an EU AI Act Art.~15 dossier would cite.
+red-team report or an EU AI Act Art.~15 dossier would cite. We stress that this
+number is a \emph{lexical-leak upper bound on a harmless, single-turn proxy} --- a
+screening signal, not evidence of deployment safety --- and any compliance reliance
+must pair it with semantic / human-validated evaluation.
 
 \paragraph{Dual-use.} The published transform suite is also a reusable attack
-wrapper. The attacker uplift is low (the Japanese-script transforms are folklore;
-the encodings replicate public work; no harmful payloads are included), while the
-defender benefit is concrete: the same repository ships the \textbf{normalizing
-regex guardrail} that neutralizes every transform (unit-tested). We judge open
+wrapper. The attacker uplift is low (the Japanese-script transforms are documented
+folklore; the encodings replicate public work~\citep{cipherchat,artprompt}; no
+harmful \emph{payloads} are included), while the defender benefit is concrete: the
+same repository ships the \textbf{normalizing regex guardrail} that neutralizes the
+\emph{fixed published} transforms (unit-tested). The defender benefit is thus
+bounded to those transforms, not adaptive obfuscation --- a determined attacker can
+mutate a transform past a deterministic normalizer --- but we still judge open
 release net-positive for defenders, consistent with \S6.2.
 
 \section{Limitations}
@@ -499,16 +565,37 @@ release net-positive for defenders, consistent with \S6.2.
 \begin{itemize}[leftmargin=1.4em,itemsep=2pt]
   \item \textbf{Proxy markers, not harm:} we measure instruction-violation /
         leakage proxies rather than real-world harm.
-  \item \textbf{Deterministic judge:} the judge matches the canary/marker exactly
-        \emph{and} after light normalization (case-folding, whitespace/zero-width
-        removal), so a reformatted echo is counted as a breach. It cannot detect
-        \emph{semantic}/paraphrased leakage, so reported defense rates are an
-        \textbf{upper bound}; a human-validated LLM-judge is future work.
-  \item \textbf{Single-turn:} multi-turn / crescendo attacks are not yet modeled.
-  \item \textbf{Sample size:} a handcrafted suite (11 attacks $\times$ 7
-        transforms); default $N{=}1$ per cell.
-  \item \textbf{Provider non-determinism / router variance:} results are
-        snapshots and depend on routing and model versions at run time.
+  \item \textbf{Deterministic judge (construct validity):} the judge matches the
+        canary/marker exactly \emph{and} after light normalization (case-folding,
+        whitespace/zero-width removal), so a reformatted echo is counted as a
+        breach. It cannot detect \emph{semantic}/paraphrased leakage, so reported
+        defense rates are an \textbf{upper bound}. Crucially, the bias is
+        \emph{correlated with the treatment}: a hardened prompt that instructs the
+        model not to emit the marker tokens can raise the measured rate by
+        \textbf{suppressing the marker string rather than by genuine refusal}, so
+        our rates cannot fully separate true hardening from marker-suppression. A
+        small human/LLM-judge audit of defended responses to bound this gap is
+        future work; until then, absolute defense rates (and any governance use of
+        them) carry this caveat.
+  \item \textbf{Single-turn:} multi-turn / crescendo~\citep{crescendo} and
+        many-shot~\citep{manyshot} attacks are not yet modeled --- and these most
+        erode exactly the input-classifier and prompt-hardening defenses we find
+        effective, so the 91--100\% band is a \emph{single-turn ceiling} and the
+        configuration-collapse finding is established for single-turn and only
+        \emph{hypothesized} for multi-turn.
+  \item \textbf{Fixed handcrafted suite:} 11 attacks $\times$ 7 transforms with a
+        fixed, auditable transform set (harness default $N{=}1$ per cell; this paper
+        uses $K{=}5$ live and $K{=}3$ ablation). Defense rates are therefore an
+        upper bound \emph{also w.r.t.\ attack strength}: an adaptive optimizer
+        (PAIR/TAP~\citep{pair,tap}, AutoDAN~\citep{autodan}, or GCG~\citep{gcg})
+        would likely lower them, so ``91--100\% defense'' is not robustness to
+        optimized adversaries.
+  \item \textbf{Provider stochasticity:} results are snapshots that depend on
+        sampling temperature, provider routing, and model versions at run time. We
+        attribute the within-campaign variance (\S\ref{sec:results}) to provider
+        stochasticity \emph{broadly}; we do not isolate router routing from ordinary
+        sampling noise (cells with breach probability near 0.5 flip often at
+        $K{=}5$ by chance alone).
   \item \textbf{Non-random missingness (now mostly resolved):} we flagged that an
         earlier campaign's partial configs had \textbf{non-random} missingness ---
         rate limits correlate with attack difficulty, under-representing Opus's
@@ -553,22 +640,29 @@ and cluster-robust CIs are recomputed by the provided \code{analyze\_ablation.py
 and \code{analyze\_variance.py}. A continuously-deployed public leaderboard exists;
 its URL is withheld for double-blind review and provided in the camera-ready.
 
-\section*{AI Writing Assistance}
+\section*{AI Assistance Disclosure}
 The author used \textbf{Claude Opus~4 (Anthropic)}, accessed via the Claude Code
-command-line interface, for writing and editing assistance during the preparation
-of this manuscript: (1)~drafting and revising prose across three rounds of
-reviewer-driven revision; (2)~bilingual editing of the Japanese-language abstract
-and the parallel Japanese version (\code{technical-report.ja.tex}); and
-(3)~citation error checking (author attributions, publication years, bibliography
-completeness). All AI-generated text was reviewed, corrected where necessary, and
-approved by the sole author. The scientific content --- experimental design, all
-live API evaluations, data collection, statistical computation (Wilson and
-cluster-robust intervals), and interpretation --- was conducted independently by
-the human author without AI generation assistance. \emph{Dual-role note:} Claude
-Opus~4.x also appears in this paper as one of the \emph{evaluated} models
-(\S\ref{sec:results}, naked defense rate 86.5\%, $n{=}385$); its role as a writing
-tool and its role as a research subject are distinct and both disclosed here. The
-author takes sole and full responsibility for all content.
+command-line interface, as an assistant throughout this work, in two capacities.
+\textbf{(A)~Writing:} drafting and revising prose across three rounds of
+reviewer-driven revision; bilingual editing of the Japanese-language abstract and
+the parallel Japanese version; and citation error checking (author attributions,
+publication years, bibliography completeness). \textbf{(B)~Code implementation:}
+assisting with the implementation of the evaluation harness and the analysis
+scripts, including the statistical routines --- Wilson intervals, Newcombe
+difference intervals, and the cluster-robust bootstrap in \code{analyze\_ablation.py}
+and \code{analyze\_variance.py}.
+
+All methodological decisions --- the experimental design, the choice of statistical
+methods and their rationale (e.g., resampling cells rather than trials to respect
+within-cell clustering), the scope of every claim, and the interpretation of
+results --- were made and directed by the sole human author. All AI-generated text
+and code was reviewed, tested, and verified by the author; every reported number
+reproduces from the committed artifacts via the provided scripts. \emph{Dual-role
+note:} Claude Opus~4.x also appears in this paper as one of the \emph{evaluated}
+models (\S\ref{sec:results}, naked defense rate 86.5\%, $n{=}385$); its role as an
+assistant tool and its role as a research subject are distinct and both disclosed
+here. The author takes sole and full responsibility for all content, claims, and
+analysis.
 
 \begin{thebibliography}{99}
 \bibitem{atlas} MITRE ATLAS --- Adversarial Threat Landscape for AI Systems.
@@ -625,6 +719,13 @@ author takes sole and full responsibility for all content.
   against Aligned LLMs. 2024.
 \bibitem{agentdojo} Debenedetti et al. AgentDojo: A Dynamic Environment to
   Evaluate Attacks and Defenses for LLM Agents. 2024.
+\bibitem{crescendo} Russinovich, Salem, Eldan. Great, Now Write an Article About
+  That: The Crescendo Multi-Turn LLM Jailbreak Attack. 2024.
+\bibitem{manyshot} Anil et al. Many-shot Jailbreaking. Anthropic, 2024.
+\bibitem{autodan} Liu et al. AutoDAN: Generating Stealthy Jailbreak Prompts on
+  Aligned Large Language Models. 2024.
+\bibitem{badchars} Boucher, Shumailov, Anderson, Papernot. Bad Characters:
+  Imperceptible NLP Attacks. IEEE S\&P, 2022.
 \end{thebibliography}
 
 \end{document}

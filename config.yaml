@@ -50,7 +50,7 @@ targets:
     rag: true
 
   - id: openai-41mini-keyword
-    label: "GPT-4.1-mini + 強プロンプト + キーワードGR"
+    label: "GPT-4.1-mini + 強化プロンプト + キーワードGR"
     label_en: "GPT-4.1-mini + Hardened + Keyword GR"
     provider: openai
     model: gpt-4.1-mini
@@ -59,7 +59,7 @@ targets:
     rag: true
 
   - id: openai-41-llmgr
-    label: "GPT-4.1 + 強プロンプト + LLMガードレール"
+    label: "GPT-4.1 + 強化プロンプト + LLMガードレール"
     label_en: "GPT-4.1 + Hardened + LLM guardrail"
     provider: openai
     model: gpt-4.1
@@ -69,7 +69,7 @@ targets:
 
   # ===== Anthropic（Claude 4.x 系へ刷新＋Opusフラグシップ追加） =====
   - id: anthropic-haiku-keyword
-    label: "Claude Haiku 4.5 + 強プロンプト + キーワードGR"
+    label: "Claude Haiku 4.5 + 強化プロンプト + キーワードGR"
     label_en: "Claude Haiku 4.5 + Hardened + Keyword GR"
     provider: anthropic
     model: claude-haiku-4-5
@@ -78,7 +78,7 @@ targets:
     rag: true
 
   - id: anthropic-sonnet-llmgr
-    label: "Claude Sonnet 4.6 + 強プロンプト + LLMガードレール"
+    label: "Claude Sonnet 4.6 + 強化プロンプト + LLMガードレール"
     label_en: "Claude Sonnet 4.6 + Hardened + LLM guardrail"
     provider: anthropic
     model: claude-sonnet-4-6
@@ -106,7 +106,7 @@ targets:
     rag: true
 
   - id: gemini-pro-keyword
-    label: "Gemini 2.5 Pro + 強プロンプト + キーワードGR"
+    label: "Gemini 2.5 Pro + 強化プロンプト + キーワードGR"
     label_en: "Gemini 2.5 Pro + Hardened + Keyword GR"
     provider: gemini
     model: gemini-2.5-pro
@@ -132,7 +132,7 @@ targets:
     rag: true
 
   - id: gptoss-20b-keyword
-    label: "gpt-oss-20b + 強プロンプト + キーワードGR (OpenRouter)"
+    label: "gpt-oss-20b + 強化プロンプト + キーワードGR (OpenRouter)"
     label_en: "gpt-oss-20b + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
@@ -143,7 +143,7 @@ targets:
     rag: true
 
   - id: qwen3-235b-llmgr
-    label: "Qwen3-235B + 強プロンプト + LLMガードレール (OpenRouter)"
+    label: "Qwen3-235B + 強化プロンプト + LLMガードレール (OpenRouter)"
     label_en: "Qwen3-235B + Hardened + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
@@ -154,7 +154,7 @@ targets:
     rag: true
 
   - id: qwen3-max-keyword
-    label: "Qwen3-Max + 強プロンプト + キーワードGR (OpenRouter)"
+    label: "Qwen3-Max + 強化プロンプト + キーワードGR (OpenRouter)"
     label_en: "Qwen3-Max + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
@@ -165,7 +165,7 @@ targets:
     rag: true
 
   - id: llama4-maverick-keyword
-    label: "Llama 4 Maverick + 強プロンプト + キーワードGR (OpenRouter)"
+    label: "Llama 4 Maverick + 強化プロンプト + キーワードGR (OpenRouter)"
     label_en: "Llama 4 Maverick + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
@@ -198,7 +198,7 @@ targets:
     rag: true
 
   - id: deepseek-v32-llmgr
-    label: "DeepSeek V3.2 + 強プロンプト + LLMガードレール (OpenRouter)"
+    label: "DeepSeek V3.2 + 強化プロンプト + LLMガードレール (OpenRouter)"
     label_en: "DeepSeek V3.2 + Hardened + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
@@ -209,7 +209,7 @@ targets:
     rag: true
 
   - id: mistral-medium-keyword
-    label: "Mistral Medium 3.1 + 強プロンプト + キーワードGR (OpenRouter)"
+    label: "Mistral Medium 3.1 + 強化プロンプト + キーワードGR (OpenRouter)"
     label_en: "Mistral Medium 3.1 + Hardened + Keyword GR (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
@@ -220,7 +220,7 @@ targets:
     rag: true
 
   - id: mistral-large-llmgr
-    label: "Mistral Large + 強プロンプト + LLMガードレール (OpenRouter)"
+    label: "Mistral Large + 強化プロンプト + LLMガードレール (OpenRouter)"
     label_en: "Mistral Large + Hardened + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"

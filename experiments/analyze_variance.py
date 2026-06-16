@@ -40,8 +40,12 @@ def within_run(data):
     print(f"=== 実行内ばらつき（1実行・{k}反復/セル, mode={data.get('mode')}） ===")
     if k < 2:
         print("[!] JART_TRIALS=1 で実行されています。反復ばらつきを見るには K>=2 で再実行してください。")
-    unstable = [d for d in details if 0 < d.get("breaches", 0) < d.get("trials", 1)]
-    print(f"総セル数: {len(details)}  / 反復内で結果が割れた（不安定）セル: {len(unstable)}")
+    # 論文§4.3 と一致させる：全 K 試行がクリーン（api_error なし）なセルのみを母数にする。
+    clean = [d for d in details if d.get("trials", 0) == k and d.get("api_errors", 0) == 0]
+    unstable = [d for d in clean if 0 < d.get("breaches", 0) < d.get("trials", 1)]
+    print(f"総セル数: {len(details)}  / 全{k}試行クリーンなセル: {len(clean)}  / "
+          f"反復内で結果が割れた（不安定）セル: {len(unstable)} "
+          f"({100*len(unstable)/max(len(clean),1):.1f}%)")
     for d in sorted(unstable, key=lambda d: -d["breach_rate"])[:30]:
         print(f"  {d['target_id']:<22} {d['attack_id']:<22} {d['transformation']:<16} "
               f"突破 {d['breaches']}/{d['trials']} ({d['breach_rate']}%)")

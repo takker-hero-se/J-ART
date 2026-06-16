@@ -39,8 +39,10 @@ Anonymous (double-blind). Do **not** enter real names until the camera-ready.
 - **Ethics / responsible disclosure.** Section 6: harmless proxy markers, no
   weaponizable content, masked attack cores (unit-test-audited), a reusable
   safe-disclosure pattern, a governance crosswalk, and a dual-use discussion.
-- **LLM usage.** Disclosed in the "AI Writing Assistance" section (writing/editing
-  assistance; the human author is responsible for all claims and analysis).
+- **LLM usage.** Disclosed in the "AI Assistance Disclosure" section (writing **and
+  code-implementation** assistance, including the statistical-analysis scripts; the
+  human author directed all methodological choices, verified all results, and is
+  responsible for all claims and analysis).
 
 ## Submission checklist mapping
 | TMLR expectation | Where addressed |
@@ -50,7 +52,7 @@ Anonymous (double-blind). Do **not** enter real names until the camera-ready.
 | Reproducibility (code/data/seeds) | §9; seeded bootstrap; committed JSON artifacts |
 | Compute/cost reported | §4 (≈$6.0), §3.8 cost metric |
 | Ethics / dual-use | §6 (incl. dual-use paragraph) |
-| LLM-use disclosure | "AI Writing Assistance" section |
+| LLM-use disclosure | "AI Assistance Disclosure" section (writing + code) |
 
 ## What I (author) still need to do
 1. Compile `main.tex` with the official `tmlr.sty` (Overleaf "TMLR" template) → `main.pdf`.

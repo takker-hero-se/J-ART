@@ -21,7 +21,7 @@ author-identifying information removed.
   repository**, released upon acceptance, and the site URL is withheld.
 - Title subtitle "Technical Report (v0.2, preprint)" and the preprint status
   block → removed/neutralized.
-- The **AI Writing Assistance** section is kept (TMLR requires disclosure of LLM
+- The **AI Assistance Disclosure** section is kept (TMLR requires disclosure of LLM
   use) and contains no identifying information.
 
 ## How to compile (self-contained — already verified)

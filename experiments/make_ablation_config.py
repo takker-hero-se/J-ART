@@ -35,7 +35,7 @@ _JP_GR = {"none": "GRなし", "keyword": "キーワードGR", "regex": "正規�
           "llm": "LLM-GR", "llamaguard": "LlamaGuard"}
 _EN_GR = {"none": "no GR", "keyword": "keyword GR", "regex": "regex GR",
           "llm": "LLM GR", "llamaguard": "Llama Guard"}
-_JP_PS = {"low": "素", "high": "強プロンプト"}
+_JP_PS = {"low": "素", "high": "強化プロンプト"}
 _EN_PS = {"low": "naked", "high": "hardened"}
 
 

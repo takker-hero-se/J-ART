@@ -28,24 +28,27 @@ the **application-structure layer** — `model × system-prompt strength × guar
 obfuscation transforms** (gyaru-moji character substitution, vertical/newline
 splitting, keigo "polite-coercion" framing, double-talk false premises, Base64,
 and leet/zero-width smuggling) that defeat naïve keyword filters; (iii) grounds
-attacks in **MITRE ATLAS** (10 inference-time techniques); and (iv) reports a
+attacks in **MITRE ATLAS** (9 techniques, all at inference time); and (iv) reports a
 **cost-efficiency** metric alongside a defense rate with **Wilson 95% confidence
 intervals**. Attacks use *harmless proxy markers* (a fictitious canary and
 benign output markers) so the framework contains **no weaponizable content**, and
-the malicious "core" of each attack is masked in all published artifacts.
+the malicious "core" of each attack is masked in all published artifacts. (The
+framework contains no weaponizable payloads.)
 
-Across 21 application configurations and 11 attacks × 7 transforms (live, K=5
-trials per cell), we find that **application-layer defenses dominate raw model
-capability** (a naked flagship was breached far more often than a hardened cheap
-model). In a
-balanced ablation on **three** base models with **cluster-robust** intervals, a
-**hardened prompt and the model-based guardrails significantly raise defense on
-every model**, while lightweight keyword/regex filters help most where the base
-model is weak; the effect scales inversely with the naked baseline (measured
-against the naked baseline — the hardened arm saturates, so guardrail-atop-hardened
-is out of scope). A simple
-**normalizing filter** defeats the obfuscation transforms a naïve keyword filter
-misses. We also document **large within-campaign variance**: in a controlled K=5
+Across 21 application configurations and 11 attacks × 7 transforms (a live K=5
+campaign for the rates and a balanced K=3 ablation on **three** base models for the
+difference claims), we find that **application-layer configuration collapses the
+large naked-model spread**: naked models range 29.6–86.5%, yet every hardened or
+guardrailed configuration on all three ablated models lands in the **91–100%** band,
+so model choice matters far less once the application is configured. With
+**cluster-robust** intervals, a **hardened prompt and the model-based guardrails
+significantly raise defense on each ablated model**, while lightweight keyword/regex
+filters help most where the base model is weak (and are not individually significant
+near the ceiling, where the hardened arm saturates). Defense rates are
+**lexical-leak upper bounds** that cannot fully separate genuine refusal from
+marker-suppression (§7), and "naked" is a zero-defense lower bound, not a deployment
+baseline. A simple **normalizing filter** defeats the obfuscation transforms a naïve
+keyword filter misses. We also document **large within-campaign variance**: in a controlled K=5
 repeat of a frozen configuration set, **9.6% of cells changed outcome across
 identical trials**, which makes single-sample leaderboards unreliable and
 motivates the statistical treatment we adopt.
@@ -57,14 +60,16 @@ LLM のレッドチーミング/ジェイルブレイク評価はほぼ英語中
 特徴は、(1)「モデル × システムプロンプト強度 × ガードレール × RAG」という
 **アプリケーション構造層**を評価すること、(2) ギャル文字・縦書き改行・慇懃無礼・
 二枚舌・Base64・leet/ゼロ幅密輸といった**日本語特有の難読化変形**でキーワード検閲を
-突破すること、(3) 攻撃を **MITRE ATLAS**（推論時10技術）に対応づけること、
+突破すること、(3) 攻撃を **MITRE ATLAS**（推論（運用）時に行われる9技術）に対応づけること、
 (4) 防御率に **Wilson 95%信頼区間**を付し、**コスト効率**指標を併記すること、である。
 攻撃は無害なプロキシ（架空カナリア・無害マーカー）で構成され、危険物を一切含まず、
 悪意あるコアは公開物上で常にマスクされる。実験（実LIVE・21構成・各セルK=5反復）では、
-**アプリ層の防御がモデル素性を上回る**こと——素のモデルは防御29.6〜86.5%とばらつくが、
-**3モデル**の均衡アブレーション（クラスタ頑健CI）で**強プロンプトとモデルベースのガード
-レールは全モデルで有意に防御を引き上げ**、軽量なkeyword/regexは素の弱いモデルほど効く
-（効果は素の余地に反比例）——、**正規化フィルタが難読化を無効化**することを示す。さらに、
+**アプリ層の構成が「素のモデル」の大きなばらつきを潰す**こと——素のモデルは防御29.6〜86.5%
+とばらつくが、3モデルすべてで強化/ガード付き構成は**91〜100%**帯に収まり、**一度構成すれば
+モデル選択の差はほとんど効かなくなる**。**クラスタ頑健CI**で**強化プロンプトとモデルベースの
+ガードレールは各モデルで有意に防御を引き上げ**、軽量なkeyword/regexは素の弱いモデルほど効く
+（天井付近では有意でない）。防御率は**lexical-leakの上限**で、真の拒否とマーカー抑制を完全には
+区別できない（§7）。**正規化フィルタが難読化を無効化**することを示す。さらに、
 構成を固定したK=5反復で**9.6%のセルが反復間で結果を変える**ことを記録し、単一サンプルの
 リーダーボードが信頼できないこと、統計的処理が必要であることを論じる。
 
@@ -97,7 +102,8 @@ application-layer, MITRE-ATLAS-grounded evaluation harness with a safe
 proxy-marker methodology; (c) a guardrail comparison including a normalizing
 filter and a model-based classifier; (d) a statistically-reported leaderboard
 (Wilson CIs, optional repeated trials) with a cost-efficiency metric; and
-(e) an empirical observation of large router-induced run-to-run variance.
+(e) an empirical observation of large run-to-run variance induced by model
+routers (which dispatch each request to an actual serving backend).
 
 ## 2. Related Work
 
@@ -223,12 +229,12 @@ attack surface (the Japanese-script transforms).
 
 ### 3.3 Attack suite and MITRE ATLAS mapping
 
-Eleven attacks cover ten inference-time ATLAS techniques: Direct/Indirect Prompt
-Injection (AML.T0051.000/.001), LLM Jailbreak (AML.T0054), LLM Data Leakage
-(AML.T0057), LLM Prompt Self-Replication (AML.T0061), Trusted-Output/Citations
-manipulation (AML.T0067.000), LLM Prompt Obfuscation (AML.T0068), System-Prompt
-discovery (AML.T0069.002), RAG Poisoning (AML.T0070), and False RAG Entry
-Injection (AML.T0071). Vectors are `user` (direct) or `rag` (indirect).
+Eleven attacks cover nine ATLAS techniques, all exercised at inference
+(deployment) time: Direct/Indirect Prompt Injection (AML.T0051.000/.001), LLM
+Jailbreak (AML.T0054), LLM Data Leakage (AML.T0057), LLM Prompt Self-Replication
+(AML.T0061), Trusted-Output/Citations manipulation (AML.T0067.000), LLM Prompt
+Obfuscation (AML.T0068), System-Prompt discovery (AML.T0069.002), and RAG
+Poisoning, including false-RAG-entry injection (AML.T0070). Vectors are `user` (direct) or `rag` (indirect).
 
 ### 3.4 Harmless proxy markers and safety-by-construction
 
@@ -524,7 +530,7 @@ deployment's risk classification.
 | Direct / indirect prompt injection, jailbreak (T0051, T0054) | LLM01 Prompt Injection | MEASURE 2.7 (security & resilience) | Art. 15 (robustness/cybersecurity); Art. 55 (adversarial testing of systemic-risk GPAI) | AISI red-teaming guide; AI Guidelines for Business |
 | Canary / data leakage (T0057) | LLM02 Sensitive Information Disclosure | MEASURE 2.7; MAP 5.1 | Art. 15; Art. 10 (data governance) | AI Guidelines for Business (safety/security) |
 | System-prompt discovery (T0069.002) | LLM07 System Prompt Leakage | MEASURE 2.7 | Art. 15 | AISI red-teaming guide |
-| RAG poisoning / false RAG entry (T0070, T0071) | LLM08 Vector & Embedding Weaknesses; LLM01 | MEASURE 2.7; MANAGE 2.2 | Art. 15; Art. 10 | AISI red-teaming guide |
+| RAG poisoning / false-entry injection (T0070) | LLM08 Vector & Embedding Weaknesses; LLM01 | MEASURE 2.7; MANAGE 2.2 | Art. 15; Art. 10 | AISI red-teaming guide |
 | Trusted-output / citation manipulation (T0067.000) | LLM09 Misinformation; LLM05 Improper Output Handling | MEASURE 2.6 (safety) | Art. 50 (transparency) | AI Guidelines for Business |
 | Prompt obfuscation / self-replication (T0068, T0061) | LLM01 | MEASURE 2.7 | Art. 55 | AISI red-teaming guide |
 
@@ -630,23 +636,29 @@ reported here; a fresh LIVE re-measurement runs on a schedule (and on manual
 trigger), and push events re-publish the committed artifact without any API calls,
 so the site never silently mixes MOCK and LIVE.
 
-## AI Writing Assistance
+## AI Assistance Disclosure
 
 The author used **Claude Opus 4 (Anthropic)**, accessed via the Claude Code
-command-line interface, for writing and editing assistance during the preparation
-of this manuscript: (1) drafting and revising prose across three rounds of
-reviewer-driven revision; (2) bilingual editing of the Japanese-language abstract
-and the parallel Japanese LaTeX version (`technical-report.ja.tex`); and
-(3) citation error checking (author attributions, publication years, bibliography
-completeness). All AI-generated text was reviewed, corrected where necessary, and
-approved by the sole author. The scientific content — experimental design, all
-live API evaluations, data collection, statistical computation (Wilson and
-cluster-robust intervals), and interpretation — was conducted independently by the
-human author without AI generation assistance. **Dual-role note:** Claude Opus 4.x
-also appears in this paper as one of the *evaluated* models (§4.2, naked defense
-rate 86.5%, n = 385); its role as a writing tool and its role as a research subject
-are distinct and both disclosed here. The author takes sole and full responsibility
-for all content.
+command-line interface, as an assistant throughout this work, in two capacities.
+**(A) Writing:** drafting and revising prose across three rounds of reviewer-driven
+revision; bilingual editing of the Japanese-language abstract and the parallel
+Japanese LaTeX version (`technical-report.ja.tex`); and citation error checking
+(author attributions, publication years, bibliography completeness).
+**(B) Code implementation:** assisting with the implementation of the evaluation
+harness and the analysis scripts, including the statistical routines — Wilson
+intervals, Newcombe difference intervals, and the cluster-robust bootstrap in
+`analyze_ablation.py` and `analyze_variance.py`.
+
+All methodological decisions — the experimental design, the choice of statistical
+methods and their rationale (e.g., resampling cells rather than trials to respect
+within-cell clustering), the scope of every claim, and the interpretation of
+results — were made and directed by the sole human author. All AI-generated text
+and code was reviewed, tested, and verified by the author; every reported number
+reproduces from the committed artifacts via the provided scripts. **Dual-role
+note:** Claude Opus 4.x also appears in this paper as one of the *evaluated* models
+(§4.2, naked defense rate 86.5%, n = 385); its role as an assistant tool and its
+role as a research subject are distinct and both disclosed here. The author takes
+sole and full responsibility for all content, claims, and analysis.
 
 ## 10. References
 

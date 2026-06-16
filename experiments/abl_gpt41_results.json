@@ -16,7 +16,7 @@
   "summary": [
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -247,7 +247,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -324,7 +324,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -401,7 +401,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -478,7 +478,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14263,7 +14263,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14298,7 +14298,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14333,7 +14333,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14368,7 +14368,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14403,7 +14403,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14438,7 +14438,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14473,7 +14473,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14508,7 +14508,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14543,7 +14543,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14578,7 +14578,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14613,7 +14613,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14648,7 +14648,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14683,7 +14683,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14718,7 +14718,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14753,7 +14753,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14788,7 +14788,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14823,7 +14823,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14858,7 +14858,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14893,7 +14893,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14928,7 +14928,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14963,7 +14963,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -14998,7 +14998,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15033,7 +15033,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15068,7 +15068,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15103,7 +15103,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15138,7 +15138,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15173,7 +15173,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15208,7 +15208,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15243,7 +15243,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15278,7 +15278,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15313,7 +15313,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15348,7 +15348,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15383,7 +15383,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15418,7 +15418,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15453,7 +15453,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15488,7 +15488,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15523,7 +15523,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15558,7 +15558,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15593,7 +15593,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15628,7 +15628,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15663,7 +15663,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15698,7 +15698,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15733,7 +15733,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15768,7 +15768,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15803,7 +15803,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15838,7 +15838,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15873,7 +15873,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15908,7 +15908,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15943,7 +15943,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -15978,7 +15978,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16013,7 +16013,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16048,7 +16048,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16083,7 +16083,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16118,7 +16118,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16153,7 +16153,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16188,7 +16188,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16223,7 +16223,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16258,7 +16258,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16293,7 +16293,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16328,7 +16328,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16363,7 +16363,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16398,7 +16398,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16433,7 +16433,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16468,7 +16468,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16503,7 +16503,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16538,7 +16538,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16573,7 +16573,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16608,7 +16608,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16643,7 +16643,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16678,7 +16678,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16713,7 +16713,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16748,7 +16748,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16783,7 +16783,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16818,7 +16818,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16853,7 +16853,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16888,7 +16888,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16923,7 +16923,7 @@
     },
     {
       "target_id": "abl-high-none",
-      "target_label": "gpt-4.1 / 強プロンプト + GRなし",
+      "target_label": "gpt-4.1 / 強化プロンプト + GRなし",
       "target_label_en": "gpt-4.1 / hardened + no GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16958,7 +16958,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -16993,7 +16993,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17028,7 +17028,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17063,7 +17063,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17098,7 +17098,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17133,7 +17133,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17168,7 +17168,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17203,7 +17203,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17238,7 +17238,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17273,7 +17273,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17308,7 +17308,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17343,7 +17343,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17378,7 +17378,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17413,7 +17413,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17448,7 +17448,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17483,7 +17483,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17518,7 +17518,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17553,7 +17553,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17588,7 +17588,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17623,7 +17623,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17658,7 +17658,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17693,7 +17693,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17728,7 +17728,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17763,7 +17763,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17798,7 +17798,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17833,7 +17833,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17868,7 +17868,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17903,7 +17903,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17938,7 +17938,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -17973,7 +17973,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18008,7 +18008,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18043,7 +18043,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18078,7 +18078,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18113,7 +18113,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18148,7 +18148,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18183,7 +18183,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18218,7 +18218,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18253,7 +18253,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18288,7 +18288,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18323,7 +18323,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18358,7 +18358,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18393,7 +18393,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18428,7 +18428,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18463,7 +18463,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18498,7 +18498,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18533,7 +18533,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18568,7 +18568,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18603,7 +18603,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18638,7 +18638,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18673,7 +18673,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18708,7 +18708,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18743,7 +18743,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18778,7 +18778,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18813,7 +18813,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18848,7 +18848,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18883,7 +18883,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18918,7 +18918,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18953,7 +18953,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -18988,7 +18988,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19023,7 +19023,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19058,7 +19058,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19093,7 +19093,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19128,7 +19128,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19163,7 +19163,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19198,7 +19198,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19233,7 +19233,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19268,7 +19268,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19303,7 +19303,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19338,7 +19338,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19373,7 +19373,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19408,7 +19408,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19443,7 +19443,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19478,7 +19478,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19513,7 +19513,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19548,7 +19548,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19583,7 +19583,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19618,7 +19618,7 @@
     },
     {
       "target_id": "abl-high-keyword",
-      "target_label": "gpt-4.1 / 強プロンプト + キーワードGR",
+      "target_label": "gpt-4.1 / 強化プロンプト + キーワードGR",
       "target_label_en": "gpt-4.1 / hardened + keyword GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19653,7 +19653,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19688,7 +19688,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19723,7 +19723,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19758,7 +19758,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19793,7 +19793,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19828,7 +19828,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19863,7 +19863,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19898,7 +19898,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19933,7 +19933,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -19968,7 +19968,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20003,7 +20003,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20038,7 +20038,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20073,7 +20073,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20108,7 +20108,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20143,7 +20143,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20178,7 +20178,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20213,7 +20213,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20248,7 +20248,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20283,7 +20283,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20318,7 +20318,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20353,7 +20353,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20388,7 +20388,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20423,7 +20423,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20458,7 +20458,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20493,7 +20493,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20528,7 +20528,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20563,7 +20563,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20598,7 +20598,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20633,7 +20633,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20668,7 +20668,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20703,7 +20703,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20738,7 +20738,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20773,7 +20773,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20808,7 +20808,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20843,7 +20843,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20878,7 +20878,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20913,7 +20913,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20948,7 +20948,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -20983,7 +20983,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21018,7 +21018,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21053,7 +21053,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21088,7 +21088,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21123,7 +21123,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21158,7 +21158,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21193,7 +21193,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21228,7 +21228,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21263,7 +21263,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21298,7 +21298,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21333,7 +21333,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21368,7 +21368,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21403,7 +21403,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21438,7 +21438,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21473,7 +21473,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21508,7 +21508,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21543,7 +21543,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21578,7 +21578,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21613,7 +21613,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21648,7 +21648,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21683,7 +21683,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21718,7 +21718,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21753,7 +21753,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21788,7 +21788,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21823,7 +21823,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21858,7 +21858,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21893,7 +21893,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21928,7 +21928,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21963,7 +21963,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -21998,7 +21998,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22033,7 +22033,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22068,7 +22068,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22103,7 +22103,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22138,7 +22138,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22173,7 +22173,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22208,7 +22208,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22243,7 +22243,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22278,7 +22278,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22313,7 +22313,7 @@
     },
     {
       "target_id": "abl-high-regex",
-      "target_label": "gpt-4.1 / 強プロンプト + 正規化GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + 正規化GR",
       "target_label_en": "gpt-4.1 / hardened + regex GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22348,7 +22348,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22383,7 +22383,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22418,7 +22418,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22453,7 +22453,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22488,7 +22488,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22523,7 +22523,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22558,7 +22558,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22593,7 +22593,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22628,7 +22628,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22663,7 +22663,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22698,7 +22698,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22733,7 +22733,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22768,7 +22768,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22803,7 +22803,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22838,7 +22838,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22873,7 +22873,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22908,7 +22908,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22943,7 +22943,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -22978,7 +22978,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23013,7 +23013,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23048,7 +23048,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23083,7 +23083,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23118,7 +23118,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23153,7 +23153,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23188,7 +23188,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23223,7 +23223,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23258,7 +23258,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23293,7 +23293,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23328,7 +23328,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23363,7 +23363,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23398,7 +23398,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23433,7 +23433,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23468,7 +23468,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23503,7 +23503,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23538,7 +23538,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23573,7 +23573,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23608,7 +23608,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23643,7 +23643,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23678,7 +23678,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23713,7 +23713,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23748,7 +23748,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23783,7 +23783,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23818,7 +23818,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23853,7 +23853,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23888,7 +23888,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23923,7 +23923,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23958,7 +23958,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -23993,7 +23993,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24028,7 +24028,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24063,7 +24063,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24098,7 +24098,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24133,7 +24133,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24168,7 +24168,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24203,7 +24203,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24238,7 +24238,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24273,7 +24273,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24308,7 +24308,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24343,7 +24343,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24378,7 +24378,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24413,7 +24413,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24448,7 +24448,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24483,7 +24483,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24518,7 +24518,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24553,7 +24553,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24588,7 +24588,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24623,7 +24623,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24658,7 +24658,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24693,7 +24693,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24728,7 +24728,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24763,7 +24763,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24798,7 +24798,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24833,7 +24833,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24868,7 +24868,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24903,7 +24903,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24938,7 +24938,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -24973,7 +24973,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25008,7 +25008,7 @@
     },
     {
       "target_id": "abl-high-llm",
-      "target_label": "gpt-4.1 / 強プロンプト + LLM-GR",
+      "target_label": "gpt-4.1 / 強化プロンプト + LLM-GR",
       "target_label_en": "gpt-4.1 / hardened + LLM GR",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25043,7 +25043,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25078,7 +25078,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25113,7 +25113,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25148,7 +25148,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25183,7 +25183,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25218,7 +25218,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25253,7 +25253,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25288,7 +25288,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25323,7 +25323,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25358,7 +25358,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25393,7 +25393,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25428,7 +25428,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25463,7 +25463,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25498,7 +25498,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25533,7 +25533,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25568,7 +25568,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25603,7 +25603,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25638,7 +25638,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25673,7 +25673,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25708,7 +25708,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25743,7 +25743,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25778,7 +25778,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25813,7 +25813,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25848,7 +25848,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25883,7 +25883,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25918,7 +25918,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25953,7 +25953,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -25988,7 +25988,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26023,7 +26023,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26058,7 +26058,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26093,7 +26093,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26128,7 +26128,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26163,7 +26163,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26198,7 +26198,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26233,7 +26233,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26268,7 +26268,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26303,7 +26303,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26338,7 +26338,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26373,7 +26373,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26408,7 +26408,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26443,7 +26443,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26478,7 +26478,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26513,7 +26513,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26548,7 +26548,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26583,7 +26583,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26618,7 +26618,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26653,7 +26653,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26688,7 +26688,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26723,7 +26723,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26758,7 +26758,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26793,7 +26793,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26828,7 +26828,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26863,7 +26863,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26898,7 +26898,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26933,7 +26933,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -26968,7 +26968,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27003,7 +27003,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27038,7 +27038,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27073,7 +27073,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27108,7 +27108,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27143,7 +27143,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27178,7 +27178,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27213,7 +27213,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27248,7 +27248,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27283,7 +27283,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27318,7 +27318,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27353,7 +27353,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27388,7 +27388,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27423,7 +27423,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27458,7 +27458,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27493,7 +27493,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27528,7 +27528,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27563,7 +27563,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27598,7 +27598,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27633,7 +27633,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27668,7 +27668,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
@@ -27703,7 +27703,7 @@
     },
     {
       "target_id": "abl-high-llamaguard",
-      "target_label": "gpt-4.1 / 強プロンプト + LlamaGuard",
+      "target_label": "gpt-4.1 / 強化プロンプト + LlamaGuard",
       "target_label_en": "gpt-4.1 / hardened + Llama Guard",
       "provider": "openai",
       "model": "gpt-4.1",
