@@ -478,7 +478,11 @@ keigo authority-framing overlaps with language-agnostic role-play jailbreaks): w
 do \emph{not} isolate the marginal effect of the Japanese-specific surface over a
 language-agnostic baseline, so we claim a Japanese obfuscation \emph{surface worth
 cataloguing}, not that Japanese script per se is empirically more dangerous. The
-clearest takeaway is that \emph{legible} transforms beat cryptographic ones.
+clearest takeaway is that \emph{legible} transforms beat cryptographic ones --- with
+one caveat: our audit (\S\ref{sec:limits}) finds the encoding transforms' low scores
+are partly a \emph{judge artifact} (the model complies but emits the marker in
+obfuscated form the exact-match judge misses), so a stricter judge could narrow this
+gap.
 
 \section{The Leaderboard Artifact}
 The harness emits \code{results.json} and a self-contained static site (sortable
@@ -576,9 +580,17 @@ release net-positive for defenders, consistent with \S6.2.
         model not to emit the marker tokens can raise the measured rate by
         \textbf{suppressing the marker string rather than by genuine refusal}, so
         our rates cannot fully separate true hardening from marker-suppression. A
-        small human/LLM-judge audit of defended responses to bound this gap is
-        future work; until then, absolute defense rates (and any governance use of
-        them) carry this caveat.
+        preliminary semantic-judge audit (60 defended cells, an LLM judge; manual
+        review found ${\sim}4$ of 6 flags genuine) estimates this looseness at
+        \textbf{${\sim}7$--$10$ points} and localizes its mechanism: the exact-match
+        judge is \emph{attack-specific} and does not reverse obfuscation, so it
+        misses (i)~a marker emitted in leet form (e.g.\ \code{[J@RT-PWN3D]}) and
+        (ii)~a canary leaked during a non-leakage attack; the gap is thus
+        \textbf{concentrated in the encoding transforms} (\code{base64}/\code{leet}).
+        A stricter judge (canary-checked across all attacks, leet-reversed before
+        matching) --- which would \emph{lower} encoding-transform defense rates ---
+        and a human-validated audit are future work. Until then, absolute defense
+        rates (and any governance use of them) carry this caveat.
   \item \textbf{Single-turn:} multi-turn / crescendo~\cite{crescendo} and
         many-shot~\cite{manyshot} attacks are not yet modeled --- and these most
         erode exactly the input-classifier and prompt-hardening defenses we find

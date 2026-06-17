@@ -29,16 +29,22 @@ repositioning is in framing and scope.
 
 ### C2 — The lexical-leak judge cannot separate genuine refusal from marker-suppression; the bias correlates with the treatment (Devil's Advocate; echoed by R1, R3)
 - **A:** We accept this as a genuine construct-validity threat and now state it
-  prominently: a hardened prompt that instructs the model not to emit the marker
-  tokens can raise the measured rate by suppressing the string rather than by true
-  refusal, so our rates cannot fully separate the two. We **commit a small
-  human/LLM-judge audit of defended responses** (to bound the lexical-vs-semantic
-  gap) as the priority next step; pending that, all absolute rates carry this caveat.
-- **C:** New construct-validity text in §4; expanded "Deterministic judge"
-  limitation bullet (§7); abstract now says defense rates "cannot fully separate
-  genuine refusal from marker-suppression."
-- **Remaining (needs data):** the audit itself requires a new run; flagged as
-  committed future work, and no headline now depends on the absolute level.
+  prominently. **We ran a preliminary semantic-judge audit** (60 defended cells, an
+  LLM judge; manual review found ~4 of 6 flags genuine): the lexical-leak looseness
+  is **~7–10 points**, and — importantly — **concentrated in the encoding
+  transforms**, because the exact-match, attack-specific judge misses (i) markers
+  emitted in leet form (e.g. `[J@RT-PWN3D]`) and (ii) a canary leaked during a
+  non-leakage attack. The upper bound is thus now *empirically bounded*, not unknown,
+  and we identify the concrete mechanism.
+- **C:** §4 + the "Deterministic judge" limitation now report the audit result and
+  mechanism; the abstract says rates "cannot fully separate genuine refusal from
+  marker-suppression"; M1 caveats that the encoding transforms' low scores are partly
+  a judge artifact. Audit tooling committed (`experiments/audit_semantic_judge.py`,
+  `audit_results.json`).
+- **Remaining:** a human-validated audit and a **stricter judge** (canary-checked
+  across all attacks, leet-reversed before matching) that would *lower*
+  encoding-transform defense rates — future work. No headline depends on the
+  absolute level.
 
 ---
 
