@@ -267,7 +267,7 @@ exercised at inference (deployment) time: Direct/Indirect Prompt Injection
 Jailbreak (AML.T0054), LLM Data Leakage (AML.T0057), LLM Prompt Self-Replication
 (AML.T0061), Trusted-Output/Citations manipulation (AML.T0067.000), LLM Prompt
 Obfuscation (AML.T0068), System-Prompt discovery (AML.T0069.002), and RAG
-Poisoning, including false-RAG-entry injection (AML.T0070). Vectors are \code{user} (direct) or \code{rag} (indirect).
+Poisoning, including false-RAG-entry injection (AML.T0070). Vectors are \code{user} (direct) or \code{rag} (indirect). The eleven attacks \emph{realize} these nine techniques (an 11-to-9 map, not a bijection): e.g.\ both RAG attacks --- corpus poisoning and false-entry injection --- realize \code{AML.T0070}, and the two prompt-injection vectors realize the two \code{AML.T0051} sub-techniques.
 
 \paragraph{Harmless proxy markers and safety-by-construction.}\label{sec:markers}
 To avoid producing weaponizable content, attacks target \textbf{harmless
@@ -314,13 +314,16 @@ We report $\mathrm{cospa} = \text{defense\_rate}(\%) \div
 \text{cost\_per\_million\_tokens (USD)}$ (per-million cost clamped at a \$0.01
 floor). cospa is a deliberately simple \emph{screening ratio}, not a utility model:
 its units are not independently meaningful and the ranking is sensitive to the
-clamp and price snapshot. Because cospa rewards cheap configurations, we use it only behind a
-\textbf{sufficiency gate}: rank only configurations whose defense-rate CI lower
-bound clears a user-set floor, then sort by cost (``cheapest \emph{sufficiently
-safe}''); a high cospa from a lightweight keyword filter must not be read as
-obfuscation-robust (\S\ref{sec:results}). We present the underlying
-\textbf{defense-vs-cost trade-off} directly; the clamp affects only
-sub-\$0.01/Mtok configurations, of which our fleet has none.
+clamp and price snapshot. Because cospa rewards cheap configurations, we \textbf{recommend applying a
+sufficiency gate} --- a recommended methodology, \emph{not} the harness default:
+rank only configurations whose defense-rate CI lower bound clears a user-set floor,
+then sort by cost (``cheapest \emph{sufficiently safe}''); a high cospa from a
+lightweight keyword filter must not be read as obfuscation-robust
+(\S\ref{sec:results}). The released leaderboard reports raw cospa as a sort key
+(with each rate's CI shown), so the gate must be applied by the practitioner before
+reading off a recommendation. We present the underlying \textbf{defense-vs-cost
+trade-off} directly; the clamp affects only sub-\$0.01/Mtok configurations, of which
+our fleet has none.
 
 \paragraph{Execution.}
 Trials are independent and run with bounded concurrency (a thread pool, default 8
@@ -476,11 +479,12 @@ keigo authority-framing overlaps with language-agnostic role-play jailbreaks): w
 do \emph{not} isolate the marginal effect of the Japanese-specific surface over a
 language-agnostic baseline, so we claim a Japanese obfuscation \emph{surface worth
 cataloguing}, not that Japanese script per se is empirically more dangerous. The
-clearest takeaway is that \emph{legible} transforms beat cryptographic ones --- with
-one caveat: our audit (\S\ref{sec:limits}) finds the encoding transforms' low scores
-are partly a \emph{judge artifact} (the model complies but emits the marker in
-obfuscated form the exact-match judge misses), so a stricter judge could narrow this
-gap.
+clearest takeaway is that \emph{legible} transforms beat cryptographic ones, \emph{with
+an important caveat}: our audit (\S\ref{sec:limits}) \emph{suggests} the encoding
+transforms' low scores are partly a \emph{judge artifact} (the model complies but
+emits the marker in obfuscated form the exact-match judge misses). We do not separate
+the two explanations or quantify how much of the base64/leet gap survives a stricter
+judge, so this takeaway is \emph{provisional} pending that re-measurement.
 
 \section{The Leaderboard Artifact}
 The harness emits \code{results.json} and a self-contained static site (sortable
@@ -578,17 +582,22 @@ release net-positive for defenders, consistent with \S6.2.
         model not to emit the marker tokens can raise the measured rate by
         \textbf{suppressing the marker string rather than by genuine refusal}, so
         our rates cannot fully separate true hardening from marker-suppression. A
-        preliminary semantic-judge audit (60 defended cells, an LLM judge; manual
-        review found ${\sim}4$ of 6 flags genuine) estimates this looseness at
-        \textbf{${\sim}7$--$10$ points} and localizes its mechanism: the exact-match
-        judge is \emph{attack-specific} and does not reverse obfuscation, so it
-        misses (i)~a marker emitted in leet form (e.g.\ \code{[J@RT-PWN3D]}) and
-        (ii)~a canary leaked during a non-leakage attack; the gap is thus
-        \textbf{concentrated in the encoding transforms} (\code{base64}/\code{leet}).
-        A stricter judge (canary-checked across all attacks, leet-reversed before
-        matching) --- which would \emph{lower} encoding-transform defense rates ---
-        and a human-validated audit are future work. Until then, absolute defense
-        rates (and any governance use of them) carry this caveat.
+        \emph{preliminary, under-powered} semantic-judge audit (60 defended cells;
+        an LLM judge, hence itself imperfect and partly circular --- it reintroduces
+        the LLM-judge bias we avoid for the headline metric) flagged 6 cells (Wilson
+        95\% CI $[4.7\%, 20.1\%]$; an informal manual look judged ${\sim}4$ genuine,
+        recorded in \code{audit\_results.json}). We therefore read it as an
+        \emph{existence proof of single-digit-to-low-double-digit looseness}, not a
+        calibrated correction. Its value is mechanistic: the two unambiguous misses
+        --- a marker emitted in leet form (\code{[J@RT-PWN3D]}) and a canary leaked
+        during a non-leakage attack --- show the exact-match, \emph{attack-specific}
+        judge misses obfuscated markers and cross-attack leaks, so the looseness is
+        \textbf{concentrated in the encoding transforms} (\code{base64}/\code{leet});
+        the headline configuration-collapse result, which rests on the
+        hardened/guardrail arms, is comparatively unaffected. A stricter judge
+        (canary-checked across all attacks, leet-reversed --- which would
+        \emph{lower} encoding-transform rates) and a powered, human-validated audit
+        are future work.
   \item \textbf{Single-turn:} multi-turn / crescendo~\citep{crescendo} and
         many-shot~\citep{manyshot} attacks are not yet modeled --- and these most
         erode exactly the input-classifier and prompt-hardening defenses we find
@@ -735,7 +744,7 @@ analysis.
   That: The Crescendo Multi-Turn LLM Jailbreak Attack. 2024.
 \bibitem{manyshot} Anil et al. Many-shot Jailbreaking. Anthropic, 2024.
 \bibitem{autodan} Liu et al. AutoDAN: Generating Stealthy Jailbreak Prompts on
-  Aligned Large Language Models. 2024.
+  Aligned Large Language Models. ICLR 2024. arXiv:2310.04451.
 \bibitem{badchars} Boucher, Shumailov, Anderson, Papernot. Bad Characters:
   Imperceptible NLP Attacks. IEEE S\&P, 2022.
 \end{thebibliography}

@@ -239,7 +239,7 @@ inference (deployment) time: Direct/Indirect Prompt Injection (AML.T0051.000/.00
 Jailbreak (AML.T0054), LLM Data Leakage (AML.T0057), LLM Prompt Self-Replication
 (AML.T0061), Trusted-Output/Citations manipulation (AML.T0067.000), LLM Prompt
 Obfuscation (AML.T0068), System-Prompt discovery (AML.T0069.002), and RAG
-Poisoning, including false-RAG-entry injection (AML.T0070). Vectors are `user` (direct) or `rag` (indirect).
+Poisoning, including false-RAG-entry injection (AML.T0070). Vectors are `user` (direct) or `rag` (indirect). The eleven attacks *realize* these nine techniques (an 11-to-9 map, not a bijection): e.g. both RAG attacks — corpus poisoning and false-entry injection — realize AML.T0070, and the two prompt-injection vectors realize the two AML.T0051 sub-techniques.
 
 ### 3.4 Harmless proxy markers and safety-by-construction
 
@@ -301,10 +301,13 @@ per-million cost is clamped at a 0.01 USD floor to avoid divergence). This
 surfaces configurations that are both safe and cheap. cospa is a deliberately
 simple screening ratio, not a utility model: its units (defense-% per USD/Mtok)
 are not independently meaningful, and the ranking is sensitive to the clamp and to
-the price snapshot. Because cospa rewards cheap configurations, we use it only behind a **sufficiency
-gate**: rank only configurations whose defense-rate CI lower bound clears a user-set
-floor, then sort by cost ("cheapest *sufficiently safe*"); a high cospa from a
-lightweight keyword filter must **not** be read as obfuscation-robust (§4.4). We
+the price snapshot. Because cospa rewards cheap configurations, we **recommend applying a sufficiency
+gate** (a recommended methodology, *not* the harness default): rank only
+configurations whose defense-rate CI lower bound clears a user-set floor, then sort
+by cost ("cheapest *sufficiently safe*"); a high cospa from a lightweight keyword
+filter must **not** be read as obfuscation-robust (§4.4). The released leaderboard
+reports raw cospa as a sort key (with each rate's CI shown), so the gate must be
+applied by the practitioner. We
 present the underlying **defense-vs-cost trade-off** directly (the safe-and-cheap
 frontier in §4.4); a configuration is preferable only if it is Pareto-non-dominated
 on (defense, cost). Sensitivity to the clamp affects only sub-$0.01/Mtok
@@ -478,10 +481,11 @@ Japanese-specific (`vertical_newline` is typographic; keigo framing overlaps wit
 language-agnostic role-play), and we do **not** isolate the marginal effect of the
 Japanese-specific surface, so we claim a Japanese obfuscation *surface worth
 cataloguing*, not that Japanese script is more dangerous. The clearest takeaway is
-that *legible* transforms beat cryptographic ones — with one caveat: our audit (§7)
-finds the encoding transforms' low scores are partly a **judge artifact** (the model
-complies but emits the marker in obfuscated form the exact-match judge misses), so a
-stricter judge could narrow this gap.
+that *legible* transforms beat cryptographic ones — *with an important caveat*: our
+audit (§7) *suggests* the encoding transforms' low scores are partly a **judge
+artifact** (the model complies but emits the marker in obfuscated form the exact-match
+judge misses). We do not separate the two explanations or quantify how much of the
+base64/leet gap survives a stricter judge, so this takeaway is *provisional*.
 
 ## 5. The Leaderboard Artifact
 
@@ -592,13 +596,19 @@ for defenders, consistent with the responsible-disclosure pattern of §6.2.
   whitespace/zero-width removal). It cannot detect *semantic*/paraphrased leakage,
   so reported defense rates are an **upper bound** — and the bias is *correlated
   with the treatment* (a hardened prompt told not to emit the marker can raise the
-  rate by suppressing the string, not by genuine refusal). A preliminary
-  semantic-judge audit (60 defended cells, LLM judge; ~4 of 6 flags genuine on
-  manual review) estimates this looseness at **~7–10 points**, **concentrated in
-  the encoding transforms** (base64/leet): the attack-specific exact-match judge
-  misses leet-form markers (e.g. `[J@RT-PWN3D]`) and cross-attack canary leaks. A
-  stricter judge (canary-checked across all attacks, leet-reversed) — which would
-  *lower* encoding-transform rates — and a human-validated audit are future work.
+  rate by suppressing the string, not by genuine refusal). A *preliminary,
+  under-powered* semantic-judge audit (60 defended cells; an LLM judge, hence itself
+  imperfect and partly circular) flagged 6 cells (Wilson 95% CI [4.7%, 20.1%]; an
+  informal manual look judged ~4 genuine, recorded in `audit_results.json`). We read
+  it as an *existence proof of single-digit-to-low-double-digit looseness*, not a
+  calibrated correction; its value is mechanistic — two unambiguous misses (a
+  leet-form marker `[J@RT-PWN3D]` and a canary leaked under a non-leakage attack)
+  show the attack-specific exact-match judge misses obfuscated markers and
+  cross-attack leaks, so the looseness is **concentrated in the encoding transforms**
+  (base64/leet) and the headline configuration-collapse result is comparatively
+  unaffected. A stricter judge (canary-checked across all attacks, leet-reversed) —
+  which would *lower* encoding-transform rates — and a powered, human-validated audit
+  are future work.
 - **Single-turn:** multi-turn / crescendo [31] and many-shot [32] attacks are not
   yet modeled — and these most erode the very input-classifier and prompt-hardening
   defenses we find effective, so the 91–100% band is a single-turn ceiling and the
@@ -759,7 +769,7 @@ completed for camera-ready.)*
     Multi-Turn LLM Jailbreak Attack (2024).
 32. Anil et al. Many-shot Jailbreaking. Anthropic (2024).
 33. Liu et al. AutoDAN: Generating Stealthy Jailbreak Prompts on Aligned Large
-    Language Models (2024).
+    Language Models. ICLR 2024. arXiv:2310.04451.
 34. Boucher, Shumailov, Anderson, Papernot. Bad Characters: Imperceptible NLP
     Attacks. IEEE S&P (2022).
 

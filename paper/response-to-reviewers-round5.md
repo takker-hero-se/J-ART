@@ -125,3 +125,33 @@ repositioning is in framing and scope.
 
 We did **not** fabricate any of these; the revision instead de-escalates the claims
 so that none of the paper's current conclusions depends on them.
+
+---
+
+## Round-6 calibration (post re-review)
+
+A second simulated review of the revised manuscript downgraded both prior CRITICALs
+to resolved/substantially-resolved and surfaced calibration items, addressed here:
+
+- **cospa "sufficiency gate" was described but not implemented in the harness** (a
+  paper-vs-artifact mismatch). Fixed by **accurately rewording**: the gate is now
+  stated as a *recommended methodology, not the harness default*; the leaderboard
+  reports raw cospa (with CIs) and the practitioner applies the gate. (No false
+  claim of an unimplemented feature.)
+- **The "~7–10 points" audit figure was over-stated for N=60.** Now reported with
+  its binomial CI (6/60, Wilson 95% CI [4.7%, 20.1%]; ~4/6 genuine), framed as an
+  *existence proof of single-digit-to-low-double-digit looseness, not a calibrated
+  correction*, with the LLM-judge circularity named and the manual adjudication
+  committed to `audit_results.json`. We also note the headline configuration-collapse
+  result (hardened/guardrail arms) is comparatively unaffected by the
+  encoding-localized looseness.
+- **M1 "legible beats cryptographic"** softened from "finds" to "*suggests*", with an
+  explicit statement that the two explanations are not separated and the surviving
+  gap is unquantified (*provisional*).
+- **ATLAS auditability:** added a one-line 11-attack→9-technique mapping note (both
+  RAG attacks realize T0070; the two PI vectors realize the two T0051 sub-techniques).
+- **AutoDAN** disambiguated (Liu et al., ICLR 2024, arXiv:2310.04451).
+
+Remaining (genuinely needs new work, not review-fixable): a deployment-realistic
+minimal-prompt baseline (to move C1 from "well-disclosed limitation" to "removed"),
+and a powered, human-validated judge audit + stricter-judge re-measurement.
