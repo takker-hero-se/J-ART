@@ -137,8 +137,12 @@ even though Japanese is itself high-resource.
 
 **Encoding and typographic obfuscation.** Encoding-based jailbreaks are
 established prior art: CipherChat [28] shows that conversing in ciphers evades
-safety alignment, and ArtPrompt [29] uses ASCII-art typography to smuggle banned
-words past filters. Our `base64_wrap` and `leet_smuggle` transforms are
+safety alignment, ArtPrompt [29] uses ASCII-art typography to smuggle banned words
+past filters, and Boucher et al. [34] ("Bad Characters") is the canonical
+zero-width/homoglyph perturbation attack — the nearest prior art to our zero-width
+smuggling in `gyaru`/`leet_smuggle` (their perturbations target classifier/MT models
+*imperceptibly*, whereas gyaru-moji is a *human-legible*, culturally-conventionalized
+Japanese script substitution). Our `base64_wrap` and `leet_smuggle` transforms are
 **language-agnostic replications of this line**, included as a comparison
 baseline, *not* as novel contributions; the novel surface in J-ART is the
 **Japanese-script** transforms (`gyaru`, `vertical_newline`, keigo framing),
@@ -229,8 +233,9 @@ attack surface (the Japanese-script transforms).
 
 ### 3.3 Attack suite and MITRE ATLAS mapping
 
-Eleven attacks cover nine ATLAS techniques, all exercised at inference
-(deployment) time: Direct/Indirect Prompt Injection (AML.T0051.000/.001), LLM
+Eleven attacks cover nine ATLAS techniques (mapped against the MITRE ATLAS matrix,
+accessed 2026-06; the two AML.T0051 sub-techniques count as two), all exercised at
+inference (deployment) time: Direct/Indirect Prompt Injection (AML.T0051.000/.001), LLM
 Jailbreak (AML.T0054), LLM Data Leakage (AML.T0057), LLM Prompt Self-Replication
 (AML.T0061), Trusted-Output/Citations manipulation (AML.T0067.000), LLM Prompt
 Obfuscation (AML.T0068), System-Prompt discovery (AML.T0069.002), and RAG
@@ -296,10 +301,13 @@ per-million cost is clamped at a 0.01 USD floor to avoid divergence). This
 surfaces configurations that are both safe and cheap. cospa is a deliberately
 simple screening ratio, not a utility model: its units (defense-% per USD/Mtok)
 are not independently meaningful, and the ranking is sensitive to the clamp and to
-the price snapshot. We therefore treat cospa only as a *sort key* and present the
-underlying **defense-vs-cost trade-off** directly (the safe-and-cheap frontier in
-§4.4); a configuration is preferable only if it is Pareto-non-dominated on
-(defense, cost). Sensitivity to the clamp affects only sub-$0.01/Mtok
+the price snapshot. Because cospa rewards cheap configurations, we use it only behind a **sufficiency
+gate**: rank only configurations whose defense-rate CI lower bound clears a user-set
+floor, then sort by cost ("cheapest *sufficiently safe*"); a high cospa from a
+lightweight keyword filter must **not** be read as obfuscation-robust (§4.4). We
+present the underlying **defense-vs-cost trade-off** directly (the safe-and-cheap
+frontier in §4.4); a configuration is preferable only if it is Pareto-non-dominated
+on (defense, cost). Sensitivity to the clamp affects only sub-$0.01/Mtok
 configurations, of which there are none in our fleet.
 
 ### 3.9 Execution
@@ -463,9 +471,17 @@ Among **transforms**, the *un-obfuscated* `baseline` was most effective (**22.0%
 followed by `vertical_newline` (20.0%) and `polite_business` (17.3%), while
 **`base64_wrap` was least effective (5.5%)** and `leet_smuggle` next (8.8%):
 heavy encoding makes models *refuse or fail to parse* the instruction more often
-than it smuggles it past them. This is itself a finding — the most dangerous
-Japanese transforms are the *legible* ones (vertical writing, keigo framing), not
-the cryptographic ones.
+than it smuggles it past them. Aggregated by class, the Japanese-specific transforms
+retain more potency (mean ~16%) than the language-agnostic encodings (base64/leet,
+~7%) — but this is partly a *legibility* effect that is not strictly
+Japanese-specific (`vertical_newline` is typographic; keigo framing overlaps with
+language-agnostic role-play), and we do **not** isolate the marginal effect of the
+Japanese-specific surface, so we claim a Japanese obfuscation *surface worth
+cataloguing*, not that Japanese script is more dangerous. The clearest takeaway is
+that *legible* transforms beat cryptographic ones — with one caveat: our audit (§7)
+finds the encoding transforms' low scores are partly a **judge artifact** (the model
+complies but emits the marker in obfuscated form the exact-match judge misses), so a
+stricter judge could narrow this gap.
 
 ## 5. The Leaderboard Artifact
 
@@ -523,7 +539,7 @@ AISI red-teaming guide [27]. The mapping is **informational, not a compliance
 claim or legal advice**; standards evolve and applicability depends on each
 deployment's risk classification.
 
-**Table 4. Governance crosswalk (informational).**
+**Table 4. Governance crosswalk (informational; Article references indicate the obligation *area*, not that a given deployment is in scope).**
 
 | J-ART capability (ATLAS) | OWASP LLM Top 10 (2025) | NIST AI RMF | EU AI Act | Japan guidance |
 |---|---|---|---|---|
@@ -547,7 +563,10 @@ n = 385, K = 5, model GPT-4.1-mini + hardened prompt + keyword guardrail,
 2026-06-14"*, with a pre-registered sufficiency threshold (e.g. "CI lower bound
 ≥ 90% for the shipped configuration"). The same row is the
 evidence an AISI red-teaming report or an EU AI Act Art. 15 robustness dossier
-would cite. This shows the crosswalk is operational, not merely a label.
+would cite. We stress this number is a *lexical-leak upper bound on a harmless,
+single-turn proxy* — a screening signal, not evidence of deployment safety — to be
+paired with semantic/human-validated evaluation before any compliance reliance. This
+shows the crosswalk is operational, not merely a label.
 
 ### 6.4 Dual-use
 
@@ -555,29 +574,45 @@ J-ART is a defensive evaluation harness, but the published transform suite is al
 a reusable *attack* wrapper, and we weigh this openly. The uplift it gives an
 attacker is low: the Japanese-script transforms are folklore among Japanese
 internet users, the encoding transforms are replications of public work
-(CipherChat [28], ArtPrompt [29]), and the suite contains no harmful payloads — only the
-harmless proxy markers (§3.4). Against this, the defender benefit is concrete: we
-release, in the same repository, the **normalizing regex guardrail** that
-neutralizes every transform in the suite (verified by unit tests), so the
-mitigation ships with the disclosure. On balance we judge open release net-positive
+(CipherChat [28], ArtPrompt [29]), and the suite contains no harmful *payloads* —
+only the harmless proxy markers (§3.4). Against this, the defender benefit is
+concrete: we release, in the same repository, the **normalizing regex guardrail**
+that neutralizes the *fixed published* transforms (verified by unit tests). That
+benefit is bounded to those transforms, not adaptive obfuscation (an attacker can
+mutate a transform past a deterministic normalizer), but the mitigation still ships
+with the disclosure. On balance we judge open release net-positive
 for defenders, consistent with the responsible-disclosure pattern of §6.2.
 
 ## 7. Limitations
 
 - **Proxy markers, not harm:** we measure instruction-violation / leakage proxies
   rather than real-world harm.
-- **Deterministic judge:** the judge matches the canary/marker exactly *and*
-  after light normalization (case-folding, whitespace/zero-width removal), so a
-  reformatted echo (e.g. a vertically split or spaced canary) is now counted as a
-  breach (see `tests/test_guardrails.py`). It still cannot detect *semantic* or
-  paraphrased leakage, so reported defense rates are an **upper bound**;
-  quantifying the residual false-negative rate via a human-validated LLM-judge is
-  future work.
-- **Single-turn:** multi-turn / crescendo attacks are not yet modeled.
-- **Sample size:** a handcrafted suite (11 attacks × 7 transforms); default
-  `N`=1 per cell.
-- **Provider non-determinism / router variance:** see §4.3; results are
-  snapshots and depend on routing and model versions at run time.
+- **Deterministic judge (construct validity):** the judge matches the
+  canary/marker exactly *and* after light normalization (case-folding,
+  whitespace/zero-width removal). It cannot detect *semantic*/paraphrased leakage,
+  so reported defense rates are an **upper bound** — and the bias is *correlated
+  with the treatment* (a hardened prompt told not to emit the marker can raise the
+  rate by suppressing the string, not by genuine refusal). A preliminary
+  semantic-judge audit (60 defended cells, LLM judge; ~4 of 6 flags genuine on
+  manual review) estimates this looseness at **~7–10 points**, **concentrated in
+  the encoding transforms** (base64/leet): the attack-specific exact-match judge
+  misses leet-form markers (e.g. `[J@RT-PWN3D]`) and cross-attack canary leaks. A
+  stricter judge (canary-checked across all attacks, leet-reversed) — which would
+  *lower* encoding-transform rates — and a human-validated audit are future work.
+- **Single-turn:** multi-turn / crescendo [31] and many-shot [32] attacks are not
+  yet modeled — and these most erode the very input-classifier and prompt-hardening
+  defenses we find effective, so the 91–100% band is a single-turn ceiling and the
+  configuration-collapse finding is only *hypothesized* for multi-turn.
+- **Fixed handcrafted suite:** 11 attacks × 7 transforms, fixed and auditable
+  (harness default `N`=1 per cell; this paper uses K=5 live, K=3 ablation). Defense
+  rates are an upper bound *also w.r.t. attack strength*: adaptive optimizers
+  (PAIR/TAP [6,7], AutoDAN [33], GCG [11]) would likely lower them, so "91–100%
+  defense" is not robustness to optimized adversaries.
+- **Provider stochasticity:** results are snapshots depending on sampling
+  temperature, provider routing, and model versions at run time; we attribute the
+  within-campaign variance (§4.3) to provider stochasticity *broadly* and do not
+  isolate router routing from ordinary sampling noise (cells near p=0.5 flip often
+  at K=5 by chance).
 - **Non-random missingness (now mostly resolved):** an earlier campaign left three
   flagship/rate-limited configs partial, and we flagged that the missingness was
   **not random** — rate limits correlate with attack difficulty, so Opus's hardest
@@ -720,6 +755,13 @@ completed for camera-ready.)*
     LLMs (2024).
 30. Debenedetti et al. AgentDojo: A Dynamic Environment to Evaluate Attacks and
     Defenses for LLM Agents (2024).
+31. Russinovich, Salem, Eldan. Great, Now Write an Article About That: The Crescendo
+    Multi-Turn LLM Jailbreak Attack (2024).
+32. Anil et al. Many-shot Jailbreaking. Anthropic (2024).
+33. Liu et al. AutoDAN: Generating Stealthy Jailbreak Prompts on Aligned Large
+    Language Models (2024).
+34. Boucher, Shumailov, Anderson, Papernot. Bad Characters: Imperceptible NLP
+    Attacks. IEEE S&P (2022).
 
 ## Citation
 
