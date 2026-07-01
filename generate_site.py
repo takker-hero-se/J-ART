@@ -711,10 +711,10 @@ function renderBoard() {{
       <td class="px-4 py-4 text-center w-16">${{rankBadge}}</td>
       <td class="px-4 py-4">
         <div class="font-semibold text-slate-100 flex items-center gap-2 flex-wrap">
-          ${{esc(labelOf(s))}} ${{modeBadge(s.mode)}}
+          ${{esc(labelOf(s))}}
         </div>
         <div class="flex items-center gap-1.5 flex-wrap mt-1.5">
-          ${{promptBadge(s.prompt_strength)}} ${{guardrailBadge(s.guardrail)}}
+          ${{modeBadge(s.mode)}} ${{promptBadge(s.prompt_strength)}} ${{guardrailBadge(s.guardrail)}}
         </div>
         <div class="text-xs text-slate-500 mt-1.5">
           <span class="font-mono text-slate-400">${{esc(s.model)}}</span>
