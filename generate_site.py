@@ -23,6 +23,16 @@ import argparse
 # GitHub リポジトリ URL（フッターのリンク・PR 募集に使用）。自身のリポジトリに合わせて書き換え可。
 REPO_URL = "https://github.com/takker-hero-se/J-ART"
 
+# 公開サイト（GitHub Pages）の正規 URL。canonical / OGP / sitemap / robots に使用。
+# 末尾スラッシュ付きで統一する（重複 URL 扱いを避ける）。フォーク時はここを書き換える。
+SITE_URL = "https://takker-hero-se.github.io/J-ART/"
+
+# 検索結果のスニペット・OGP に使う説明文（120 字前後が目安）。
+SITE_DESC = (
+    "J-ART — Japanese Adversarial Red-Team framework. "
+    "日本語 LLM の安全性とコストを実 API で計測するオープンなリーダーボード。"
+)
+
 # ブランドアイコン（盾=防御耐性 / 照準レティクル=敵対的レッドチーム / 中心の赤丸=日の丸 ＝ ブルズアイ）。
 # 単一ソース: assets/icon.svg。CI でも確実に参照できるよう、見つからない場合のフォールバックも内蔵する。
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -257,9 +267,27 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>J-ART | Open LLM Security &amp; Cost Leaderboard</title>
+<meta name="description" content="{site_desc}">
+<meta name="robots" content="index,follow">
+<!-- Google Search Console 所有権確認（削除するとサイトマップ送信等が失効するため残す） -->
+<meta name="google-site-verification" content="qREgRC0nh7MwmvSxbPYoF9CVZkwpJgQug1rJ1FYakcs">
+
+<link rel="canonical" href="{site_url}">
+<!-- Open Graph（SNS 共有・一部検索エンジンの理解補助） -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="J-ART">
+<meta property="og:title" content="J-ART | Open LLM Security &amp; Cost Leaderboard">
+<meta property="og:description" content="{site_desc}">
+<meta property="og:url" content="{site_url}">
+<meta property="og:image" content="{site_url}icon.svg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="J-ART | Open LLM Security &amp; Cost Leaderboard">
+<meta name="twitter:description" content="{site_desc}">
+<meta name="twitter:image" content="{site_url}icon.svg">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <meta name="theme-color" content="#020617">
+<script type="application/ld+json">{jsonld}</script>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {{
@@ -318,6 +346,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
   .code-scroll::-webkit-scrollbar {{ height: 8px; width: 8px; }}
   .code-scroll::-webkit-scrollbar-thumb {{ background: #1e293b; border-radius: 8px; }}
 </style>
+{analytics}
 </head>
 <body class="text-slate-100 min-h-screen">
 <div class="grid-bg">
@@ -805,6 +834,20 @@ def main():
 
     os.makedirs(args.outdir, exist_ok=True)
 
+    # アクセス解析（GoatCounter）。サイトコードは環境変数 JART_GOATCOUNTER_CODE で注入する。
+    #   - 未設定なら空文字（＝タグを出力せず、ローカルビルドやフォークを壊さない）。
+    #   - 値は素のコード（例: "j-art"）でも、完全な count エンドポイント URL でも可。
+    #   - Cookie レス・IP非保存の軽量解析。GitHub Pages は生ログを出さないため、これで訪問数を可視化する。
+    gc_code = os.environ.get("JART_GOATCOUNTER_CODE", "").strip()
+    if gc_code:
+        gc_endpoint = gc_code if "://" in gc_code else f"https://{gc_code}.goatcounter.com/count"
+        analytics = (
+            f'<script data-goatcounter="{html.escape(gc_endpoint)}"\n'
+            f'        async src="//gc.zgo.at/count.js"></script>'
+        )
+    else:
+        analytics = "<!-- analytics disabled: set JART_GOATCOUNTER_CODE to enable GoatCounter -->"
+
     # ブランドアイコンを出力ディレクトリへ配置（favicon 用）し、ヘッダー用にサイズ調整版を用意。
     icon_svg = load_icon()
     with open(os.path.join(args.outdir, "icon.svg"), "w", encoding="utf-8") as f:
@@ -830,6 +873,26 @@ def main():
         mode_label = f"全 MOCK（{n_mock} 構成・シミュレーション）"
         mode_class = "bg-amber-500/15 text-amber-300 border border-amber-500/40"
 
+    # 構造化データ（schema.org Dataset）。検索エンジンが研究成果物として解釈しやすくする。
+    # json.dumps で生成し、</script> による早期終了だけ無害化して <head> に埋め込む。
+    jsonld = json.dumps(
+        {
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "J-ART: Japanese Adversarial Red-Team leaderboard",
+            "description": SITE_DESC,
+            "url": SITE_URL,
+            "license": "https://opensource.org/licenses/MIT",
+            "creator": {"@type": "Organization", "name": "J-ART"},
+            "isBasedOn": REPO_URL,
+            "keywords": [
+                "LLM", "AI safety", "red teaming", "Japanese", "jailbreak",
+                "leaderboard", "adversarial", "benchmark",
+            ],
+        },
+        ensure_ascii=False,
+    ).replace("</", "<\\/")
+
     page = PAGE_TEMPLATE.format(
         generated_at=html.escape(data.get("generated_at", "")),
         mode=html.escape(mode_label),
@@ -841,6 +904,10 @@ def main():
         header_icon=header_icon,
         data_json=json.dumps(data, ensure_ascii=False),
         i18n_json=json.dumps(build_i18n(), ensure_ascii=False),
+        analytics=analytics,
+        site_desc=html.escape(SITE_DESC),
+        site_url=html.escape(SITE_URL),
+        jsonld=jsonld,
     )
 
     index_path = os.path.join(args.outdir, "index.html")
@@ -850,6 +917,24 @@ def main():
     # 生データもダウンロード可能なように配置
     with open(os.path.join(args.outdir, "results.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+    # sitemap.xml … クローラに公開 URL を提示。lastmod は生成日を YYYY-MM-DD で流用。
+    lastmod = data.get("generated_at", "")[:10]
+    lastmod_tag = f"\n    <lastmod>{html.escape(lastmod)}</lastmod>" if len(lastmod) == 10 and lastmod[4] == "-" else ""
+    sitemap = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"  <url>\n    <loc>{html.escape(SITE_URL)}</loc>{lastmod_tag}\n"
+        "    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n"
+        "</urlset>\n"
+    )
+    with open(os.path.join(args.outdir, "sitemap.xml"), "w", encoding="utf-8") as f:
+        f.write(sitemap)
+
+    # robots.txt … 全クロール許可 + sitemap の所在を明示。
+    robots = f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}sitemap.xml\n"
+    with open(os.path.join(args.outdir, "robots.txt"), "w", encoding="utf-8") as f:
+        f.write(robots)
 
     print(f"[+] 生成完了: {index_path}")
 

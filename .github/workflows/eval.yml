@@ -87,6 +87,10 @@ jobs:
           fi
 
       - name: Generate static site
+        env:
+          # GoatCounter のサイトコード。Actions の Variables に JART_GOATCOUNTER_CODE を
+          # 設定すると公開サイトへ解析タグが入る。未設定なら自動的にタグなしで生成される。
+          JART_GOATCOUNTER_CODE: ${{ vars.JART_GOATCOUNTER_CODE }}
         run: |
           python generate_site.py --results results.json --outdir site
 
