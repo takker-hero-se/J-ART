@@ -94,6 +94,13 @@ jobs:
         run: |
           python generate_site.py --results results.json --outdir site
 
+      # GitHub Pages を明示的に有効化・再構成する（Pages バックエンドの状態異常対策）。
+      # enablement: true で未設定/不整合でも API 経由で Pages を立て直す。
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - name: Upload artifact for Pages
         uses: actions/upload-pages-artifact@v5
         with:
