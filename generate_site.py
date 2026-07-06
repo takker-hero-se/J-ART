@@ -33,6 +33,12 @@ SITE_DESC = (
     "日本語 LLM の安全性とコストを実 API で計測するオープンなリーダーボード。"
 )
 
+# 運用支援（LIVE 評価の API 実費相殺）の受け皿。GitHub Sponsors を既定にする。
+# Ko-fi 等へ差し替える場合はこの URL を変更するだけでフッターのボタンも切り替わる。
+SPONSOR_URL = "https://github.com/sponsors/takker-hero-se"
+# テンプレ経路・i18n 経路の両方で同一のエスケープ方針を使うための単一ソース。
+SPONSOR_URL_ESCAPED = html.escape(SPONSOR_URL)
+
 # ブランドアイコン（盾=防御耐性 / 照準レティクル=敵対的レッドチーム / 中心の赤丸=日の丸 ＝ ブルズアイ）。
 # 単一ソース: assets/icon.svg。CI でも確実に参照できるよう、見つからない場合のフォールバックも内蔵する。
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -126,6 +132,10 @@ def build_i18n():
                 '新たな<span class="text-emerald-300">日本語攻撃プレイブック（テストケース）</span>の追加 Pull Request を歓迎します。'
                 '慇懃無礼・縦書き改行・ギャル文字・二枚舌など、未知の難読化ベクトルを見つけたら、ぜひ'
                 f'<a href="{REPO_URL}/pulls" target="_blank" rel="noopener" class="text-emerald-400 hover:underline">PR</a> でコミュニティに共有してください。'
+            ),
+            "footer_support": (
+                '本リーダーボードは毎週 <span class="text-emerald-300">実 API で LIVE 評価</span>しており、その計測費で運用されています。継続にご支援いただける方は '
+                f'<a href="{SPONSOR_URL_ESCAPED}" target="_blank" rel="noopener" class="text-rose-300 hover:text-rose-200 hover:underline font-semibold">♥ スポンサー</a> からお願いします。'
             ),
             "footer_tagline": "J-ART — garak / deepeval に着想を得た日本語特化の独自評価ハーネス。<br>本指標は研究・検証用 PoC であり、各社モデルの公式評価ではありません。",
             # JS生成ラベル
@@ -222,6 +232,10 @@ def build_i18n():
                 'Pull requests adding new <span class="text-emerald-300">Japanese attack playbooks (test cases)</span> are welcome. '
                 'If you find an unknown obfuscation vector — keigo, vertical line breaks, gyaru script, double-talk — please share it with the community via a '
                 f'<a href="{REPO_URL}/pulls" target="_blank" rel="noopener" class="text-emerald-400 hover:underline">PR</a>.'
+            ),
+            "footer_support": (
+                'This leaderboard runs a <span class="text-emerald-300">weekly LIVE evaluation against real APIs</span>, funded by those measurement costs. '
+                f'If you would like to help keep it running, please consider becoming a <a href="{SPONSOR_URL_ESCAPED}" target="_blank" rel="noopener" class="text-rose-300 hover:text-rose-200 hover:underline font-semibold">♥ sponsor</a>.'
             ),
             "footer_tagline": "J-ART — a Japanese-focused evaluation harness inspired by garak / deepeval.<br>These metrics are a research PoC, not an official evaluation of any vendor model.",
             # JS-rendered labels
@@ -525,6 +539,10 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
           新たな<span class="text-emerald-300">日本語攻撃プレイブック（テストケース）</span>の追加 Pull Request を歓迎します。
           慇懃無礼・縦書き改行・ギャル文字・二枚舌など、未知の難読化ベクトルを見つけたら、ぜひ
           <a href="{repo_url}/pulls" target="_blank" rel="noopener" class="text-emerald-400 hover:underline">PR</a> でコミュニティに共有してください。
+        </p>
+        <p class="mt-3 text-slate-500 leading-relaxed" data-i18n-html="footer_support">
+          本リーダーボードは毎週 <span class="text-emerald-300">実 API で LIVE 評価</span>しており、その計測費で運用されています。継続にご支援いただける方は
+          <a href="{sponsor_url}" target="_blank" rel="noopener" class="text-rose-300 hover:text-rose-200 hover:underline font-semibold">♥ スポンサー</a> からお願いします。
         </p>
       </div>
       <span class="text-xs text-slate-600 shrink-0" data-i18n-html="footer_tagline">
@@ -907,6 +925,7 @@ def main():
         analytics=analytics,
         site_desc=html.escape(SITE_DESC),
         site_url=html.escape(SITE_URL),
+        sponsor_url=html.escape(SPONSOR_URL),
         jsonld=jsonld,
     )
 
