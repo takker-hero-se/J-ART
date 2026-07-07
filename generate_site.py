@@ -27,10 +27,15 @@ REPO_URL = "https://github.com/takker-hero-se/J-ART"
 # 末尾スラッシュ付きで統一する（重複 URL 扱いを避ける）。フォーク時はここを書き換える。
 SITE_URL = "https://takker-hero-se.github.io/J-ART/"
 
-# 検索結果のスニペット・OGP に使う説明文（120 字前後が目安）。
+# ページタイトル（<title> / og:title / twitter:title の単一ソース）。日英バランスで検索語を含める。
+SITE_TITLE = "J-ART — 日本語LLM 脱獄耐性＆コスト リーダーボード | Japanese LLM Red-Team & Cost Leaderboard"
+
+# 検索結果のスニペット・OGP に使う説明文。日英両方＋主要検索語（脱獄/ジェイルブレイク/PI/モデル名）を織り込む。
 SITE_DESC = (
-    "J-ART — Japanese Adversarial Red-Team framework. "
-    "日本語 LLM の安全性とコストを実 API で計測するオープンなリーダーボード。"
+    "J-ART — 日本語LLMの安全性（脱獄・ジェイルブレイク・プロンプトインジェクション耐性）とコストを"
+    "実APIで計測するオープンなリーダーボード。GPT・Claude・Gemini・Llama・Qwen 等を日本語レッドチームで評価。 "
+    "An open leaderboard measuring Japanese-LLM safety (jailbreak & prompt-injection resistance) "
+    "and cost across GPT, Claude, Gemini, Llama, Qwen and more."
 )
 
 # 運用支援（LIVE 評価の API 実費相殺）の受け皿。GitHub Sponsors を既定にする。
@@ -280,7 +285,7 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>J-ART | Open LLM Security &amp; Cost Leaderboard</title>
+<title>{site_title}</title>
 <meta name="description" content="{site_desc}">
 <meta name="robots" content="index,follow">
 <!-- Google Search Console 所有権確認（削除するとサイトマップ送信等が失効するため残す） -->
@@ -290,12 +295,12 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
 <!-- Open Graph（SNS 共有・一部検索エンジンの理解補助） -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="J-ART">
-<meta property="og:title" content="J-ART | Open LLM Security &amp; Cost Leaderboard">
+<meta property="og:title" content="{site_title}">
 <meta property="og:description" content="{site_desc}">
 <meta property="og:url" content="{site_url}">
 <meta property="og:image" content="{site_url}icon.svg">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="J-ART | Open LLM Security &amp; Cost Leaderboard">
+<meta name="twitter:title" content="{site_title}">
 <meta name="twitter:description" content="{site_desc}">
 <meta name="twitter:image" content="{site_url}icon.svg">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
@@ -544,6 +549,8 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
           本リーダーボードは毎週 <span class="text-emerald-300">実 API で LIVE 評価</span>しており、その計測費で運用されています。継続にご支援いただける方は
           <a href="{sponsor_url}" target="_blank" rel="noopener" class="text-rose-300 hover:text-rose-200 hover:underline font-semibold">♥ スポンサー</a> からお願いします。
         </p>
+        <!-- クロール可能なモデル一覧（ランキング表は JS 注入のため、検索到達性の担保として静的にも列挙） -->
+        <p class="mt-3 text-xs text-slate-600 leading-relaxed">{seo_models}</p>
       </div>
       <span class="text-xs text-slate-600 shrink-0" data-i18n-html="footer_tagline">
         J-ART — garak / deepeval に着想を得た日本語特化の独自評価ハーネス。<br>
@@ -891,6 +898,20 @@ def main():
         mode_label = f"全 MOCK（{n_mock} 構成・シミュレーション）"
         mode_class = "bg-amber-500/15 text-amber-300 border border-amber-500/40"
 
+    # SEO: クロール可能なモデル一覧。ランキング表は JS 注入のため、評価対象のモデル名を静的にも列挙して
+    # 「GPT-4.1 安全性」「Claude 脱獄」等の検索到達性を確保する。model 例: "openai/gpt-oss-20b"。
+    seen_models = []
+    for row in data.get("summary", []):
+        m = (row.get("model") or "").split("/")[-1].strip()
+        if m and m not in seen_models:
+            seen_models.append(m)
+    n_tf = len(data.get("transformations", []))
+    seo_models = html.escape(
+        f"評価対象モデル / Evaluated models: {', '.join(seen_models)}. "
+        f"{len(data.get('summary', []))} 構成 × {n_tf} 種の日本語変形攻撃"
+        f"（脱獄・ジェイルブレイク・プロンプトインジェクション）で計測。"
+    )
+
     # 構造化データ（schema.org Dataset）。検索エンジンが研究成果物として解釈しやすくする。
     # json.dumps で生成し、</script> による早期終了だけ無害化して <head> に埋め込む。
     jsonld = json.dumps(
@@ -904,8 +925,10 @@ def main():
             "creator": {"@type": "Organization", "name": "J-ART"},
             "isBasedOn": REPO_URL,
             "keywords": [
-                "LLM", "AI safety", "red teaming", "Japanese", "jailbreak",
+                "LLM", "AI safety", "red teaming", "Japanese", "日本語",
+                "jailbreak", "脱獄", "prompt injection", "プロンプトインジェクション",
                 "leaderboard", "adversarial", "benchmark",
+                "GPT", "Claude", "Gemini", "Llama", "Qwen",
             ],
         },
         ensure_ascii=False,
@@ -923,9 +946,11 @@ def main():
         data_json=json.dumps(data, ensure_ascii=False),
         i18n_json=json.dumps(build_i18n(), ensure_ascii=False),
         analytics=analytics,
+        site_title=html.escape(SITE_TITLE),
         site_desc=html.escape(SITE_DESC),
         site_url=html.escape(SITE_URL),
         sponsor_url=html.escape(SPONSOR_URL),
+        seo_models=seo_models,
         jsonld=jsonld,
     )
 
