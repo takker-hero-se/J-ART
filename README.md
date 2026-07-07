@@ -2,6 +2,8 @@
 
 <p align="center"><b>日本語</b> | <a href="README.en.md">English</a></p>
 
+<p align="center"><b>🔗 公開リーダーボード（Live）: <a href="https://takker-hero-se.github.io/J-ART/">takker-hero-se.github.io/J-ART</a></b></p>
+
 # J-ART (Japanese Adversarial Red-Team framework)
 
 **日本語環境における RAG システム / ガードレール構成の、MITRE ATLAS 準拠 脆弱性耐性リーダーボード（静的Webサイト）**
