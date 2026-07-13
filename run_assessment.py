@@ -45,10 +45,15 @@ PRICING = {
     "gpt-4o-mini":                {"in": 0.15,  "out": 0.60},
     "gpt-4.1-mini":               {"in": 0.40,  "out": 1.60},
     "gpt-4.1":                    {"in": 2.00,  "out": 8.00},
-    # --- Anthropic（Claude 4.x） ---
+    # GPT-5.6 3ティア（Sol=フラグシップ / Terra=バランス / Luna=廉価・OpenRouter経由）。
+    "openai/gpt-5.6-sol":         {"in": 5.00,  "out": 30.00},
+    "openai/gpt-5.6-terra":       {"in": 2.50,  "out": 15.00},
+    "openai/gpt-5.6-luna":        {"in": 1.00,  "out": 6.00},
+    # --- Anthropic（Claude 4.x / 5 系） ---
     "claude-haiku-4-5":           {"in": 1.00,  "out": 5.00},
     "claude-sonnet-4-6":          {"in": 3.00,  "out": 15.00},
     "claude-opus-4-8":            {"in": 5.00,  "out": 25.00},
+    "claude-fable-5":             {"in": 10.00, "out": 50.00},
     # --- Google Gemini（2.5 系） ---
     "gemini-2.5-flash":           {"in": 0.30,  "out": 2.50},
     "gemini-2.5-pro":             {"in": 1.25,  "out": 10.00},
@@ -613,11 +618,15 @@ def _openai_client(target):
 def _call_openai_chat(target, system, user):
     """OpenAI および OpenAI互換ホスト(OpenRouter/Together/Groq, gpt-oss/Qwen/Llama)共通。"""
     client = _openai_client(target)
-    r = client.chat.completions.create(
-        model=target["model"], temperature=0, max_tokens=512,
-        messages=[{"role": "system", "content": system},
-                  {"role": "user", "content": user}],
-    )
+    model = target["model"]
+    params = dict(model=model, max_tokens=512,
+                  messages=[{"role": "system", "content": system},
+                            {"role": "user", "content": user}])
+    # 決定論のため temperature=0 を付すが、推論系(gpt-5/6 系・o 系)は既定値以外の
+    # temperature を非対応(400)とすることがあるため、その系統では省略する。
+    if not any(k in model.lower() for k in ("gpt-5", "gpt-6", "/o1", "/o3", "/o4")):
+        params["temperature"] = 0
+    r = client.chat.completions.create(**params)
     content = r.choices[0].message.content or ""
     usage = getattr(r, "usage", None)
     in_tok = getattr(usage, "prompt_tokens", None)
@@ -636,9 +645,10 @@ def _call_anthropic(target, system, user):
     model = target["model"]
     params = dict(model=model, max_tokens=1024, system=system,
                   messages=[{"role": "user", "content": user}])
-    # 決定論のため temperature=0 を付すが、一部モデル(Claude Opus 4.x)は temperature を
-    # 非対応(400 'temperature is deprecated')とするため、その系統では省略する。
-    if "opus" not in model.lower():
+    # 決定論のため temperature=0 を付すが、一部の系統（Claude Opus 4.x / Fable 5 / Mythos 5 /
+    # Sonnet 5）は temperature 等のサンプリング指定を非対応(400)とするため、その系統では省略する。
+    _no_sampling = ("opus", "fable", "mythos", "sonnet-5")
+    if not any(k in model.lower() for k in _no_sampling):
         params["temperature"] = 0
     r = client.messages.create(**params)
     text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")

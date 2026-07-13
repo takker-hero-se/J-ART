@@ -67,6 +67,39 @@ targets:
     guardrail: llm
     rag: true
 
+  - id: openai-gpt56sol-naked
+    label: "GPT-5.6 Sol / 素のAPI (OpenRouter)"
+    label_en: "GPT-5.6 Sol / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-sol"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openai-gpt56terra-naked
+    label: "GPT-5.6 Terra / 素のAPI (OpenRouter)"
+    label_en: "GPT-5.6 Terra / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-terra"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openai-gpt56luna-naked
+    label: "GPT-5.6 Luna / 素のAPI (OpenRouter)"
+    label_en: "GPT-5.6 Luna / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-luna"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
   # ===== Anthropic（Claude 4.x 系へ刷新＋Opusフラグシップ追加） =====
   - id: anthropic-haiku-keyword
     label: "Claude Haiku 4.5 + 強化プロンプト + キーワードGR"
@@ -91,6 +124,15 @@ targets:
     label_en: "Claude Opus 4.8 / Naked API"
     provider: anthropic
     model: claude-opus-4-8
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: anthropic-fable-naked
+    label: "Claude Fable 5 / 素のAPI"
+    label_en: "Claude Fable 5 / Naked API"
+    provider: anthropic
+    model: claude-fable-5
     prompt_strength: low
     guardrail: none
     rag: true
