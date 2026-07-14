@@ -305,6 +305,133 @@ targets:
     guardrail: llamaguard
     rag: true
 
+  # ===================================================================
+  # 共通ベースライン（全モデルに「素のAPI」＝ low/none を1点ずつ揃える）。
+  #   モデルの“生耐性”を apples-to-apples で比較するための共通軸。
+  #   既に素のAPI構成があるモデルは重複を避けここには入れない。
+  # ===================================================================
+  - id: openai-41mini-naked
+    label: "GPT-4.1-mini / 素のAPI"
+    label_en: "GPT-4.1-mini / Naked API"
+    provider: openai
+    model: gpt-4.1-mini
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openai-41-naked
+    label: "GPT-4.1 / 素のAPI"
+    label_en: "GPT-4.1 / Naked API"
+    provider: openai
+    model: gpt-4.1
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: anthropic-haiku-naked
+    label: "Claude Haiku 4.5 / 素のAPI"
+    label_en: "Claude Haiku 4.5 / Naked API"
+    provider: anthropic
+    model: claude-haiku-4-5
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: anthropic-sonnet-naked
+    label: "Claude Sonnet 4.6 / 素のAPI"
+    label_en: "Claude Sonnet 4.6 / Naked API"
+    provider: anthropic
+    model: claude-sonnet-4-6
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: gemini-pro-naked
+    label: "Gemini 2.5 Pro / 素のAPI"
+    label_en: "Gemini 2.5 Pro / Naked API"
+    provider: gemini
+    model: gemini-2.5-pro
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: gptoss-20b-naked
+    label: "gpt-oss-20b / 素のAPI (OpenRouter)"
+    label_en: "gpt-oss-20b / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-oss-20b"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: qwen3-235b-naked
+    label: "Qwen3-235B / 素のAPI (OpenRouter)"
+    label_en: "Qwen3-235B / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "qwen/qwen3-235b-a22b-2507"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: qwen3-max-naked
+    label: "Qwen3-Max / 素のAPI (OpenRouter)"
+    label_en: "Qwen3-Max / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "qwen/qwen3-max"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: llama4-maverick-naked
+    label: "Llama 4 Maverick / 素のAPI (OpenRouter)"
+    label_en: "Llama 4 Maverick / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "meta-llama/llama-4-maverick"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: deepseek-v32-naked
+    label: "DeepSeek V3.2 / 素のAPI (OpenRouter)"
+    label_en: "DeepSeek V3.2 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "deepseek/deepseek-v3.2"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: mistral-medium-naked
+    label: "Mistral Medium 3.1 / 素のAPI (OpenRouter)"
+    label_en: "Mistral Medium 3.1 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "mistralai/mistral-medium-3.1"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: mistral-large-naked
+    label: "Mistral Large / 素のAPI (OpenRouter)"
+    label_en: "Mistral Large / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "mistralai/mistral-large-2512"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)
