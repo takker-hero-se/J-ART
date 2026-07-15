@@ -432,6 +432,95 @@ targets:
     guardrail: none
     rag: true
 
+  # ===================================================================
+  # 新モデルの構成拡張（強化プロンプト × ガードレール）。
+  #   Fable 5 / GPT-5.6 三兄弟に keyword / LLM ガードレール版を追加し、
+  #   アプリ層の防御でどこまで固くなるかを素のAPI比較の上に重ねて見る。
+  # ===================================================================
+  - id: anthropic-fable-keyword
+    label: "Claude Fable 5 + 強化プロンプト + キーワードGR"
+    label_en: "Claude Fable 5 + Hardened + Keyword GR"
+    provider: anthropic
+    model: claude-fable-5
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: anthropic-fable-llmgr
+    label: "Claude Fable 5 + 強化プロンプト + LLMガードレール"
+    label_en: "Claude Fable 5 + Hardened + LLM guardrail"
+    provider: anthropic
+    model: claude-fable-5
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  - id: openai-gpt56sol-keyword
+    label: "GPT-5.6 Sol + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "GPT-5.6 Sol + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-sol"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: openai-gpt56sol-llmgr
+    label: "GPT-5.6 Sol + 強化プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "GPT-5.6 Sol + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-sol"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  - id: openai-gpt56terra-keyword
+    label: "GPT-5.6 Terra + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "GPT-5.6 Terra + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-terra"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: openai-gpt56terra-llmgr
+    label: "GPT-5.6 Terra + 強化プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "GPT-5.6 Terra + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-terra"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  - id: openai-gpt56luna-keyword
+    label: "GPT-5.6 Luna + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "GPT-5.6 Luna + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-luna"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  - id: openai-gpt56luna-llmgr
+    label: "GPT-5.6 Luna + 強化プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "GPT-5.6 Luna + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-5.6-luna"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)
