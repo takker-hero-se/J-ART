@@ -53,6 +53,10 @@ PRICING = {
     "claude-haiku-4-5":           {"in": 1.00,  "out": 5.00},
     "claude-sonnet-4-6":          {"in": 3.00,  "out": 15.00},
     "claude-opus-4-8":            {"in": 5.00,  "out": 25.00},
+    # Claude 5 世代（Sonnet 5 / Opus 5）。単価は前世代ティアを踏襲した暫定値。
+    # 正式単価が判明したら差し替えること（コスパスコアはこの単価に依存）。
+    "claude-sonnet-5":            {"in": 3.00,  "out": 15.00},
+    "claude-opus-5":              {"in": 5.00,  "out": 25.00},
     "claude-fable-5":             {"in": 10.00, "out": 50.00},
     # --- Google Gemini（2.5 系） ---
     "gemini-2.5-flash":           {"in": 0.30,  "out": 2.50},
@@ -76,6 +80,17 @@ PRICING = {
     "mistralai/mistral-large-2512":           {"in": 0.50, "out": 1.50},
     # 安全分類器（ガードレール専用モデル。ガードトークンはこの単価で別建て課金）
     "meta-llama/llama-guard-4-12b":           {"in": 0.18, "out": 0.18},
+
+    # --- 第2弾追加モデル（暫定単価・要確認） ---
+    # egress 制限でライブカタログを確認できず、モデルID(スラッグ)と単価はいずれも
+    # 知識時点のベストエフォート。LIVE 前に OpenRouter / 各社の現行値へ差し替えること
+    # （コスパスコアはこの単価に依存）。未登録なら DEFAULT_PRICE が使われる。
+    "x-ai/grok-4":                            {"in": 3.00, "out": 15.00},   # xAI Grok 4
+    "deepseek/deepseek-r1":                   {"in": 0.55, "out": 2.19},    # DeepSeek R1（推論特化）
+    "gemini-2.5-flash-lite":                  {"in": 0.10, "out": 0.40},    # Gemini 最廉価枠
+    "moonshotai/kimi-k2":                     {"in": 0.55, "out": 2.20},    # Moonshot Kimi K2
+    "z-ai/glm-4.6":                           {"in": 0.40, "out": 1.75},    # Zhipu GLM-4.6
+    "google/gemma-3-27b-it":                  {"in": 0.10, "out": 0.20},    # Google Gemma 3（開放重み）
 }
 DEFAULT_PRICE = {"in": 1.00, "out": 3.00}
 
