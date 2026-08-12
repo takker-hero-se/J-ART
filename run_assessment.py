@@ -53,6 +53,10 @@ PRICING = {
     "claude-haiku-4-5":           {"in": 1.00,  "out": 5.00},
     "claude-sonnet-4-6":          {"in": 3.00,  "out": 15.00},
     "claude-opus-4-8":            {"in": 5.00,  "out": 25.00},
+    # Claude 5 世代（Sonnet 5 / Opus 5）。単価は前世代ティアを踏襲した暫定値。
+    # 正式単価が判明したら差し替えること（コスパスコアはこの単価に依存）。
+    "claude-sonnet-5":            {"in": 3.00,  "out": 15.00},
+    "claude-opus-5":              {"in": 5.00,  "out": 25.00},
     "claude-fable-5":             {"in": 10.00, "out": 50.00},
     # --- Google Gemini（2.5 系） ---
     "gemini-2.5-flash":           {"in": 0.30,  "out": 2.50},
