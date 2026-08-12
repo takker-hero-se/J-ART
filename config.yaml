@@ -575,6 +575,148 @@ targets:
     guardrail: llm
     rag: true
 
+  # ===================================================================
+  # 第2弾追加（ベンダー/系統の空きを埋める拡張）。
+  #   各モデルを「素のAPI（生耐性）＋ 強化プロンプト付きガードレール版」の
+  #   2構成で追加（既存OSS枠と同じ方針）。
+  #   ※ egress 制限でライブカタログ未確認のため、モデルID(スラッグ)は知識時点の
+  #     ベストエフォート。LIVE 実行前に OpenRouter / 各社の現行スラッグへ要確認。
+  #     未設定キー/不明モデルは自動MOCK・DEFAULT単価にフォールバックする。
+  # ===================================================================
+  # --- xAI Grok（ベンダーごと新規） ---
+  - id: xai-grok4-naked
+    label: "Grok 4 / 素のAPI (OpenRouter)"
+    label_en: "Grok 4 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "x-ai/grok-4"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: xai-grok4-llmgr
+    label: "Grok 4 + 強化プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "Grok 4 + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "x-ai/grok-4"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  # --- DeepSeek R1（推論特化系） ---
+  - id: deepseek-r1-naked
+    label: "DeepSeek R1 / 素のAPI (OpenRouter)"
+    label_en: "DeepSeek R1 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "deepseek/deepseek-r1"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: deepseek-r1-llmgr
+    label: "DeepSeek R1 + 強化プロンプト + LLMガードレール (OpenRouter)"
+    label_en: "DeepSeek R1 + Hardened + LLM guardrail (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "deepseek/deepseek-r1"
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  # --- Google Gemini 最廉価枠 ---
+  - id: gemini-flashlite-naked
+    label: "Gemini 2.5 Flash-Lite / 素のAPI"
+    label_en: "Gemini 2.5 Flash-Lite / Naked API"
+    provider: gemini
+    model: gemini-2.5-flash-lite
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: gemini-flashlite-keyword
+    label: "Gemini 2.5 Flash-Lite + 強化プロンプト + キーワードGR"
+    label_en: "Gemini 2.5 Flash-Lite + Hardened + Keyword GR"
+    provider: gemini
+    model: gemini-2.5-flash-lite
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  # --- Moonshot Kimi K2（OSS） ---
+  - id: kimi-k2-naked
+    label: "Kimi K2 / 素のAPI (OpenRouter)"
+    label_en: "Kimi K2 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "moonshotai/kimi-k2"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: kimi-k2-keyword
+    label: "Kimi K2 + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Kimi K2 + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "moonshotai/kimi-k2"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  # --- Zhipu GLM-4.6（OSS） ---
+  - id: glm-46-naked
+    label: "GLM-4.6 / 素のAPI (OpenRouter)"
+    label_en: "GLM-4.6 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "z-ai/glm-4.6"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: glm-46-keyword
+    label: "GLM-4.6 + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "GLM-4.6 + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "z-ai/glm-4.6"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
+  # --- Google Gemma 3（開放重み枠・現状ゼロを埋める） ---
+  - id: gemma3-27b-naked
+    label: "Gemma 3 27B / 素のAPI (OpenRouter)"
+    label_en: "Gemma 3 27B / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "google/gemma-3-27b-it"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: gemma3-27b-keyword
+    label: "Gemma 3 27B + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Gemma 3 27B + Hardened + Keyword GR (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "google/gemma-3-27b-it"
+    prompt_strength: high
+    guardrail: keyword
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)
