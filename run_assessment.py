@@ -646,11 +646,17 @@ def _call_anthropic(target, system, user):
     params = dict(model=model, max_tokens=1024, system=system,
                   messages=[{"role": "user", "content": user}])
     # 決定論のため temperature=0 を付すが、一部の系統（Claude Opus 4.x / Fable 5 / Mythos 5 /
-    # Sonnet 5）は temperature 等のサンプリング指定を非対応(400)とするため、その系統では省略する。
-    _no_sampling = ("opus", "fable", "mythos", "sonnet-5")
+    # Haiku 4.5 / Sonnet 4.6 / Sonnet 5）は temperature 等のサンプリング指定を非対応とするため
+    # 省略する。新モデルの追加でリストが陳腐化しても落ちないよう、SDK が引数自体を受け付けない
+    # 場合（TypeError）は temperature を外して1回だけ再試行する。
+    _no_sampling = ("opus", "fable", "mythos", "haiku-4-5", "sonnet-4-6", "sonnet-5")
     if not any(k in model.lower() for k in _no_sampling):
         params["temperature"] = 0
-    r = client.messages.create(**params)
+    try:
+        r = client.messages.create(**params)
+    except TypeError:
+        params.pop("temperature", None)
+        r = client.messages.create(**params)
     text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
     return text, r.usage.input_tokens, r.usage.output_tokens
 
@@ -1032,6 +1038,10 @@ def summarize(target, mode, records):
         "rag": bool(target.get("rag")),
         "mode": mode,
         "n_api_error": n_api_error,
+        # 有効試行が1件も無い構成（全セルがAPIエラー）は「未計測」であり、
+        # 防御率0%（＝最弱）とは意味が異なる。サイト側でランキングから除外して N/A 表示する。
+        "measured": total > 0,
+        "n_planned": total + n_api_error,
         "total_attacks": total,
         "defended": defended,
         "breached": total - defended,
