@@ -54,6 +54,8 @@ PRICING = {
     "claude-sonnet-4-6":          {"in": 3.00,  "out": 15.00},
     "claude-opus-4-8":            {"in": 5.00,  "out": 25.00},
     "claude-fable-5":             {"in": 10.00, "out": 50.00},
+    "claude-opus-5":              {"in": 5.00,  "out": 25.00},
+    "claude-sonnet-5":            {"in": 2.00,  "out": 10.00},
     # --- Google Gemini（2.5 系） ---
     "gemini-2.5-flash":           {"in": 0.30,  "out": 2.50},
     "gemini-2.5-pro":             {"in": 1.25,  "out": 10.00},
@@ -488,6 +490,7 @@ def _estimate_tokens(text: str) -> int:
 PROVIDER_ROBUSTNESS = {  # MOCKでのモデル自体の防御力補正（大型・新世代ほど高め）
     "gpt-4o-mini": 0.00, "gpt-4.1-mini": 0.04, "gpt-4.1": 0.14,
     "claude-haiku-4-5": 0.10, "claude-sonnet-4-6": 0.18, "claude-opus-4-8": 0.24,
+    "claude-sonnet-5": 0.22, "claude-opus-5": 0.28,
     "gemini-2.5-flash": 0.02, "gemini-2.5-pro": 0.14,
     # OSS（OpenAI互換経由）。大型ほど高め、軽量ほど低めに補正。
     "openai/gpt-oss-120b": 0.06, "openai/gpt-oss-20b": -0.04,

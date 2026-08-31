@@ -137,6 +137,26 @@ targets:
     guardrail: none
     rag: true
 
+  # Claude 5 世代（Opus 5 / Sonnet 5）。いずれも temperature 非対応のため
+  # run_assessment.py の _no_sampling（"opus" 前方一致 / "sonnet-5"）で除外済み。
+  - id: anthropic-opus5-llmgr
+    label: "Claude Opus 5 + 強化プロンプト + LLMガードレール"
+    label_en: "Claude Opus 5 + Hardened + LLM guardrail"
+    provider: anthropic
+    model: claude-opus-5
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
+  - id: anthropic-sonnet5-llmgr
+    label: "Claude Sonnet 5 + 強化プロンプト + LLMガードレール"
+    label_en: "Claude Sonnet 5 + Hardened + LLM guardrail"
+    provider: anthropic
+    model: claude-sonnet-5
+    prompt_strength: high
+    guardrail: llm
+    rag: true
+
   # ===== Google Gemini（2.5 系へ刷新） =====
   - id: gemini-flash-naked
     label: "Gemini 2.5 Flash / 素のAPI"
@@ -342,6 +362,24 @@ targets:
     label_en: "Claude Sonnet 4.6 / Naked API"
     provider: anthropic
     model: claude-sonnet-4-6
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: anthropic-opus5-naked
+    label: "Claude Opus 5 / 素のAPI"
+    label_en: "Claude Opus 5 / Naked API"
+    provider: anthropic
+    model: claude-opus-5
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: anthropic-sonnet5-naked
+    label: "Claude Sonnet 5 / 素のAPI"
+    label_en: "Claude Sonnet 5 / Naked API"
+    provider: anthropic
+    model: claude-sonnet-5
     prompt_strength: low
     guardrail: none
     rag: true
