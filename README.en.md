@@ -2,7 +2,7 @@
 
 <p align="center"><a href="README.md">日本語</a> | <b>English</b></p>
 
-<p align="center"><b>🔗 Live leaderboard: <a href="https://takker-hero-se.github.io/J-ART/">takker-hero-se.github.io/J-ART</a></b></p>
+<p align="center"><b>🔗 Live leaderboard: <a href="https://jart.quietforensics.com/">jart.quietforensics.com</a></b></p>
 
 # J-ART (Japanese Adversarial Red-Team framework)
 
