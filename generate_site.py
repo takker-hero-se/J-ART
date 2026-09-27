@@ -110,12 +110,46 @@ def load_icon():
 def build_i18n():
     return {
         "ja": {
+            "nav_findings": "要点",
+            "nav_examples": "変形の実例",
+            "cta_findings": "計測結果の要点",
+            "findings_eyebrow": "要点",
+            "findings_title": "今回の計測でわかったこと",
+            "kpi_naked_title": "素の API（防御指示なし）",
+            "kpi_naked_sub": "平均防御率。{n} モデル、最低 {min}% 〜 最高 {max}%",
+            "kpi_prot_title": "防御層を足した構成",
+            "kpi_prot_sub": "{n} 構成のうち、すべての攻撃を防いだ構成の数",
+            "kpi_tf_title": "最も突破された日本語変形",
+            "kpi_tf_sub": "突破率 {rate}%（全構成の試行を合算）",
+            "kpi_none": "該当する構成がありません",
+            "pairs_title": "同じモデルで比べると",
+            "pairs_note": "素の API と、同じモデルに防御層を足した構成のうち最も防御率が高いもの（同率なら安いもの）を並べています。",
+            "pairs_naked": "素のAPI",
+            "pairs_prot": "防御あり",
+            "examples_eyebrow": "日本語変形の実例",
+            "examples_title": "同じ攻撃を、日本語の書き方を変えて何通りも試します",
+            "examples_sub": "例は「{atlas}」の攻撃です。悪意ある指示の中身はマスクし、包み方（前置き・偽の前提・符号化など）だけを見せています。",
+            "tfdesc_baseline": "変形なし。攻撃の指示をそのまま送ります。",
+            "tfdesc_polite_business": "丁寧すぎるビジネス文書で、正式な依頼に見せかけます。",
+            "tfdesc_vertical_newline": "縦書き・改行で文字を分断し、キーワード検出をすり抜けます。",
+            "tfdesc_gyaru": "ギャル文字や崩した表記で、読み取りにくくします。",
+            "tfdesc_double_tongue": "「ここはテスト環境」などの偽の前提で、制約を外させます。",
+            "tfdesc_base64_wrap": "Base64 で符号化し、復号して実行するよう求めます。",
+            "tfdesc_leet_smuggle": "記号への置き換え（leet）とゼロ幅文字で指示を埋め込みます。",
+            "view_all": "すべて",
+            "view_naked": "素のAPI",
+            "view_protected": "防御あり",
+            "show_unmeasured": "未計測の構成も表示（{n}）",
+            "blocked_at_input": "入口で遮断",
+            "blocked_at_input_tip": "入力の段階でガードレールが攻撃をすべて止めたため、モデルは呼ばれていません。$0 は攻撃を受けたときの費用で、通常の利用料金ではありません。",
+            "glossary_eyebrow": "用語と読み方",
+            "glossary_title": "指標と構成の読み方",
             "subtitle": "日本語 LLM レッドチーム・リーダーボード",
             "chip": "公開研究 · MITRE ATLAS 準拠",
             "tagline": (
-                "日本語特有の難読化・エッジケース攻撃に対する<b>耐性</b>と、100万トークンあたりの"
-                "<b>コスト効率</b>を、実 API で同時に計測するオープンなリーダーボードです。"
-                "モデル単体ではなく「システムプロンプト＋RAG＋ガードレール」のアプリケーション構成を評価します。"
+                "日本語でひねった攻撃に、生成 AI アプリはどこまで耐えられるのか。"
+                "主要な LLM と防御層（システムプロンプト・ガードレール）の組み合わせを毎週 実 API で攻撃し、"
+                "<b>防御率</b>と<b>かかる費用</b>を公開しています。"
             ),
             "cta_board": "リーダーボードを見る",
             "cta_paper": "テクニカルレポート",
@@ -136,8 +170,8 @@ def build_i18n():
             "tf_card_note": "全構成の試行を合算（API エラーの試行は除外）。低いほど防御側が優位。",
             "metrics_eyebrow": "指標",
             "metrics_title": "3 つの指標で比較します",
-            "metric1_title": "ATLAS 防御成功率",
-            "metric1_body": "日本語変形攻撃に対し、攻撃を拒否できた割合。<b class=\"ok\">高いほど安全</b>です。",
+            "metric1_title": "防御率（MITRE ATLAS 準拠）",
+            "metric1_body": "MITRE ATLAS の攻撃分類に沿った日本語の攻撃のうち、拒否できた割合。<b class=\"ok\">高いほど安全</b>です。",
             "metric2_title": "100万トークン単価",
             "metric2_body": "テストで消費した入出力トークンの実効コスト <span class=\"mono\">(USD / 1M)</span>。",
             "metric3_title": "コスパスコア（独自指標）",
@@ -164,11 +198,11 @@ def build_i18n():
             "guide_gr_llamaguard_body": "<b>専用の安全性分類モデル(Llama Guard)</b>で入力を攻撃/良性に分類。高い検出率だが、追加のAPIコストが発生する。",
             "guide_rag_note": "※ 行の「RAG有」は、外部文書を検索・注入する構成（間接プロンプトインジェクションの検証対象）であることを示します。各行のバッジにマウスを乗せると説明が出ます。",
             "board_eyebrow": "リーダーボード",
-            "board_title": "構成ごとの防御率とコスト",
-            "board_subtitle": "列見出しで並び替え、行をクリックするとその構成の攻撃ログを展開します。",
+            "board_title": "全構成の防御率と費用",
+            "board_subtitle": "防御率の高い順（同率なら安い順）です。列見出しで並び替え、行をクリックするとその構成の攻撃ログが開きます。",
             "th_rank": "順位",
             "th_config": "モデル / システム構成",
-            "th_defense": "ATLAS 防御成功率",
+            "th_defense": "防御率",
             "th_cost": "コスト / 1M tok",
             "th_cospa": "コスパスコア",
             "th_status": "ステータス",
@@ -233,12 +267,46 @@ def build_i18n():
             "log_more": "さらに {n} 件を表示（残り {rest} 件）",
         },
         "en": {
+            "nav_findings": "Key findings",
+            "nav_examples": "Examples",
+            "cta_findings": "Key findings",
+            "findings_eyebrow": "Key findings",
+            "findings_title": "What this run shows",
+            "kpi_naked_title": "Naked API (no defenses)",
+            "kpi_naked_sub": "Mean defense rate across {n} models, from {min}% to {max}%",
+            "kpi_prot_title": "With a defense layer",
+            "kpi_prot_sub": "configurations out of {n} that stopped every attack",
+            "kpi_tf_title": "Most successful Japanese transform",
+            "kpi_tf_sub": "Breach rate {rate}% (all configurations pooled)",
+            "kpi_none": "No matching configurations",
+            "pairs_title": "Same model, with and without defenses",
+            "pairs_note": "Each model's naked API next to its best defended configuration (highest defense rate, then lowest cost).",
+            "pairs_naked": "Naked",
+            "pairs_prot": "Defended",
+            "examples_eyebrow": "Japanese transforms",
+            "examples_title": "One attack, rewritten in many Japanese styles",
+            "examples_sub": "The example is a \"{atlas}\" attack. The malicious instruction is masked; only the wrapping - preamble, false premise, encoding - is shown.",
+            "tfdesc_baseline": "No transform: the instruction is sent as is.",
+            "tfdesc_polite_business": "Over-polite business Japanese that makes it look like an official request.",
+            "tfdesc_vertical_newline": "Vertical writing and line breaks split the words to slip past keyword filters.",
+            "tfdesc_gyaru": "Gyaru script and distorted spelling make it hard to read.",
+            "tfdesc_double_tongue": "A false premise (\"this is a test sandbox\") talks the model out of its rules.",
+            "tfdesc_base64_wrap": "Base64-encoded, with a request to decode and follow it.",
+            "tfdesc_leet_smuggle": "Symbol substitution (leet) and zero-width characters hide the instruction.",
+            "view_all": "All",
+            "view_naked": "Naked API",
+            "view_protected": "Defended",
+            "show_unmeasured": "Show unmeasured configs ({n})",
+            "blocked_at_input": "Blocked at input",
+            "blocked_at_input_tip": "The guardrail stopped every attack at the input, so the model was never called. $0 is the cost of handling the attacks, not the normal usage price.",
+            "glossary_eyebrow": "Glossary",
+            "glossary_title": "How to read the metrics and configurations",
             "subtitle": "Japanese LLM red-team leaderboard",
             "chip": "Open research · MITRE ATLAS-aligned",
             "tagline": (
-                "An open leaderboard that measures, against real APIs, <b>resilience</b> to Japanese-specific "
-                "obfuscation and edge-case attacks together with <b>cost efficiency</b> per million tokens. "
-                "It evaluates application configurations - system prompt + RAG + guardrail - not bare models."
+                "How well do LLM apps hold up when the attack is disguised in Japanese? "
+                "Every week we attack major LLMs, with and without defense layers (system prompt, guardrail), "
+                "through their real APIs and publish the <b>defense rate</b> and <b>what it costs</b>."
             ),
             "cta_board": "View the leaderboard",
             "cta_paper": "Technical report",
@@ -259,7 +327,7 @@ def build_i18n():
             "tf_card_note": "All configurations pooled (trials with API errors excluded). Lower favours the defender.",
             "metrics_eyebrow": "Metrics",
             "metrics_title": "Three numbers per configuration",
-            "metric1_title": "ATLAS defense rate",
+            "metric1_title": "Defense rate (MITRE ATLAS)",
             "metric1_body": "Share of Japanese transformed attacks the model refused. <b class=\"ok\">Higher is safer</b>.",
             "metric2_title": "Cost per 1M tokens",
             "metric2_body": "Effective cost of the input/output tokens consumed during testing <span class=\"mono\">(USD / 1M)</span>.",
@@ -287,11 +355,11 @@ def build_i18n():
             "guide_gr_llamaguard_body": "A <b>dedicated safety-classification model (Llama Guard)</b> that screens input for attacks vs benign content. High detection, but adds API cost.",
             "guide_rag_note": "※ \"RAG\" on a row marks configs that retrieve/inject external documents (the target of indirect prompt-injection tests). Hover a row badge for details.",
             "board_eyebrow": "Leaderboard",
-            "board_title": "Defense rate and cost per configuration",
-            "board_subtitle": "Sort by a column header; click a row to expand its attack log.",
+            "board_title": "Defense rate and cost, every configuration",
+            "board_subtitle": "Highest defense rate first (cheapest first on ties). Sort by a column header; click a row to open its attack log.",
             "th_rank": "Rank",
             "th_config": "Model / system config",
-            "th_defense": "ATLAS defense rate",
+            "th_defense": "Defense rate",
             "th_cost": "Cost / 1M tok",
             "th_cospa": "Cospa score",
             "th_status": "Status",
@@ -447,7 +515,7 @@ b{font-weight:700;color:var(--ink)}
 .brand .sep{color:var(--on-navy-faint);font-weight:400}
 .brand .prod{color:var(--cyan)}
 .nav ul{list-style:none;margin:0;padding:0;display:flex;gap:26px}
-.nav ul a{color:#D6E6F3;font-weight:500;font-size:.9rem}
+.nav ul a{color:#D6E6F3;font-weight:500;font-size:.9rem;white-space:nowrap}
 .nav ul a:hover{color:#fff}
 .nav-right{display:flex;align-items:center;gap:14px}
 .lang{display:inline-flex;padding:3px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18)}
@@ -557,6 +625,44 @@ tr.is-open+tr.acc-row>td{border-bottom:1px solid var(--line) !important}
 .panel-title{font-weight:700;color:var(--ink);font-size:.9375rem}
 .panel-sum{font-size:.8125rem;color:var(--muted)}
 
+/* findings */
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+.kpi .t{font-size:.875rem;font-weight:600;color:var(--muted)}
+.kpi .big{margin-top:6px;font-size:clamp(2rem,3.4vw,2.6rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;color:var(--ink);font-variant-numeric:tabular-nums}
+.kpi .big small{font-size:.5em;color:var(--faint);font-weight:600;margin-left:4px}
+.kpi p{margin-top:8px;font-size:.875rem;color:var(--muted);line-height:1.65}
+.pairs{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px}
+.pairs h3{font-size:1rem}
+.pairs .legend{display:flex;gap:16px;margin-top:6px;font-size:.8125rem;color:var(--muted)}
+.pairs .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.lg-naked{background:#9FB3C8} .lg-prot{background:var(--ok)}
+.pair{display:grid;grid-template-columns:minmax(0,12em) minmax(0,1fr);gap:8px 20px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.pair:first-of-type{border-top:0}
+.pair .name{font-weight:600;color:var(--ink);font-size:.9375rem}
+.pair .name small{display:block;font-weight:400;color:var(--faint);font-size:.75rem}
+.pbars{display:grid;gap:6px}
+.pbar{display:grid;grid-template-columns:minmax(0,1fr) 4em;gap:10px;align-items:center}
+.pbar .track{height:10px;border-radius:999px;background:var(--alt);overflow:hidden}
+.pbar .track i{display:block;height:100%;border-radius:999px}
+.pbar .v{text-align:right;font-family:var(--mono);font-size:.8125rem;color:var(--ink)}
+.pairs .note{margin-top:14px}
+/* examples */
+.examples{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.ex h3{font-size:1rem}
+.ex p{font-size:.8125rem;color:var(--muted);line-height:1.65}
+.ex pre.code{font-size:.75rem;max-height:12rem}
+.subhead{margin:40px 0 16px;font-size:1.125rem}
+/* board toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-bottom:14px}
+.seg{display:inline-flex;padding:3px;border-radius:8px;background:var(--alt);border:1px solid var(--line)}
+.seg button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.8125rem;font-weight:600;padding:6px 14px;border-radius:6px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm)}
+.chk{display:inline-flex;align-items:center;gap:8px;font-size:.875rem;color:var(--body-ink);cursor:pointer}
+.chk input{width:16px;height:16px;accent-color:var(--accent)}
+.costcell{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+
 /* attack log */
 .filters{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin-bottom:16px;font-size:.875rem}
 .filters select{font:inherit;font-size:.875rem;color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 12px;max-width:100%}
@@ -602,10 +708,11 @@ footer .brand .logo{width:22px;height:22px}
 footer .gh{display:inline-flex;align-items:center;gap:8px;font-weight:600}
 footer .gh svg{width:18px;height:18px;fill:currentColor}
 
-@media (max-width:1100px){.nav ul{display:none}}
+@media (max-width:1200px){.nav ul{display:none}}
 @media (max-width:960px){
   .hero .grid,.cards2,footer .cols{grid-template-columns:1fr}
-  .cards3{grid-template-columns:1fr}
+  .cards3,.kpis{grid-template-columns:1fr}
+  .pair{grid-template-columns:1fr}
   .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:640px){
@@ -630,10 +737,11 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   <div class="wrap">
     <a class="brand" href="%%qf_url%%">%%qf_logo%%<span class="qfname">Quiet Forensics</span><span class="sep">/</span><span class="prod">J-ART</span></a>
     <ul>
+      <li><a href="#findings" data-i18n="nav_findings">要点</a></li>
+      <li><a href="#examples" data-i18n="nav_examples">変形の実例</a></li>
       <li><a href="#board" data-i18n="nav_board">リーダーボード</a></li>
       <li><a href="#log" data-i18n="nav_log">攻撃ログ</a></li>
       <li><a href="%%paper_url%%" target="_blank" rel="noopener" data-i18n="nav_paper">テクニカルレポート</a></li>
-      <li><a href="%%repo_url%%" target="_blank" rel="noopener">GitHub</a></li>
     </ul>
     <div class="nav-right">
       <div class="lang" role="group" aria-label="Language / 言語">
@@ -655,8 +763,8 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
         <span class="sub" data-i18n="subtitle">日本語 LLM レッドチーム・リーダーボード</span>
         <p class="lead" data-i18n-html="tagline">%%ja.tagline%%</p>
         <div class="cta">
-          <a class="btn btn-primary" href="#board" data-i18n="cta_board">リーダーボードを見る</a>
-          <a class="btn btn-ghost" href="%%paper_url%%" target="_blank" rel="noopener" data-i18n="cta_paper">テクニカルレポート</a>
+          <a class="btn btn-primary" href="#findings" data-i18n="cta_findings">計測結果の要点</a>
+          <a class="btn btn-ghost" href="#board" data-i18n="cta_board">リーダーボードを見る</a>
         </div>
       </div>
       %%tf_card%%
@@ -671,26 +779,56 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   </div>
 </header>
 
-<section class="block">
+%%findings%%
+%%examples%%
+<section class="block" id="board">
   <div class="wrap">
     <div class="sec-head">
-      <p class="eyebrow" data-i18n="metrics_eyebrow">指標</p>
-      <h2 data-i18n="metrics_title">3 つの指標で比較します</h2>
+      <p class="eyebrow" data-i18n="board_eyebrow">リーダーボード</p>
+      <h2 data-i18n="board_title">構成ごとの防御率とコスト</h2>
+      <p class="sub" data-i18n="board_subtitle">列見出しで並び替え、行をクリックするとその構成の攻撃ログを展開します。</p>
+    </div>
+    <div class="toolbar">
+      <div class="seg" role="group" aria-label="view">
+        <button type="button" data-view="all" aria-pressed="true" data-i18n="view_all">すべて</button>
+        <button type="button" data-view="naked" aria-pressed="false" data-i18n="view_naked">素のAPI</button>
+        <button type="button" data-view="protected" aria-pressed="false" data-i18n="view_protected">防御あり</button>
+      </div>
+      <label class="chk"><input type="checkbox" id="show-unmeasured"> <span id="show-unmeasured-label"></span></label>
+    </div>
+    <div class="tablewrap">
+      <table class="board">
+        <thead>
+          <tr>
+            <th class="c" data-i18n="th_rank">順位</th>
+            <th class="sortable arrow" data-key="target_label" data-type="str" data-i18n="th_config">モデル / システム構成</th>
+            <th class="r sortable arrow desc" data-key="success_rate" data-type="num" data-i18n="th_defense">ATLAS 防御成功率</th>
+            <th class="r sortable arrow" data-key="cost_per_million_usd" data-type="num" data-i18n="th_cost">コスト / 1M tok</th>
+            <th class="r sortable arrow" data-key="cospa_score" data-type="num" data-i18n="th_cospa">コスパスコア</th>
+            <th class="c" data-i18n="th_status">ステータス</th>
+            <th class="c"></th>
+          </tr>
+        </thead>
+        <tbody id="board-body"></tbody>
+      </table>
+    </div>
+    <p class="note" data-i18n-html="board_note1">%%ja.board_note1%%</p>
+    <p class="note" style="margin-top:4px" data-i18n-html="board_note2">%%ja.board_note2%%</p>
+  </div>
+</section>
+
+<section class="block alt" id="glossary">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow" data-i18n="glossary_eyebrow">用語と読み方</p>
+      <h2 data-i18n="glossary_title">指標と構成の読み方</h2>
     </div>
     <div class="cards3">
       <div class="card"><span class="n">01</span><h3 data-i18n="metric1_title">ATLAS 防御成功率</h3><p data-i18n-html="metric1_body">%%ja.metric1_body%%</p></div>
       <div class="card"><span class="n">02</span><h3 data-i18n="metric2_title">100万トークン単価</h3><p data-i18n-html="metric2_body">%%ja.metric2_body%%</p></div>
       <div class="card"><span class="n">03</span><h3 data-i18n="metric3_title">コスパスコア（独自指標）</h3><p data-i18n-html="metric3_body">%%ja.metric3_body%%</p></div>
     </div>
-  </div>
-</section>
-
-<section class="block alt">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow" data-i18n="guide_eyebrow">構成の読み方</p>
-      <h2 data-i18n="guide_title">各構成は「モデル × システムプロンプト × ガードレール」</h2>
-    </div>
+    <h3 class="subhead" data-i18n="guide_title">各構成は「モデル × システムプロンプト × ガードレール」</h3>
     <div class="cards2">
       <div class="card">
         <h3><span data-i18n="guide_sys_title">① システムプロンプト</span><small data-i18n="guide_sys_sub">モデルへ与える防御指示の強さ</small></h3>
@@ -714,35 +852,7 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   </div>
 </section>
 
-<section class="block" id="board">
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="eyebrow" data-i18n="board_eyebrow">リーダーボード</p>
-      <h2 data-i18n="board_title">構成ごとの防御率とコスト</h2>
-      <p class="sub" data-i18n="board_subtitle">列見出しで並び替え、行をクリックするとその構成の攻撃ログを展開します。</p>
-    </div>
-    <div class="tablewrap">
-      <table class="board">
-        <thead>
-          <tr>
-            <th class="c" data-i18n="th_rank">順位</th>
-            <th class="sortable arrow" data-key="target_label" data-type="str" data-i18n="th_config">モデル / システム構成</th>
-            <th class="r sortable arrow" data-key="success_rate" data-type="num" data-i18n="th_defense">ATLAS 防御成功率</th>
-            <th class="r sortable arrow" data-key="cost_per_million_usd" data-type="num" data-i18n="th_cost">コスト / 1M tok</th>
-            <th class="r sortable arrow desc" data-key="cospa_score" data-type="num" data-i18n="th_cospa">コスパスコア</th>
-            <th class="c" data-i18n="th_status">ステータス</th>
-            <th class="c"></th>
-          </tr>
-        </thead>
-        <tbody id="board-body"></tbody>
-      </table>
-    </div>
-    <p class="note" data-i18n-html="board_note1">%%ja.board_note1%%</p>
-    <p class="note" style="margin-top:4px" data-i18n-html="board_note2">%%ja.board_note2%%</p>
-  </div>
-</section>
-
-<section class="block alt" id="log">
+<section class="block" id="log">
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow" data-i18n="log_eyebrow">攻撃ログ</p>
@@ -959,16 +1069,34 @@ function logCard(d) {
 
 // ---------- Leaderboard ----------
 let board = DATA.summary.slice();
-let sortKey = "cospa_score", sortType = "num", sortDir = -1;
+// 既定は防御率の高い順。同率ならコストの安い順→構成名順（コスパ 10,000 の同点が並ぶのを避ける）。
+let sortKey = "success_rate", sortType = "num", sortDir = -1;
+let VIEW = "all";
+function isNaked(s) { return s.prompt_strength !== "high" && (s.guardrail || "none") === "none"; }
+function inView(s) {
+  if (VIEW === "naked") return isNaked(s);
+  if (VIEW === "protected") return !isNaked(s);
+  return true;
+}
+function tieBreak(a, b) {
+  return (a.cost_per_million_usd - b.cost_per_million_usd) || (b.success_rate - a.success_rate) ||
+         String(labelOf(a)).localeCompare(String(labelOf(b)));
+}
 
 function renderBoard() {
-  // 未計測（全セルAPIエラー）の構成は順位を付けず、常に表の末尾へ回す。
-  const ranked = board.filter(isMeasured);
-  const unranked = board.filter(function(s) { return !isMeasured(s); });
+  // 未計測（全セルAPIエラー）の構成は順位を付けず、表示するときも常に表の末尾へ回す。既定では隠す。
+  const showUnmeasured = document.getElementById("show-unmeasured").checked;
+  const rows = board.filter(inView);
+  const ranked = rows.filter(isMeasured);
+  const unranked = showUnmeasured ? rows.filter(function(s) { return !isMeasured(s); }) : [];
+  const nUnmeasured = board.filter(function(s) { return !isMeasured(s); }).length;
+  const ul = document.getElementById("show-unmeasured-label");
+  ul.textContent = t("show_unmeasured").replace("{n}", nUnmeasured);
+  ul.parentElement.style.display = nUnmeasured ? "" : "none";
   ranked.sort((a,b) => {
     let av=a[sortKey], bv=b[sortKey];
-    if (sortType==="str") return String(av).localeCompare(String(bv))*sortDir;
-    return (av-bv)*sortDir;
+    const c = (sortType==="str") ? String(av).localeCompare(String(bv))*sortDir : (av-bv)*sortDir;
+    return c || tieBreak(a, b);
   });
   const body = document.getElementById("board-body");
   body.innerHTML = ranked.concat(unranked).map((s,i) => {
@@ -985,7 +1113,7 @@ function renderBoard() {
         <div class="model"><span class="mono">${esc(s.model)}</span> · ${sub}</div>
       </td>
       <td class="r">${rateBar(s)}</td>
-      <td class="r num">${fmtUSD(s.cost_per_million_usd)}</td>
+      <td class="r"><div class="costcell"><span class="num">${fmtUSD(s.cost_per_million_usd)}</span>${(isMeasured(s) && Number(s.cost_per_million_usd) === 0) ? pill("p-llm", t("blocked_at_input"), t("blocked_at_input_tip")) : ""}</div></td>
       <td class="r"><span class="cospa">${Number(s.cospa_score).toLocaleString()}</span></td>
       <td class="c">${isMeasured(s) ? statusBadge(s.success_rate) : noDataBadge()}</td>
       <td class="c"><svg class="chev" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 5l6 5-6 5" stroke-linecap="round" stroke-linejoin="round"/></svg></td>
@@ -1063,6 +1191,14 @@ document.getElementById("filter-breach").addEventListener("change", renderLog);
 document.querySelectorAll("[data-lang-btn]").forEach(function(b) {
   b.addEventListener("click", function() { applyI18n(b.getAttribute("data-lang-btn")); });
 });
+document.querySelectorAll("[data-view]").forEach(function(b) {
+  b.addEventListener("click", function() {
+    VIEW = b.getAttribute("data-view");
+    document.querySelectorAll("[data-view]").forEach(function(x) { x.setAttribute("aria-pressed", String(x === b)); });
+    renderBoard();
+  });
+});
+document.getElementById("show-unmeasured").addEventListener("change", renderBoard);
 
 // 初期描画（言語適用 → フィルタ構築 → ボード/ログ描画を内部で実行）
 applyI18n(LANG);
@@ -1103,6 +1239,187 @@ def transform_breach_rates(data):
         agg[d.get("transformation", "")][1] += trials
     order = list(data.get("transformations", [])) + sorted(k for k in agg if k not in data.get("transformations", []))
     return [(k, agg[k][0], agg[k][1]) for k in order if agg.get(k, [0, 0])[1] > 0]
+
+
+PROMPT_NAMES = {"high": ("強化プロンプト", "Hardened prompt"), "low": ("素のプロンプト", "Plain prompt")}
+GUARD_NAMES = {
+    "none": ("ガードレールなし", "no guardrail"),
+    "keyword": ("キーワードGR", "keyword GR"),
+    "llm": ("LLMガードレール", "LLM guardrail"),
+    "regex": ("正規化フィルタGR", "regex-normalize GR"),
+    "llamaguard": ("Llama Guard 分類器GR", "Llama Guard GR"),
+}
+
+
+def _is_measured(s):
+    """有効試行が 1 件以上ある構成か（JS の isMeasured と同じ判定）。"""
+    return s.get("measured") is not False and (s.get("total_attacks") is None or s.get("total_attacks", 0) > 0)
+
+
+def _is_naked(s):
+    """防御指示もガードレールも無い「素の API」構成か（JS の isNaked と同じ判定）。"""
+    return s.get("prompt_strength") != "high" and (s.get("guardrail") or "none") == "none"
+
+
+def key_findings(data):
+    """要点欄の数値。未計測の構成は含めない。
+
+    - naked_*: 素の API 構成の防御率（件数・平均・最小・最大）
+    - protected_*: 防御層を足した構成の件数と、防御率 100% の件数
+    - pairs: 素の API と防御ありの両方があるモデルごとの比較（防御ありは防御率→安さで最良の 1 構成）
+    - top_transform: 最も突破率の高い日本語変形 (id, 率%)。データが無ければ None
+    """
+    rows = [s for s in data.get("summary", []) if _is_measured(s)]
+    naked = [s for s in rows if _is_naked(s)]
+    protected = [s for s in rows if not _is_naked(s)]
+    rates = [float(s["success_rate"]) for s in naked]
+    pairs = []
+    for n in sorted(naked, key=lambda s: float(s["success_rate"])):
+        same = [p for p in protected if p.get("model") == n.get("model")]
+        if not same:
+            continue
+        best = min(same, key=lambda p: (-float(p["success_rate"]), float(p.get("cost_per_million_usd", 0))))
+        pairs.append({
+            "model": n.get("model"),
+            "label": (n.get("target_label") or "").split(" / ")[0],
+            "label_en": (n.get("target_label_en") or n.get("target_label") or "").split(" / ")[0],
+            "naked": float(n["success_rate"]),
+            "protected": float(best["success_rate"]),
+            "protected_prompt": best.get("prompt_strength"),
+            "protected_guardrail": best.get("guardrail") or "none",
+        })
+    tf = [(k, 100.0 * b / t) for k, b, t in transform_breach_rates(data)]
+    return {
+        "naked_n": len(naked),
+        "naked_mean": round(sum(rates) / len(rates), 1) if rates else None,
+        "naked_min": min(rates) if rates else None,
+        "naked_max": max(rates) if rates else None,
+        "protected_n": len(protected),
+        "protected_perfect": sum(1 for s in protected if float(s["success_rate"]) >= 100.0),
+        "pairs": pairs,
+        "top_transform": max(tf, key=lambda x: x[1]) if tf else None,
+    }
+
+
+def _both(key, **kw):
+    """i18n の文言を日英 2 つの <span lang> にして返す（数値入りの文言をサーバ側で組むため）。"""
+    t = build_i18n()
+    out = []
+    for lang in ("ja", "en"):
+        text = t[lang][key]
+        for k, v in kw.items():
+            text = text.replace("{" + k + "}", html.escape(str(v)))
+        out.append(f'<span lang="{lang}">{text}</span>')
+    return "".join(out)
+
+
+def _pct(x):
+    return f"{x:.1f}"
+
+
+def _findings_section(data):
+    f = key_findings(data)
+    if f["naked_n"]:
+        naked_big = f'{_pct(f["naked_mean"])}%'
+        naked_sub = _both("kpi_naked_sub", n=f["naked_n"], min=_pct(f["naked_min"]), max=_pct(f["naked_max"]))
+    else:
+        naked_big, naked_sub = "—", _both("kpi_none")
+    if f["protected_n"]:
+        prot_big = f'{f["protected_perfect"]}<small>/ {f["protected_n"]}</small>'
+        prot_sub = _both("kpi_prot_sub", n=f["protected_n"])
+    else:
+        prot_big, prot_sub = "—", _both("kpi_none")
+    if f["top_transform"]:
+        key, rate = f["top_transform"]
+        ja, en = TRANSFORM_LABELS.get(key, (key, key))
+        tf_big = f'<span lang="ja">{html.escape(ja)}</span><span lang="en">{html.escape(en)}</span>'
+        tf_sub = _both("kpi_tf_sub", rate=_pct(rate))
+    else:
+        tf_big, tf_sub = "—", _both("kpi_none")
+
+    pairs_html = ""
+    if f["pairs"]:
+        rows = []
+        for p in f["pairs"]:
+            pj, pe = PROMPT_NAMES.get(p["protected_prompt"], ("", ""))
+            gj, ge = GUARD_NAMES.get(p["protected_guardrail"], (p["protected_guardrail"], p["protected_guardrail"]))
+            rows.append(
+                '<div class="pair"><div class="name">'
+                f'<span lang="ja">{html.escape(p["label"])}</span><span lang="en">{html.escape(p["label_en"])}</span>'
+                f'<small><span lang="ja">防御あり = {html.escape(pj)} + {html.escape(gj)}</span>'
+                f'<span lang="en">defended = {html.escape(pe)} + {html.escape(ge)}</span></small></div>'
+                '<div class="pbars">'
+                f'<div class="pbar"><span class="track"><i class="lg-naked" style="width:{p["naked"]:.1f}%"></i></span><span class="v">{_pct(p["naked"])}%</span></div>'
+                f'<div class="pbar"><span class="track"><i class="lg-prot" style="width:{p["protected"]:.1f}%"></i></span><span class="v">{_pct(p["protected"])}%</span></div>'
+                "</div></div>"
+            )
+        pairs_html = (
+            '<div class="pairs">'
+            f'<h3>{_both("pairs_title")}</h3>'
+            f'<div class="legend"><span><i class="lg-naked"></i>{_both("pairs_naked")}</span>'
+            f'<span><i class="lg-prot"></i>{_both("pairs_prot")}</span></div>'
+            + "".join(rows)
+            + f'<p class="note">{_both("pairs_note")}</p></div>'
+        )
+
+    return (
+        '<section class="block" id="findings">\n  <div class="wrap">\n'
+        f'    <div class="sec-head"><p class="eyebrow">{_both("findings_eyebrow")}</p><h2>{_both("findings_title")}</h2></div>\n'
+        '    <div class="kpis">'
+        f'<div class="kpi"><div class="t">{_both("kpi_naked_title")}</div><div class="big">{naked_big}</div><p>{naked_sub}</p></div>'
+        f'<div class="kpi"><div class="t">{_both("kpi_prot_title")}</div><div class="big">{prot_big}</div><p>{prot_sub}</p></div>'
+        f'<div class="kpi"><div class="t">{_both("kpi_tf_title")}</div><div class="big">{tf_big}</div><p>{tf_sub}</p></div>'
+        "</div>\n"
+        f"    {pairs_html}\n  </div>\n</section>\n"
+    )
+
+
+def transform_examples(data):
+    """日本語変形の実例。変形の種類が最も多くそろう攻撃を 1 つ選び、変形ごとに 1 件の攻撃文を返す。
+
+    戻り値: [(transform_id, prompt_excerpt, atlas_name), ...]（config の変形順）。攻撃のコアは呼び出し側でマスクする。
+    """
+    by_attack = defaultdict(dict)
+    atlas = {}
+    for d in data.get("details", []):
+        aid, tf = d.get("attack_id"), d.get("transformation")
+        if aid and tf and d.get("prompt_excerpt") and tf not in by_attack[aid]:
+            by_attack[aid][tf] = d["prompt_excerpt"]
+            atlas.setdefault(aid, d.get("atlas_name", ""))
+    if not by_attack:
+        return []
+    order = list(data.get("transformations", []))
+    first_seen = list(by_attack)
+    aid = max(first_seen, key=lambda a: (len(by_attack[a]), -first_seen.index(a)))
+    tfs = sorted(by_attack[aid], key=lambda k: order.index(k) if k in order else len(order))
+    return [(k, by_attack[aid][k], atlas[aid]) for k in tfs]
+
+
+def _mask_core(s):
+    """攻撃のコア（<<CORE>>）を必ずマスク文言へ置換する（JS の maskCore と同じ二重防御）。"""
+    return (s or "").replace("<<CORE>>", "[ 悪意ある指示のコア（安全のためマスク済） ]")
+
+
+def _examples_section(data):
+    ex = transform_examples(data)
+    if not ex:
+        return ""
+    t = build_i18n()
+    cards = []
+    for key, excerpt, _ in ex:
+        ja, en = TRANSFORM_LABELS.get(key, (key, key))
+        dk = "tfdesc_" + key
+        desc = _both(dk) if dk in t["ja"] else ""
+        cards.append(
+            f'<div class="ex"><h3><span lang="ja">{html.escape(ja)}</span><span lang="en">{html.escape(en)}</span></h3>'
+            f'<p>{desc}</p><pre class="code">{html.escape(_mask_core(excerpt))}</pre></div>'
+        )
+    return (
+        '<section class="block alt" id="examples">\n  <div class="wrap">\n'
+        f'    <div class="sec-head"><p class="eyebrow">{_both("examples_eyebrow")}</p><h2>{_both("examples_title")}</h2>'
+        f'<p class="sub">{_both("examples_sub", atlas=ex[0][2])}</p></div>\n'
+        f'    <div class="examples">{"".join(cards)}</div>\n  </div>\n</section>\n'
+    )
 
 
 def _tf_card(data):
@@ -1195,6 +1512,8 @@ def render_page(data, analytics=""):
         "doi_url": html.escape(DOI_URL),
         "header_icon": header_icon,
         "tf_card": _tf_card(data),
+        "findings": _findings_section(data),
+        "examples": _examples_section(data),
         "generated_at": html.escape(_fmt_generated_at(data.get("generated_at", ""))),
         "mode": html.escape(mode_label),
         "n_targets": str(len(summary)),

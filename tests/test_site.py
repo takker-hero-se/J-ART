@@ -16,17 +16,18 @@ import tempfile
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import generate_site  # noqa: E402
-from generate_site import build_i18n, build_site, render_page  # noqa: E402
+from generate_site import build_i18n, build_site, key_findings, render_page, transform_examples  # noqa: E402
 
 
-def _row(tid="t1", label="テスト構成", rate=95.0, mode="LIVE", measured=True):
+def _row(tid="t1", label="テスト構成", rate=95.0, mode="LIVE", measured=True,
+         model="openai/gpt-test", prompt="high", guardrail="keyword", cost=0.5):
     return {
         "target_id": tid, "target_label": label, "target_label_en": "Test config",
-        "provider": "openai", "model": "openai/gpt-test", "prompt_strength": "high",
-        "guardrail": "keyword", "rag": True, "mode": mode, "n_api_error": 0,
+        "provider": "openai", "model": model, "prompt_strength": prompt,
+        "guardrail": guardrail, "rag": True, "mode": mode, "n_api_error": 0,
         "total_attacks": 10 if measured else 0, "defended": 9, "breached": 1,
         "success_rate": rate, "ci_low": 80.0, "ci_high": 99.0,
-        "cost_per_million_usd": 0.5, "cospa_score": 190.0,
+        "cost_per_million_usd": cost, "cospa_score": 190.0,
     }
 
 
@@ -137,6 +138,65 @@ def test_header_counts_come_from_the_results():
     page = render_page(d)
     assert "LIVE 1 / MOCK 1" in page
     assert "2026-09-28" in page
+
+
+# ---------- 分かりやすさ: 要点・変形の実例・表の既定表示 ----------
+
+def _findings_data():
+    return _data(summary=[
+        _row("a-naked", model="m/a", prompt="low", guardrail="none", rate=60.0),
+        _row("a-llm", model="m/a", prompt="high", guardrail="llm", rate=100.0, cost=2.0),
+        _row("a-kw", model="m/a", prompt="high", guardrail="keyword", rate=100.0, cost=0.0),
+        _row("b-naked", model="m/b", prompt="low", guardrail="none", rate=90.0),
+        _row("c-kw", model="m/c", prompt="high", guardrail="keyword", rate=95.0),
+        _row("dead", model="m/d", prompt="low", guardrail="none", rate=0.0, measured=False),
+    ])
+
+
+def test_key_findings_summarise_naked_versus_protected():
+    f = key_findings(_findings_data())
+    assert f["naked_n"] == 2 and f["naked_mean"] == 75.0             # 未計測の構成は含めない
+    assert f["naked_min"] == 60.0 and f["naked_max"] == 90.0
+    assert f["protected_n"] == 3 and f["protected_perfect"] == 2
+    # モデルごとの比較は、素のAPIと防御ありの両方があるモデルだけ。防御ありは防御率→安さで最良を選ぶ
+    pairs = {p["model"]: p for p in f["pairs"]}
+    assert set(pairs) == {"m/a"}
+    assert pairs["m/a"]["naked"] == 60.0 and pairs["m/a"]["protected"] == 100.0
+    assert pairs["m/a"]["protected_guardrail"] == "keyword"
+
+
+def test_key_findings_survive_results_without_naked_rows():
+    f = key_findings(_data())
+    assert f["naked_n"] == 0 and f["pairs"] == []
+    assert "id=\"findings\"" in render_page(_data())
+
+
+def test_page_opens_with_findings_before_the_table():
+    page = render_page(_findings_data())
+    assert page.index('id="findings"') < page.index('id="board"')
+    assert "75.0%" in page                                            # 素のAPIの平均防御率
+
+
+def test_transform_examples_show_each_wrapper_with_the_core_masked():
+    d = _data()
+    d["details"] = [
+        dict(d["details"][0], attack_id="x", transformation=t, prompt_excerpt=f"{t} 前置き <<CORE>>")
+        for t in ("baseline", "gyaru", "base64_wrap")
+    ]
+    ex = transform_examples(d)
+    assert [e[0] for e in ex] == ["baseline", "gyaru", "base64_wrap"]
+    page = render_page(d)
+    assert 'id="examples"' in page
+    assert "gyaru 前置き" in page and "&lt;&lt;CORE&gt;&gt;" not in page and "<<CORE>>" not in page.split("<script>")[1].split("</script>")[0]
+
+
+def test_board_defaults_to_defense_rate_and_hides_unmeasured_rows():
+    page = render_page(_findings_data())
+    assert 'let sortKey = "success_rate"' in page
+    assert 'id="show-unmeasured"' in page and 'data-view="naked"' in page and 'data-view="protected"' in page
+    # 費用 $0 の行が「無料で最強」に見えないよう、理由を表示する
+    ja = build_i18n()["ja"]
+    assert "blocked_at_input" in ja and "モデルは呼ばれていません" in ja["blocked_at_input_tip"]
 
 
 if __name__ == "__main__":
