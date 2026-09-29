@@ -1,0 +1,9 @@
+{
+  "origin": "qf-common@f826741",
+  "portal": "https://quietforensics.com",
+  "python": {
+    "__init__.py": "37aff01d2277d3c7658e8bc7e4967fe2fd3df087d21d65c6349c7b13ca3eb6be",
+    "qf_x.py": "31bbed8bc801b8641cbe5329bb19fed59de651fa5ccff7f098fedf1aee48f4b4"
+  },
+  "python_dir": "qf_common"
+}

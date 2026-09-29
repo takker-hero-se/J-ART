@@ -123,3 +123,31 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      # 週次(cron)・手動実行のみ対象。push（既存LIVE成果物の再公開）では投稿しない。
+      # X_API_KEY 等の Secrets が未設定なら post_tweet.py 側でスキップされる。
+      - name: Checkout
+        if: ${{ github.event_name != 'push' }}
+        uses: actions/checkout@v6
+
+      - name: Download results artifact
+        if: ${{ github.event_name != 'push' }}
+        uses: actions/download-artifact@v6
+        with:
+          name: results-json
+
+      - name: Set up Python
+        if: ${{ github.event_name != 'push' }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Post weekly summary to X
+        if: ${{ github.event_name != 'push' }}
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+        # 投稿は共通の qf_common/qf_x.py（標準ライブラリのみ）。追加の pip install は不要。
+        run: python post_tweet.py --results results.json
