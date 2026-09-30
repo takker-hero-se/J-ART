@@ -47,11 +47,23 @@ def test_main_without_credentials_prints_and_does_not_post(tmp_path, monkeypatch
     path.write_text(json.dumps(_results()), encoding="utf-8")
     for k in qf_x.ENV_KEYS:
         monkeypatch.delenv(k, raising=False)
+    # without this, qf_env would fall back to the real security-biz/qf-common/.env and this test
+    # would post for real once the keys are filled in there
+    monkeypatch.setenv("QF_ENV_FILE", str(tmp_path / "no-shared.env"))
     called = []
     monkeypatch.setattr(qf_x.urllib.request, "urlopen", lambda *a, **k: called.append(a))
     assert post_tweet.main(["--results", str(path)]) == 0
     out = capsys.readouterr().out
     assert "スキップ" in out and "J-ART 週次更新" in out and called == []
+
+
+def test_the_shared_env_file_is_where_local_keys_come_from(tmp_path, monkeypatch):
+    shared = tmp_path / "shared.env"
+    shared.write_text("".join(f"{k}=v\n" for k in qf_x.ENV_KEYS), encoding="utf-8")
+    monkeypatch.setenv("QF_ENV_FILE", str(shared))
+    for k in qf_x.ENV_KEYS:
+        monkeypatch.delenv(k, raising=False)
+    assert qf_x.Credentials.from_env(qf_x.qf_env.values(qf_x.ENV_KEYS)) is not None
 
 
 def test_main_dry_run_never_posts_even_with_credentials(tmp_path, monkeypatch, capsys):

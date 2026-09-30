@@ -6,7 +6,7 @@ ORIGINAL: security-biz/qf-common/python/qf_x.py - projects hold a synced copy; d
     result = post(fit("週次更新 ...", url="https://jart.quietforensics.com/"))
 
 - Credentials come from X_API_KEY / X_API_SECRET / X_ACCESS_TOKEN / X_ACCESS_SECRET (OAuth 1.0a
-  user context). Without all four, or with dry_run=True, nothing is sent and the text is returned:
+  user context), looked up by qf_env: the environment first, then the shared qf-common/.env. Without all four, or with dry_run=True, nothing is sent and the text is returned:
   a CI run without secrets never fails and never posts.
 - Length is counted the way X counts it (twitter-text v3): CJK and most non-Latin characters weigh
   2, any http(s) URL weighs 23, the limit is 280. Plain len() lets a Japanese post through that X
@@ -20,7 +20,6 @@ import base64
 import hashlib
 import hmac
 import json
-import os
 import re
 import secrets
 import time
@@ -30,6 +29,11 @@ import urllib.request
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
+
+try:  # synced as a package (qf_common.qf_x) or imported as a top-level module
+    from . import qf_env
+except ImportError:
+    import qf_env  # type: ignore[no-redef]
 
 ENDPOINT = "https://api.x.com/2/tweets"
 MAX_WEIGHT = 280
@@ -144,7 +148,7 @@ def post(
         raise XPostError(f"text weighs {weighted_length(text)}, over the {MAX_WEIGHT} limit - shorten it with fit()")
     if dry_run:
         return PostResult(text=text, posted=False, skipped_reason="dry run")
-    creds = Credentials.from_env(os.environ if env is None else env)
+    creds = Credentials.from_env(qf_env.values(ENV_KEYS) if env is None else env)
     if creds is None:
         return PostResult(text=text, posted=False, skipped_reason="X credentials not set (" + ", ".join(ENV_KEYS) + ")")
     req = urllib.request.Request(
