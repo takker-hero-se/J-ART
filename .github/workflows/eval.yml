@@ -38,6 +38,11 @@ concurrency:
 jobs:
   evaluate:
     runs-on: ubuntu-latest
+    # contents: write は、定期・手動の LIVE 結果を experiments/live_latest.json に保存するため
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -75,16 +80,36 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
         run: |
           # 公開データの方針（クレジット二重消費・MOCK混在を避ける）:
-          #   - push  … 課金せず、commit 済みの実 LIVE キャンペーン成果物
-          #             experiments/var_run.json をそのまま公開（論文の数値と一致）。
+          #   - push  … 課金せず、直近の LIVE 結果 experiments/live_latest.json を公開
+          #             （無ければ論文用の experiments/var_run.json）。
           #   - cron / 手動 … 新規に LIVE 評価を実行して結果を更新。
           if [ "$EVENT_NAME" = "push" ]; then
-            echo "[push] Publishing the committed LIVE artifact (experiments/var_run.json); no API calls."
-            cp experiments/var_run.json results.json
+            # 計測したものはすべて公開する: 直近の定期/手動 LIVE 結果（全構成）を優先し、
+            # まだ無いときだけ論文用キャンペーン（21構成）を公開する。
+            if [ -f experiments/live_latest.json ]; then
+              echo "[push] Publishing the latest LIVE run (experiments/live_latest.json); no API calls."
+              cp experiments/live_latest.json results.json
+            else
+              echo "[push] Publishing the committed LIVE artifact (experiments/var_run.json); no API calls."
+              cp experiments/var_run.json results.json
+            fi
           else
             echo "[$EVENT_NAME] Running a fresh assessment (LIVE unless force_mock)."
             python run_assessment.py --config config.yaml --out results.json
           fi
+
+      - name: Keep the LIVE results in the repository
+        # 次の push で古い結果に戻らないよう、定期・手動の LIVE 結果を保存する。
+        # MOCK 強制の手動実行は保存しない。GITHUB_TOKEN のコミットは新しい実行を起こさない。
+        if: ${{ github.event_name != 'push' && github.event.inputs.force_mock != 'true' }}
+        run: |
+          cp results.json experiments/live_latest.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add experiments/live_latest.json
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git commit -m "results: LIVE run $(date -u +%F) (${{ github.event_name }})"
+          git push origin HEAD:main || (git pull --rebase origin main && git push origin HEAD:main)
 
       - name: Generate static site
         env:
