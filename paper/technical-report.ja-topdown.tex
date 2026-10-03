@@ -624,9 +624,10 @@ ATLAS 技術の追加（コストの枯渇、モデルの抽出）。
 全体・素のばらつき・反復のばらつき・変形・cospa は \code{experiments/var\_run.json} にある。
 アブレーションは3ファイルである（\code{ablation\_results.json}・\code{abl\_scout\_results.json}・\code{abl\_gpt41\_results.json}）。
 集計とクラスタ頑健 CI は \code{analyze\_ablation.py} と \code{analyze\_variance.py} で再計算できる。
-公開リーダーボードは、push のたびにこの成果物をそのまま配信する。
-新しい実測は定期実行と手動実行で行う。
-サイトに実測とシミュレーションが混ざることはない。
+公開リーダーボードは、毎週の定期実行（または手動実行）で得た最新の実測を配信する。
+その結果は \code{experiments/live\_latest.json} として保存し、push のときはこれを再公開する。
+そのため、サイトの構成数は本稿の21構成より多い。
+本稿の数値は、上記の論文用成果物（\code{var\_run.json}）から再現する。
 
 \section*{AIによる支援の開示}
 著者は本研究で、Claude Code（Anthropic）を補助として使った。

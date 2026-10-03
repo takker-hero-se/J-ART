@@ -7,6 +7,7 @@ J-ART のリーダーボードは Quiet Forensics の公開研究として jart.
 
 pytest があれば `pytest tests/` で、無ければ `python tests/test_site.py` で直接実行できる。
 """
+import html
 import json
 import os
 import re
@@ -210,3 +211,54 @@ if __name__ == "__main__":
                 failed += 1
                 print(f"FAIL {name}: {e}")
     sys.exit(1 if failed else 0)
+
+
+# ---------- 何通り試したか（ヒーローで明示） ----------
+
+def _scale_data(trials=1, errors=0):
+    det = [{"target_id": t, "attack_id": a, "transformation": f, "trials": trials, "breaches": 0}
+           for t in ("t1", "t2") for a in ("a1", "a2", "a3") for f in ("baseline", "gyaru")]
+    rows = [dict(_row(t), total_attacks=3 * 2 * trials - (errors if t == "t1" else 0),
+                 n_api_error=(errors if t == "t1" else 0)) for t in ("t1", "t2")]
+    return _data(transformations=["baseline", "gyaru"], summary=rows, details=det)
+
+
+def test_scale_counts_configs_attacks_and_transforms():
+    s = generate_site.scale(_scale_data())
+    assert (s["n_targets"], s["n_attacks"], s["n_transforms"], s["combos"]) == (2, 3, 2, 12)
+    assert s["trials"] == 12 and s["per_cell"] == 1 and s["valid"] == 12 and s["api_errors"] == 0
+
+
+def test_scale_counts_repeated_trials_not_cells():
+    # each cell run 5 times: 12 combinations, 60 trials (the old "total trials" showed 12)
+    s = generate_site.scale(_scale_data(trials=5, errors=4))
+    assert s["combos"] == 12 and s["trials"] == 60 and s["per_cell"] == 5
+    assert s["valid"] == 56 and s["api_errors"] == 4
+
+
+def test_hero_states_how_many_combinations_were_tried():
+    page = render_page(_scale_data(trials=5, errors=4))
+    assert "2 構成 × 3 攻撃 × 2 変形 = 12 通り" in page
+    assert "各 5 回" in page and "60 試行" in page
+    assert "有効 56" in page and "API エラー 4" in page
+    assert "2 configs × 3 attacks × 2 transforms = 12 combinations" in page  # EN, switched by the i18n script
+
+
+# ---------- 防御設定の公開（強化プロンプト・LLM ガードレール） ----------
+
+def test_defense_settings_are_published_from_the_assessment_code():
+    import run_assessment as ra
+    page = render_page(_data())
+    hardened = ra.build_system_prompt({"prompt_strength": "high"}, generate_site.CANARY_MASK, "")
+    for line in hardened.splitlines():
+        if line.startswith("- "):
+            assert html.escape(line[2:]) in page, line  # every hardened rule is shown verbatim
+    assert html.escape(ra.LLM_INPUT_GUARD_PROMPT) in page
+    assert "ZIPANGU" not in page  # the canary itself is never published
+
+
+def test_simulated_output_guard_is_disclosed_honestly():
+    import run_assessment as ra
+    page = render_page(_data())
+    assert f"{round(ra.LLM_OUTPUT_GUARD_SIMULATED_P * 100)}%" in page
+    assert "シミュレーション" in page and "simulated" in page

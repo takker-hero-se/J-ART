@@ -162,6 +162,19 @@ def build_i18n():
             "badge_mode": "実行モード",
             "badge_targets": "構成数",
             "badge_trials": "総試行",
+            "def_eyebrow": "防御の設定",
+            "def_title": "「強化プロンプト」と「LLMガードレール」の中身",
+            "def_sub": "各構成で実際に使っている設定です。評価コード（run_assessment.py）から直接読み込んで表示しています。",
+            "def_naked_title": "素の API のシステムプロンプト",
+            "def_hardened_title": "強化プロンプト（prompt_strength: high）",
+            "def_llm_in_title": "LLMガードレール ①入力検閲（対象モデル自身に問い合わせ）",
+            "def_llm_in_note": "応答に「はい」が含まれれば攻撃として遮断します。API 呼び出しに失敗した場合は、決定論的な判定に切り替わります。",
+            "def_llm_out_title": "LLMガードレール ②出力検閲（現在はシミュレーション）",
+            "def_llm_out_body": "出力検閲は現在 LLM を呼び出していません。突破された応答のうち、決め打ちの確率 <b>{pct}%</b> で「漏えいを検出し是正した」とみなすシミュレーションで、LIVE 計測でも同じです。そのため「LLMガードレール」構成の防御率には、実測ではない部分が含まれます。実際の LLM による出力検閲への置き換えを予定しています。",
+            "def_mask_note": "※ 合言葉（カナリア）は伏字にしています。RAG ありの構成では、この後に社内ナレッジ検索結果（攻撃時は汚染された文書を含む）が続きます。",
+            "scale_combos": "試した組み合わせ：<b>{t} 構成 × {a} 攻撃 × {f} 変形 = {c} 通り</b>",
+            "scale_repeat": "（各 {k} 回 = {n} 試行）",
+            "scale_valid": "集計は有効 {v} 試行（API エラー {e} 件は除外）",
             "badge_transforms": "日本語変形",
             "mode_mixed": "混在 — LIVE {live} / MOCK {mock}",
             "mode_all_live": "全 LIVE（{n} 構成・実API計測）",
@@ -319,6 +332,19 @@ def build_i18n():
             "badge_mode": "Run mode",
             "badge_targets": "Configs",
             "badge_trials": "Total trials",
+            "def_eyebrow": "Defence settings",
+            "def_title": "What the \"hardened prompt\" and the \"LLM guardrail\" actually are",
+            "def_sub": "The exact settings each configuration uses, read directly from the assessment code (run_assessment.py). The prompts are in Japanese, as sent to the models.",
+            "def_naked_title": "System prompt of the naked API",
+            "def_hardened_title": "Hardened prompt (prompt_strength: high)",
+            "def_llm_in_title": "LLM guardrail (1): input screening by the target model itself",
+            "def_llm_in_note": "An answer containing \"yes\" (はい) blocks the input as an attack. If the API call fails, a deterministic judgement is used instead.",
+            "def_llm_out_title": "LLM guardrail (2): output screening (currently simulated)",
+            "def_llm_out_body": "Output screening does not call an LLM yet. A breached answer is treated as \"leak detected and corrected\" with a fixed probability of <b>{pct}%</b>: a simulated step, also in LIVE runs. Defence rates of the LLM-guardrail configurations therefore include a part that is not measured. Replacing it with real LLM output screening is planned.",
+            "def_mask_note": "The secret canary is masked. In configurations with RAG, internal knowledge-search results follow (poisoned documents during attacks).",
+            "scale_combos": "Combinations tried: <b>{t} configs × {a} attacks × {f} transforms = {c} combinations</b>",
+            "scale_repeat": " (each run {k} times = {n} trials)",
+            "scale_valid": "Rates use {v} valid trials ({e} API errors excluded)",
             "badge_transforms": "Japanese transforms",
             "mode_mixed": "Mixed — LIVE {live} / MOCK {mock}",
             "mode_all_live": "All LIVE ({n} configs · real API)",
@@ -537,6 +563,14 @@ b{font-weight:700;color:var(--ink)}
 .hero .lead b{color:#fff}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
 .facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:40px}
+.def-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.def-card{background:var(--surface,#fff);border:1px solid var(--line,#D7E6F4);border-radius:12px;padding:18px 20px;min-width:0}
+.def-card h3{font-size:1rem;margin:0 0 10px}
+.def-pre{white-space:pre-wrap;word-break:break-word;font-family:var(--mono,monospace);font-size:.82rem;line-height:1.7;background:#F3F8FD;border-radius:8px;padding:12px 14px;margin:0}
+.def-warn{background:#FFF8EB;border-color:#F2C879}
+@media (max-width:760px){.def-grid{grid-template-columns:1fr}}
+.scale{margin-top:14px;color:var(--on-navy-muted,#C5D8E8);font-size:.95rem;line-height:1.8}
+.scale b{color:#fff}
 .fact{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;min-width:0}
 .fact dt{font-size:.75rem;color:var(--on-navy-faint);font-weight:500}
 .fact dd{margin:4px 0 0;font-weight:600;color:#fff;font-size:.875rem;overflow-wrap:anywhere;line-height:1.5}
@@ -776,11 +810,13 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
       <div class="fact"><dt data-i18n="badge_trials">総試行</dt><dd class="mono">%%n_details%%</dd></div>
       <div class="fact"><dt data-i18n="badge_transforms">日本語変形</dt><dd class="mono">%%n_transforms%%</dd></div>
     </dl>
+    <p class="scale">%%scale%%</p>
   </div>
 </header>
 
 %%findings%%
 %%examples%%
+%%defense%%
 <section class="block" id="board">
   <div class="wrap">
     <div class="sec-head">
@@ -1301,6 +1337,63 @@ def key_findings(data):
     }
 
 
+CANARY_MASK = "［合言葉・伏字］"
+
+
+def _defense_section():
+    """What "hardened prompt" and "LLM guardrail" actually are, read from run_assessment itself."""
+    import run_assessment as ra
+    naked = ra.build_system_prompt({"prompt_strength": "low"}, CANARY_MASK, "")
+    hardened = ra.build_system_prompt({"prompt_strength": "high"}, CANARY_MASK, "")
+    pct = round(ra.LLM_OUTPUT_GUARD_SIMULATED_P * 100)
+    esc = html.escape
+    return f"""<section class="block" id="defense">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">{_both("def_eyebrow")}</p>
+      <h2>{_both("def_title")}</h2>
+      <p class="sub">{_both("def_sub")}</p>
+    </div>
+    <div class="def-grid">
+      <div class="def-card"><h3>{_both("def_naked_title")}</h3><pre class="def-pre">{esc(naked)}</pre></div>
+      <div class="def-card"><h3>{_both("def_hardened_title")}</h3><pre class="def-pre">{esc(hardened)}</pre></div>
+      <div class="def-card"><h3>{_both("def_llm_in_title")}</h3><pre class="def-pre">{esc(ra.LLM_INPUT_GUARD_PROMPT)}</pre>
+        <p class="note">{_both("def_llm_in_note")}</p></div>
+      <div class="def-card def-warn"><h3>{_both("def_llm_out_title")}</h3>
+        <p>{_both("def_llm_out_body", pct=pct)}</p></div>
+    </div>
+    <p class="note">{_both("def_mask_note")}</p>
+  </div>
+</section>"""
+
+
+def scale(data):
+    """How many combinations were tried, and how many trials that made.
+
+    details holds one row per cell (config x attack x transform) with a trials count, so the old
+    "total trials" (len(details)) counted cells: 1,617 for the K=5 paper campaign, not 8,085.
+    """
+    summary = data.get("summary", [])
+    details = data.get("details", [])
+    n_t = len(summary)
+    n_a = len({d.get("attack_id") for d in details if d.get("attack_id")})
+    n_f = len(data.get("transformations", [])) or len({d.get("transformation") for d in details})
+    combos = n_t * n_a * n_f
+    trials = sum(int(d.get("trials") or 1) for d in details)
+    errors = sum(int(s.get("n_api_error") or 0) for s in summary)
+    valid = sum(int(s.get("total_attacks") or 0) for s in summary)
+    per_cell = round(trials / combos) if combos else 0
+    return {"n_targets": n_t, "n_attacks": n_a, "n_transforms": n_f, "combos": combos,
+            "trials": trials, "per_cell": per_cell, "valid": valid, "api_errors": errors}
+
+
+def _scale_line(sc):
+    line = _both("scale_combos", t=sc["n_targets"], a=sc["n_attacks"], f=sc["n_transforms"], c=f"{sc['combos']:,}")
+    if sc["per_cell"] > 1:
+        line += _both("scale_repeat", k=sc["per_cell"], n=f"{sc['trials']:,}")
+    return line + "<br>" + _both("scale_valid", v=f"{sc['valid']:,}", e=f"{sc['api_errors']:,}")
+
+
 def _both(key, **kw):
     """i18n の文言を日英 2 つの <span lang> にして返す（数値入りの文言をサーバ側で組むため）。"""
     t = build_i18n()
@@ -1500,6 +1593,7 @@ def render_page(data, analytics=""):
     # ヘッダーのアイコンはサイズを CSS で決めるため、固定 width/height を外してインライン埋め込み。
     header_icon = load_icon().replace('width="64" height="64"', 'aria-hidden="true"', 1)
 
+    sc = scale(data)
     values = {
         "site_title": html.escape(SITE_TITLE),
         "site_desc": html.escape(SITE_DESC),
@@ -1517,7 +1611,9 @@ def render_page(data, analytics=""):
         "generated_at": html.escape(_fmt_generated_at(data.get("generated_at", ""))),
         "mode": html.escape(mode_label),
         "n_targets": str(len(summary)),
-        "n_details": f"{len(data.get('details', [])):,}",
+        "n_details": f"{sc['trials']:,}",
+        "scale": _scale_line(sc),
+        "defense": _defense_section(),
         "n_transforms": str(n_tf),
         "seo_models": seo_models,
         "jsonld": jsonld,
