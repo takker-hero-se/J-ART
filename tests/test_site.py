@@ -257,8 +257,9 @@ def test_defense_settings_are_published_from_the_assessment_code():
     assert "ZIPANGU" not in page  # the canary itself is never published
 
 
-def test_simulated_output_guard_is_disclosed_honestly():
+def test_output_guard_prompt_is_published_and_the_old_simulation_is_disclosed():
     import run_assessment as ra
     page = render_page(_data())
-    assert f"{round(ra.LLM_OUTPUT_GUARD_SIMULATED_P * 100)}%" in page
-    assert "シミュレーション" in page and "simulated" in page
+    assert html.escape(ra.LLM_OUTPUT_GUARD_PROMPT) in page
+    assert f"{round(ra.LLM_OUTPUT_GUARD_MOCK_P * 100)}%" in page  # runs before the change were simulated
+    assert "シミュレーション" in page and "simulation" in page

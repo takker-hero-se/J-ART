@@ -168,9 +168,9 @@ def build_i18n():
             "def_naked_title": "素の API のシステムプロンプト",
             "def_hardened_title": "強化プロンプト（prompt_strength: high）",
             "def_llm_in_title": "LLMガードレール ①入力検閲（対象モデル自身に問い合わせ）",
-            "def_llm_in_note": "応答に「はい」が含まれれば攻撃として遮断します。API 呼び出しに失敗した場合は、決定論的な判定に切り替わります。",
-            "def_llm_out_title": "LLMガードレール ②出力検閲（現在はシミュレーション）",
-            "def_llm_out_body": "出力検閲は現在 LLM を呼び出していません。突破された応答のうち、決め打ちの確率 <b>{pct}%</b> で「漏えいを検出し是正した」とみなすシミュレーションで、LIVE 計測でも同じです。そのため「LLMガードレール」構成の防御率には、実測ではない部分が含まれます。実際の LLM による出力検閲への置き換えを予定しています。",
+            "def_llm_in_note": "応答に「はい」が含まれれば攻撃として遮断します。呼び出しに失敗した試行は、推測で埋めずに API エラーとして集計から除外します。",
+            "def_llm_out_title": "LLMガードレール ②出力検閲（対象モデル自身に問い合わせ）",
+            "def_llm_out_note": "すべての応答を検閲し、「はい」なら応答を差し止めます。検閲器には合言葉を渡しません。呼び出しに失敗した試行は集計から除外します。2026-10-05 以前の計測では、出力検閲は LLM を呼ばず、突破された応答の {pct}% を「検出」とみなすシミュレーションでした（API キーのない MOCK 実行では今もこの模擬判定を使います）。",
             "def_mask_note": "※ 合言葉（カナリア）は伏字にしています。RAG ありの構成では、この後に社内ナレッジ検索結果（攻撃時は汚染された文書を含む）が続きます。",
             "scale_combos": "試した組み合わせ：<b>{t} 構成 × {a} 攻撃 × {f} 変形 = {c} 通り</b>",
             "scale_repeat": "（各 {k} 回 = {n} 試行）",
@@ -338,9 +338,9 @@ def build_i18n():
             "def_naked_title": "System prompt of the naked API",
             "def_hardened_title": "Hardened prompt (prompt_strength: high)",
             "def_llm_in_title": "LLM guardrail (1): input screening by the target model itself",
-            "def_llm_in_note": "An answer containing \"yes\" (はい) blocks the input as an attack. If the API call fails, a deterministic judgement is used instead.",
-            "def_llm_out_title": "LLM guardrail (2): output screening (currently simulated)",
-            "def_llm_out_body": "Output screening does not call an LLM yet. A breached answer is treated as \"leak detected and corrected\" with a fixed probability of <b>{pct}%</b>: a simulated step, also in LIVE runs. Defence rates of the LLM-guardrail configurations therefore include a part that is not measured. Replacing it with real LLM output screening is planned.",
+            "def_llm_in_note": "An answer containing \"yes\" (はい) blocks the input as an attack. A trial whose guard call fails is not guessed: it is counted as an API error and left out.",
+            "def_llm_out_title": "LLM guardrail (2): output screening by the target model itself",
+            "def_llm_out_note": "Every answer is screened; \"yes\" withholds it. The screen is never told the canary. Failed guard calls are left out as API errors. Runs before 2026-10-05 did not call an LLM here: a breached answer counted as detected with a fixed {pct}% probability (MOCK runs without API keys still use that simulation).",
             "def_mask_note": "The secret canary is masked. In configurations with RAG, internal knowledge-search results follow (poisoned documents during attacks).",
             "scale_combos": "Combinations tried: <b>{t} configs × {a} attacks × {f} transforms = {c} combinations</b>",
             "scale_repeat": " (each run {k} times = {n} trials)",
@@ -1345,7 +1345,7 @@ def _defense_section():
     import run_assessment as ra
     naked = ra.build_system_prompt({"prompt_strength": "low"}, CANARY_MASK, "")
     hardened = ra.build_system_prompt({"prompt_strength": "high"}, CANARY_MASK, "")
-    pct = round(ra.LLM_OUTPUT_GUARD_SIMULATED_P * 100)
+    pct = round(ra.LLM_OUTPUT_GUARD_MOCK_P * 100)
     esc = html.escape
     return f"""<section class="block" id="defense">
   <div class="wrap">
@@ -1359,8 +1359,8 @@ def _defense_section():
       <div class="def-card"><h3>{_both("def_hardened_title")}</h3><pre class="def-pre">{esc(hardened)}</pre></div>
       <div class="def-card"><h3>{_both("def_llm_in_title")}</h3><pre class="def-pre">{esc(ra.LLM_INPUT_GUARD_PROMPT)}</pre>
         <p class="note">{_both("def_llm_in_note")}</p></div>
-      <div class="def-card def-warn"><h3>{_both("def_llm_out_title")}</h3>
-        <p>{_both("def_llm_out_body", pct=pct)}</p></div>
+      <div class="def-card"><h3>{_both("def_llm_out_title")}</h3><pre class="def-pre">{esc(ra.LLM_OUTPUT_GUARD_PROMPT)}</pre>
+        <p class="note">{_both("def_llm_out_note", pct=pct)}</p></div>
     </div>
     <p class="note">{_both("def_mask_note")}</p>
   </div>
