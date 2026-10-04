@@ -30,8 +30,8 @@ identifiers:
     value: "10.5281/zenodo.20676880"
     description: "Version DOI for v0.1.0"
 license: MIT
-version: "0.2.1"
-date-released: "2026-06-14"
+version: "0.3.0"
+date-released: "2026-10-04"
 keywords:
   - large language models
   - LLM security
