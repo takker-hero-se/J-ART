@@ -604,6 +604,42 @@ targets:
     guardrail: none
     rag: true
 
+  # ===================================================================
+  # 自動追加（scripts/update_models.py, 毎週）— 新しく公開されたモデルを素のAPIで測る。
+  # ===================================================================
+  - id: openrouter-gpt-6-1-sol-naked  # auto-added 2026-10-04 (OpenRouter released 2026-09-29)
+    label: "GPT-6.1 Sol / 素のAPI (OpenRouter)"
+    label_en: "GPT-6.1 Sol / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-6.1-sol"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-claude-sonnet-5-5-naked  # auto-added 2026-10-04 (OpenRouter released 2026-09-28)
+    label: "Claude Sonnet 5.5 / 素のAPI (OpenRouter)"
+    label_en: "Claude Sonnet 5.5 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "anthropic/claude-sonnet-5.5"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-grok-4-7-naked  # auto-added 2026-10-04 (OpenRouter released 2026-09-21)
+    label: "Grok 4.7 / 素のAPI (OpenRouter)"
+    label_en: "Grok 4.7 / Naked API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "x-ai/grok-4.7"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)

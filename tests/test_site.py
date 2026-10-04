@@ -301,3 +301,8 @@ def test_hero_explains_the_models_compared_by_family():
     assert "うち 1 モデルは API エラーで未計測" in page
     assert "Anthropic（Claude）" in page and "OpenAI（gpt-oss）" in page and "Mistral AI" in page
     assert "claude-opus-4-8" in page and "gpt-oss-20b" in page  # the list names every model
+
+
+def test_new_vendor_families_are_named():
+    fams = generate_site.model_families(_data(summary=[_row("x", model="x-ai/grok-4.7"), _row("z", model="z-ai/glm-5.3")]))
+    assert {f["key"] for f in fams} == {"xai", "zai"}

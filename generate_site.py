@@ -1394,6 +1394,8 @@ _FAMILIES = [
     ("qwen", "qwen", "Alibaba（Qwen）", "Alibaba (Qwen)"),
     ("deepseek", "deepseek", "DeepSeek", "DeepSeek"),
     ("mistral", "mistral", "Mistral AI", "Mistral AI"),
+    ("xai", "grok", "xAI（Grok）", "xAI (Grok)"),
+    ("zai", "glm", "Z.ai（GLM）", "Z.ai (GLM)"),
 ]
 
 
