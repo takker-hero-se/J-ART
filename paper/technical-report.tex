@@ -295,8 +295,8 @@ Five settings are compared: \textbf{none}; \textbf{keyword} (banned-substring
 match --- fast, weak to obfuscation); \textbf{regex} (a \emph{normalizing} filter
 that strips zero-width characters, reverses leet substitutions, folds whitespace,
 and Base64-decodes long tokens \emph{before} keyword matching --- deterministic,
-zero extra API cost); \textbf{llm} (the target model self-moderates input and
-screens output); and \textbf{llamaguard} (a dedicated safety-classification model
+zero extra API cost); \textbf{llm} (the target model self-moderates input; in the reported campaign its
+output screening was simulated, see Limitations); and \textbf{llamaguard} (a dedicated safety-classification model
 --- Llama Guard~4 via a model router --- classifies the input as attack/benign,
 with a graceful fallback on failure).
 
@@ -600,6 +600,13 @@ release net-positive for defenders, consistent with \S6.2.
         (canary-checked across all attacks, leet-reversed --- which would
         \emph{lower} encoding-transform rates) and a powered, human-validated audit
         are future work.
+  \item \textbf{Simulated LLM-guard output screening:} in the reported campaign the \textbf{llm}
+        guardrail's output screening did not call an LLM: a breached answer was marked as caught with
+        a fixed 70\% probability. Guard calls that failed (LLM input screening, Llama Guard) fell back
+        to a deterministic simulated judgement. The \textbf{llm}-guard defence rates therefore include a
+        simulated share; hardened-prompt rates are unaffected, and Llama Guard rates only through its
+        failure fallback. From 2026-10-05 the harness screens every answer with a real LLM call and
+        excludes failed guard calls as \code{api\_error}.
   \item \textbf{Single-turn:} multi-turn / crescendo~\cite{crescendo} and
         many-shot~\cite{manyshot} attacks are not yet modeled --- and these most
         erode exactly the input-classifier and prompt-hardening defenses we find

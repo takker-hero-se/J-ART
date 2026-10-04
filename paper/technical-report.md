@@ -270,8 +270,8 @@ Five guardrail settings are compared: **none**; **keyword** (banned-substring
 match — fast, weak to obfuscation); **regex** (a *normalizing* filter that strips
 zero-width characters, reverses leet substitutions, folds whitespace, and
 Base64-decodes long tokens *before* keyword matching — deterministic, zero extra
-API cost); **llm** (the target model self-moderates input, and additionally
-screens output); and **llamaguard** (a dedicated safety-classification model —
+API cost); **llm** (the target model self-moderates input; in the reported
+campaign its output screening was simulated, see Limitations); and **llamaguard** (a dedicated safety-classification model —
 Llama Guard 4 via a model router — classifies the input as attack/benign, with a
 graceful fallback on failure).
 
@@ -609,6 +609,13 @@ for defenders, consistent with the responsible-disclosure pattern of §6.2.
   unaffected. A stricter judge (canary-checked across all attacks, leet-reversed) —
   which would *lower* encoding-transform rates — and a powered, human-validated audit
   are future work.
+- **Simulated LLM-guard output screening:** in the reported campaign the **llm**
+  guardrail's output screening did not call an LLM: a breached answer was marked as caught with a
+  fixed 70% probability. Guard calls that failed (LLM input screening, Llama Guard) fell back to a
+  deterministic simulated judgement. The **llm**-guard defence rates therefore include a simulated
+  share; hardened-prompt rates are unaffected, and Llama Guard rates only through its failure
+  fallback. From 2026-10-05 the harness screens every answer with a real LLM call and excludes failed
+  guard calls as `api_error`.
 - **Single-turn:** multi-turn / crescendo [31] and many-shot [32] attacks are not
   yet modeled — and these most erode the very input-classifier and prompt-hardening
   defenses we find effective, so the 91–100% band is a single-turn ceiling and the
