@@ -263,3 +263,41 @@ def test_output_guard_prompt_is_published_and_the_old_simulation_is_disclosed():
     assert html.escape(ra.LLM_OUTPUT_GUARD_PROMPT) in page
     assert f"{round(ra.LLM_OUTPUT_GUARD_MOCK_P * 100)}%" in page  # runs before the change were simulated
     assert "シミュレーション" in page and "simulation" in page
+
+
+# ---------- 比較したモデルを系統別に示す ----------
+
+def _family_data():
+    rows = [
+        _row("c1", model="claude-opus-5"), _row("c2", model="claude-opus-5", guardrail="llm"),
+        _row("c3", model="claude-opus-4-8", measured=False),
+        _row("o1", model="gpt-4.1"), _row("o2", model="openai/gpt-5.6-sol"),
+        _row("oss", model="openai/gpt-oss-20b"), _row("g", model="gemini-2.5-pro"),
+        _row("l", model="meta-llama/llama-4-scout"), _row("q", model="qwen/qwen3-max"),
+        _row("d", model="deepseek/deepseek-v3.2"), _row("m", model="mistralai/mistral-large-2512"),
+    ]
+    for r in rows:
+        if r["target_id"] == "c3":
+            r["total_attacks"] = 0
+    return _data(summary=rows)
+
+
+def test_models_are_counted_once_and_grouped_by_family():
+    fams = generate_site.model_families(_family_data())
+    by = {f["key"]: [m["name"] for m in f["models"]] for f in fams}
+    assert by["anthropic"] == ["claude-opus-4-8", "claude-opus-5"]  # two configs of opus-5 = one model
+    assert by["openai"] == ["gpt-4.1", "gpt-5.6-sol"] and by["openai-oss"] == ["gpt-oss-20b"]
+    assert by["google"] == ["gemini-2.5-pro"] and by["meta"] == ["llama-4-scout"]
+    assert by["qwen"] == ["qwen3-max"] and by["deepseek"] == ["deepseek-v3.2"] and by["mistral"] == ["mistral-large-2512"]
+    assert fams[0]["key"] == "anthropic"  # largest family first
+    unmeasured = [m["name"] for f in fams for m in f["models"] if not m["measured"]]
+    assert unmeasured == ["claude-opus-4-8"]
+
+
+def test_hero_explains_the_models_compared_by_family():
+    page = render_page(_family_data())
+    assert "比較したモデル：<b>10 モデル・8 系統</b>" in page
+    assert "Models compared: <b>10 models in 8 families</b>" in page
+    assert "うち 1 モデルは API エラーで未計測" in page
+    assert "Anthropic（Claude）" in page and "OpenAI（gpt-oss）" in page and "Mistral AI" in page
+    assert "claude-opus-4-8" in page and "gpt-oss-20b" in page  # the list names every model

@@ -162,6 +162,10 @@ def build_i18n():
             "badge_mode": "実行モード",
             "badge_targets": "構成数",
             "badge_trials": "総試行",
+            "models_head": "比較したモデル：<b>{m} モデル・{f} 系統</b>",
+            "models_unmeasured": "（うち {u} モデルは API エラーで未計測）",
+            "models_unmeasured_mark": "（未計測）",
+            "models_list": "モデル一覧（系統別）",
             "def_eyebrow": "防御の設定",
             "def_title": "「強化プロンプト」と「LLMガードレール」の中身",
             "def_sub": "各構成で実際に使っている設定です。評価コード（run_assessment.py）から直接読み込んで表示しています。",
@@ -332,6 +336,10 @@ def build_i18n():
             "badge_mode": "Run mode",
             "badge_targets": "Configs",
             "badge_trials": "Total trials",
+            "models_head": "Models compared: <b>{m} models in {f} families</b>",
+            "models_unmeasured": " ({u} not measured because of API errors)",
+            "models_unmeasured_mark": " (not measured)",
+            "models_list": "Model list by family",
             "def_eyebrow": "Defence settings",
             "def_title": "What the \"hardened prompt\" and the \"LLM guardrail\" actually are",
             "def_sub": "The exact settings each configuration uses, read directly from the assessment code (run_assessment.py). The prompts are in Japanese, as sent to the models.",
@@ -569,6 +577,14 @@ b{font-weight:700;color:var(--ink)}
 .def-pre{white-space:pre-wrap;word-break:break-word;font-family:var(--mono,monospace);font-size:.82rem;line-height:1.7;background:#F3F8FD;border-radius:8px;padding:12px 14px;margin:0}
 .def-warn{background:#FFF8EB;border-color:#F2C879}
 @media (max-width:760px){.def-grid{grid-template-columns:1fr}}
+.models{margin-top:10px;color:var(--on-navy-muted,#C5D8E8);font-size:.95rem}
+.models b{color:#fff}
+.fams{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.fam{padding:4px 12px;border-radius:999px;background:rgba(43,193,255,.14);color:#8FDDFF;font-size:.85rem}
+.fam b{color:#fff;margin-left:4px}
+.models-list{margin-top:10px;font-size:.88rem}
+.models-list summary{cursor:pointer;color:#8FDDFF}
+.models-list ul{margin:8px 0 0;padding-left:1.2em;line-height:1.9}
 .scale{margin-top:14px;color:var(--on-navy-muted,#C5D8E8);font-size:.95rem;line-height:1.8}
 .scale b{color:#fff}
 .fact{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px 14px;min-width:0}
@@ -811,6 +827,7 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
       <div class="fact"><dt data-i18n="badge_transforms">日本語変形</dt><dd class="mono">%%n_transforms%%</dd></div>
     </dl>
     <p class="scale">%%scale%%</p>
+    %%models%%
   </div>
 </header>
 
@@ -1367,6 +1384,67 @@ def _defense_section():
 </section>"""
 
 
+# モデル系統（提供元）。上から順に照合する（gpt-oss は GPT より先に判定）。
+_FAMILIES = [
+    ("anthropic", "claude", "Anthropic（Claude）", "Anthropic (Claude)"),
+    ("openai-oss", "gpt-oss", "OpenAI（gpt-oss）", "OpenAI (gpt-oss)"),
+    ("openai", "gpt", "OpenAI（GPT）", "OpenAI (GPT)"),
+    ("google", "gemini", "Google（Gemini）", "Google (Gemini)"),
+    ("meta", "llama", "Meta（Llama）", "Meta (Llama)"),
+    ("qwen", "qwen", "Alibaba（Qwen）", "Alibaba (Qwen)"),
+    ("deepseek", "deepseek", "DeepSeek", "DeepSeek"),
+    ("mistral", "mistral", "Mistral AI", "Mistral AI"),
+]
+
+
+def model_families(data):
+    """Distinct models (not configurations) grouped by family, largest family first.
+
+    A model counts as measured when at least one of its configurations has a valid trial.
+    """
+    models = {}
+    for row in data.get("summary", []):
+        name = (row.get("model") or "").split("/")[-1].strip()
+        if not name:
+            continue
+        valid = int(row.get("total_attacks") or 0) > 0 and row.get("measured") is not False
+        models[name] = models.get(name, False) or valid
+    fams = {}
+    for name, measured in models.items():
+        low = name.lower()
+        key, ja, en = next(((k, j, e) for k, pat, j, e in _FAMILIES if pat in low), ("other", "その他", "Other"))
+        fams.setdefault(key, {"key": key, "ja": ja, "en": en, "models": []})["models"].append({"name": name, "measured": measured})
+    order = {k: i for i, (k, *_rest) in enumerate(_FAMILIES)}
+    out = sorted(fams.values(), key=lambda f: (-len(f["models"]), order.get(f["key"], 99)))
+    for f in out:
+        f["models"].sort(key=lambda m: m["name"])
+    return out
+
+
+def _models_block(data):
+    fams = model_families(data)
+    if not fams:
+        return ""
+    n_models = sum(len(f["models"]) for f in fams)
+    unmeasured = [m["name"] for f in fams for m in f["models"] if not m["measured"]]
+    head = _both("models_head", m=n_models, f=len(fams))
+    if unmeasured:
+        head += _both("models_unmeasured", u=len(unmeasured))
+    chips = "".join(
+        f'<span class="fam" title="{html.escape(", ".join(m["name"] for m in f["models"]))}">'
+        f'<span lang="ja">{html.escape(f["ja"])}</span><span lang="en">{html.escape(f["en"])}</span> <b>{len(f["models"])}</b></span>'
+        for f in fams
+    )
+    rows = "".join(
+        f'<li><span lang="ja">{html.escape(f["ja"])}</span><span lang="en">{html.escape(f["en"])}</span>：'
+        + "、".join(html.escape(m["name"]) + ("" if m["measured"] else _both("models_unmeasured_mark")) for m in f["models"])
+        + "</li>"
+        for f in fams
+    )
+    return (f'<div class="models"><p>{head}</p><div class="fams">{chips}</div>'
+            f'<details class="models-list"><summary>{_both("models_list")}</summary><ul>{rows}</ul></details></div>')
+
+
 def scale(data):
     """How many combinations were tried, and how many trials that made.
 
@@ -1613,6 +1691,7 @@ def render_page(data, analytics=""):
         "n_targets": str(len(summary)),
         "n_details": f"{sc['trials']:,}",
         "scale": _scale_line(sc),
+        "models": _models_block(data),
         "defense": _defense_section(),
         "n_transforms": str(n_tf),
         "seo_models": seo_models,
