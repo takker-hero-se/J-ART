@@ -53,3 +53,12 @@ if __name__ == "__main__":
 
     import pytest
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_new_models_are_added_weekly_before_the_evaluation():
+    wf = open(os.path.join(ROOT, ".github", "workflows", "update-models.yml"), encoding="utf-8").read()
+    assert 'cron: "0 16 * * 6"' in wf          # Sunday 01:00 JST, a day before the Monday 03:00 JST evaluation
+    assert "workflow_dispatch" in wf and "contents: write" in wf
+    assert "python scripts/update_models.py" in wf
+    assert "pytest" in wf.split("python scripts/update_models.py", 1)[1]  # tests run before the commit
+    assert "git push" in wf
