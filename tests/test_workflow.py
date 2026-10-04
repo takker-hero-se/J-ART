@@ -62,3 +62,12 @@ def test_new_models_are_added_weekly_before_the_evaluation():
     assert "python scripts/update_models.py" in wf
     assert "pytest" in wf.split("python scripts/update_models.py", 1)[1]  # tests run before the commit
     assert "git push" in wf
+
+
+def test_credit_exhaustion_fails_a_separate_job_so_github_mails_the_owner():
+    job = WF.split("\n  credits:\n", 1)[1]
+    assert "needs: evaluate" in job and "github.event_name != 'push'" in job
+    assert "scripts/check_credits.py --results results.json" in job
+    assert "OPENROUTER_API_KEY" in job
+    deploy = WF.split("\n  deploy:\n", 1)[1].split("\n  credits:\n", 1)[0]
+    assert "needs: evaluate" in deploy and "credits" not in deploy  # publishing never waits for the check

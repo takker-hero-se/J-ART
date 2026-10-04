@@ -176,3 +176,23 @@ jobs:
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
         # 投稿は共通の qf_common/qf_x.py（標準ライブラリのみ）。追加の pip install は不要。
         run: python post_tweet.py --results results.json
+
+  # クレジット切れの検知（定期・手動実行のみ）。失敗すると GitHub から失敗通知メールが届く。
+  # 公開（deploy）とは独立したジョブなので、ここが失敗してもサイトの更新は止まらない。
+  credits:
+    needs: evaluate
+    if: ${{ github.event_name != 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Download results artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: results-json
+
+      - name: Check API credits
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 scripts/check_credits.py --results results.json
