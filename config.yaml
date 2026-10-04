@@ -42,7 +42,7 @@ targets:
   # ===== OpenAI（2026現行。temperature=0 を受ける chat 系を選定） =====
   - id: openai-4omini-naked
     label: "GPT-4o-mini / 素のAPI"
-    label_en: "GPT-4o-mini / Naked API"
+    label_en: "GPT-4o-mini / bare API"
     provider: openai
     model: gpt-4o-mini
     prompt_strength: low
@@ -51,7 +51,7 @@ targets:
 
   - id: openai-41mini-keyword
     label: "GPT-4.1-mini + 強化プロンプト + キーワードGR"
-    label_en: "GPT-4.1-mini + Hardened + Keyword GR"
+    label_en: "GPT-4.1-mini + hardened prompt + keyword filter"
     provider: openai
     model: gpt-4.1-mini
     prompt_strength: high
@@ -60,7 +60,7 @@ targets:
 
   - id: openai-41-llmgr
     label: "GPT-4.1 + 強化プロンプト + LLMガードレール"
-    label_en: "GPT-4.1 + Hardened + LLM guardrail"
+    label_en: "GPT-4.1 + hardened prompt + LLM guardrail"
     provider: openai
     model: gpt-4.1
     prompt_strength: high
@@ -69,7 +69,7 @@ targets:
 
   - id: openai-gpt56sol-naked
     label: "GPT-5.6 Sol / 素のAPI (OpenRouter)"
-    label_en: "GPT-5.6 Sol / Naked API (OpenRouter)"
+    label_en: "GPT-5.6 Sol / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -80,7 +80,7 @@ targets:
 
   - id: openai-gpt56terra-naked
     label: "GPT-5.6 Terra / 素のAPI (OpenRouter)"
-    label_en: "GPT-5.6 Terra / Naked API (OpenRouter)"
+    label_en: "GPT-5.6 Terra / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -91,7 +91,7 @@ targets:
 
   - id: openai-gpt56luna-naked
     label: "GPT-5.6 Luna / 素のAPI (OpenRouter)"
-    label_en: "GPT-5.6 Luna / Naked API (OpenRouter)"
+    label_en: "GPT-5.6 Luna / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -103,7 +103,7 @@ targets:
   # ===== Anthropic（Claude 4.x 系へ刷新＋Opusフラグシップ追加） =====
   - id: anthropic-haiku-keyword
     label: "Claude Haiku 4.5 + 強化プロンプト + キーワードGR"
-    label_en: "Claude Haiku 4.5 + Hardened + Keyword GR"
+    label_en: "Claude Haiku 4.5 + hardened prompt + keyword filter"
     provider: anthropic
     model: claude-haiku-4-5
     prompt_strength: high
@@ -112,7 +112,7 @@ targets:
 
   - id: anthropic-sonnet-llmgr
     label: "Claude Sonnet 4.6 + 強化プロンプト + LLMガードレール"
-    label_en: "Claude Sonnet 4.6 + Hardened + LLM guardrail"
+    label_en: "Claude Sonnet 4.6 + hardened prompt + LLM guardrail"
     provider: anthropic
     model: claude-sonnet-4-6
     prompt_strength: high
@@ -121,7 +121,7 @@ targets:
 
   - id: anthropic-opus-naked
     label: "Claude Opus 4.8 / 素のAPI"
-    label_en: "Claude Opus 4.8 / Naked API"
+    label_en: "Claude Opus 4.8 / bare API"
     provider: anthropic
     model: claude-opus-4-8
     prompt_strength: low
@@ -130,7 +130,7 @@ targets:
 
   - id: anthropic-fable-naked
     label: "Claude Fable 5 / 素のAPI"
-    label_en: "Claude Fable 5 / Naked API"
+    label_en: "Claude Fable 5 / bare API"
     provider: anthropic
     model: claude-fable-5
     prompt_strength: low
@@ -141,7 +141,7 @@ targets:
   # run_assessment.py の _no_sampling（"opus" 前方一致 / "sonnet-5"）で除外済み。
   - id: anthropic-opus5-llmgr
     label: "Claude Opus 5 + 強化プロンプト + LLMガードレール"
-    label_en: "Claude Opus 5 + Hardened + LLM guardrail"
+    label_en: "Claude Opus 5 + hardened prompt + LLM guardrail"
     provider: anthropic
     model: claude-opus-5
     prompt_strength: high
@@ -150,7 +150,7 @@ targets:
 
   - id: anthropic-sonnet5-llmgr
     label: "Claude Sonnet 5 + 強化プロンプト + LLMガードレール"
-    label_en: "Claude Sonnet 5 + Hardened + LLM guardrail"
+    label_en: "Claude Sonnet 5 + hardened prompt + LLM guardrail"
     provider: anthropic
     model: claude-sonnet-5
     prompt_strength: high
@@ -160,7 +160,7 @@ targets:
   # ===== Google Gemini（2.5 系へ刷新） =====
   - id: gemini-flash-naked
     label: "Gemini 2.5 Flash / 素のAPI"
-    label_en: "Gemini 2.5 Flash / Naked API"
+    label_en: "Gemini 2.5 Flash / bare API"
     provider: gemini
     model: gemini-2.5-flash
     prompt_strength: low
@@ -169,7 +169,7 @@ targets:
 
   - id: gemini-pro-keyword
     label: "Gemini 2.5 Pro + 強化プロンプト + キーワードGR"
-    label_en: "Gemini 2.5 Pro + Hardened + Keyword GR"
+    label_en: "Gemini 2.5 Pro + hardened prompt + keyword filter"
     provider: gemini
     model: gemini-2.5-pro
     prompt_strength: high
@@ -184,7 +184,7 @@ targets:
   # ===================================================================
   - id: gptoss-120b-naked
     label: "gpt-oss-120b / 素のAPI (OpenRouter)"
-    label_en: "gpt-oss-120b / Naked API (OpenRouter)"
+    label_en: "gpt-oss-120b / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -195,7 +195,7 @@ targets:
 
   - id: gptoss-20b-keyword
     label: "gpt-oss-20b + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "gpt-oss-20b + Hardened + Keyword GR (OpenRouter)"
+    label_en: "gpt-oss-20b + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -206,7 +206,7 @@ targets:
 
   - id: qwen3-235b-llmgr
     label: "Qwen3-235B + 強化プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "Qwen3-235B + Hardened + LLM guardrail (OpenRouter)"
+    label_en: "Qwen3-235B + hardened prompt + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -217,7 +217,7 @@ targets:
 
   - id: qwen3-max-keyword
     label: "Qwen3-Max + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "Qwen3-Max + Hardened + Keyword GR (OpenRouter)"
+    label_en: "Qwen3-Max + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -228,7 +228,7 @@ targets:
 
   - id: llama4-maverick-keyword
     label: "Llama 4 Maverick + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "Llama 4 Maverick + Hardened + Keyword GR (OpenRouter)"
+    label_en: "Llama 4 Maverick + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -239,7 +239,7 @@ targets:
 
   - id: llama4-scout-naked
     label: "Llama 4 Scout / 素のAPI (OpenRouter)"
-    label_en: "Llama 4 Scout / Naked API (OpenRouter)"
+    label_en: "Llama 4 Scout / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -250,7 +250,7 @@ targets:
 
   - id: deepseek-v3-naked
     label: "DeepSeek V3 / 素のAPI (OpenRouter)"
-    label_en: "DeepSeek V3 / Naked API (OpenRouter)"
+    label_en: "DeepSeek V3 / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -261,7 +261,7 @@ targets:
 
   - id: deepseek-v32-llmgr
     label: "DeepSeek V3.2 + 強化プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "DeepSeek V3.2 + Hardened + LLM guardrail (OpenRouter)"
+    label_en: "DeepSeek V3.2 + hardened prompt + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -272,7 +272,7 @@ targets:
 
   - id: mistral-medium-keyword
     label: "Mistral Medium 3.1 + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "Mistral Medium 3.1 + Hardened + Keyword GR (OpenRouter)"
+    label_en: "Mistral Medium 3.1 + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -283,7 +283,7 @@ targets:
 
   - id: mistral-large-llmgr
     label: "Mistral Large + 強化プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "Mistral Large + Hardened + LLM guardrail (OpenRouter)"
+    label_en: "Mistral Large + hardened prompt + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -296,7 +296,7 @@ targets:
   # 素のAPIでは突破多発の弱モデルに各ガードレールを付け、難読化への耐性を比較する。
   - id: llama4-scout-regex
     label: "Llama 4 Scout + 正規化フィルタGR (OpenRouter)"
-    label_en: "Llama 4 Scout + Regex-normalize GR (OpenRouter)"
+    label_en: "Llama 4 Scout + normalizing filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -307,7 +307,7 @@ targets:
 
   - id: gptoss-120b-regex
     label: "gpt-oss-120b + 正規化フィルタGR (OpenRouter)"
-    label_en: "gpt-oss-120b + Regex-normalize GR (OpenRouter)"
+    label_en: "gpt-oss-120b + normalizing filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -318,7 +318,7 @@ targets:
 
   - id: gpt-4omini-llamaguard
     label: "GPT-4o-mini + Llama Guard 分類器GR"
-    label_en: "GPT-4o-mini + Llama Guard classifier GR"
+    label_en: "GPT-4o-mini + Llama Guard classifier"
     provider: openai
     model: gpt-4o-mini
     prompt_strength: low
@@ -332,7 +332,7 @@ targets:
   # ===================================================================
   - id: openai-41mini-naked
     label: "GPT-4.1-mini / 素のAPI"
-    label_en: "GPT-4.1-mini / Naked API"
+    label_en: "GPT-4.1-mini / bare API"
     provider: openai
     model: gpt-4.1-mini
     prompt_strength: low
@@ -341,7 +341,7 @@ targets:
 
   - id: openai-41-naked
     label: "GPT-4.1 / 素のAPI"
-    label_en: "GPT-4.1 / Naked API"
+    label_en: "GPT-4.1 / bare API"
     provider: openai
     model: gpt-4.1
     prompt_strength: low
@@ -350,7 +350,7 @@ targets:
 
   - id: anthropic-haiku-naked
     label: "Claude Haiku 4.5 / 素のAPI"
-    label_en: "Claude Haiku 4.5 / Naked API"
+    label_en: "Claude Haiku 4.5 / bare API"
     provider: anthropic
     model: claude-haiku-4-5
     prompt_strength: low
@@ -359,7 +359,7 @@ targets:
 
   - id: anthropic-sonnet-naked
     label: "Claude Sonnet 4.6 / 素のAPI"
-    label_en: "Claude Sonnet 4.6 / Naked API"
+    label_en: "Claude Sonnet 4.6 / bare API"
     provider: anthropic
     model: claude-sonnet-4-6
     prompt_strength: low
@@ -368,7 +368,7 @@ targets:
 
   - id: anthropic-opus5-naked
     label: "Claude Opus 5 / 素のAPI"
-    label_en: "Claude Opus 5 / Naked API"
+    label_en: "Claude Opus 5 / bare API"
     provider: anthropic
     model: claude-opus-5
     prompt_strength: low
@@ -377,7 +377,7 @@ targets:
 
   - id: anthropic-sonnet5-naked
     label: "Claude Sonnet 5 / 素のAPI"
-    label_en: "Claude Sonnet 5 / Naked API"
+    label_en: "Claude Sonnet 5 / bare API"
     provider: anthropic
     model: claude-sonnet-5
     prompt_strength: low
@@ -386,7 +386,7 @@ targets:
 
   - id: gemini-pro-naked
     label: "Gemini 2.5 Pro / 素のAPI"
-    label_en: "Gemini 2.5 Pro / Naked API"
+    label_en: "Gemini 2.5 Pro / bare API"
     provider: gemini
     model: gemini-2.5-pro
     prompt_strength: low
@@ -395,7 +395,7 @@ targets:
 
   - id: gptoss-20b-naked
     label: "gpt-oss-20b / 素のAPI (OpenRouter)"
-    label_en: "gpt-oss-20b / Naked API (OpenRouter)"
+    label_en: "gpt-oss-20b / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -406,7 +406,7 @@ targets:
 
   - id: qwen3-235b-naked
     label: "Qwen3-235B / 素のAPI (OpenRouter)"
-    label_en: "Qwen3-235B / Naked API (OpenRouter)"
+    label_en: "Qwen3-235B / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -417,7 +417,7 @@ targets:
 
   - id: qwen3-max-naked
     label: "Qwen3-Max / 素のAPI (OpenRouter)"
-    label_en: "Qwen3-Max / Naked API (OpenRouter)"
+    label_en: "Qwen3-Max / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -428,7 +428,7 @@ targets:
 
   - id: llama4-maverick-naked
     label: "Llama 4 Maverick / 素のAPI (OpenRouter)"
-    label_en: "Llama 4 Maverick / Naked API (OpenRouter)"
+    label_en: "Llama 4 Maverick / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -439,7 +439,7 @@ targets:
 
   - id: deepseek-v32-naked
     label: "DeepSeek V3.2 / 素のAPI (OpenRouter)"
-    label_en: "DeepSeek V3.2 / Naked API (OpenRouter)"
+    label_en: "DeepSeek V3.2 / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -450,7 +450,7 @@ targets:
 
   - id: mistral-medium-naked
     label: "Mistral Medium 3.1 / 素のAPI (OpenRouter)"
-    label_en: "Mistral Medium 3.1 / Naked API (OpenRouter)"
+    label_en: "Mistral Medium 3.1 / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -461,7 +461,7 @@ targets:
 
   - id: mistral-large-naked
     label: "Mistral Large / 素のAPI (OpenRouter)"
-    label_en: "Mistral Large / Naked API (OpenRouter)"
+    label_en: "Mistral Large / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -477,7 +477,7 @@ targets:
   # ===================================================================
   - id: anthropic-fable-keyword
     label: "Claude Fable 5 + 強化プロンプト + キーワードGR"
-    label_en: "Claude Fable 5 + Hardened + Keyword GR"
+    label_en: "Claude Fable 5 + hardened prompt + keyword filter"
     provider: anthropic
     model: claude-fable-5
     prompt_strength: high
@@ -486,7 +486,7 @@ targets:
 
   - id: anthropic-fable-llmgr
     label: "Claude Fable 5 + 強化プロンプト + LLMガードレール"
-    label_en: "Claude Fable 5 + Hardened + LLM guardrail"
+    label_en: "Claude Fable 5 + hardened prompt + LLM guardrail"
     provider: anthropic
     model: claude-fable-5
     prompt_strength: high
@@ -495,7 +495,7 @@ targets:
 
   - id: openai-gpt56sol-keyword
     label: "GPT-5.6 Sol + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "GPT-5.6 Sol + Hardened + Keyword GR (OpenRouter)"
+    label_en: "GPT-5.6 Sol + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -506,7 +506,7 @@ targets:
 
   - id: openai-gpt56sol-llmgr
     label: "GPT-5.6 Sol + 強化プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "GPT-5.6 Sol + Hardened + LLM guardrail (OpenRouter)"
+    label_en: "GPT-5.6 Sol + hardened prompt + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -517,7 +517,7 @@ targets:
 
   - id: openai-gpt56terra-keyword
     label: "GPT-5.6 Terra + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "GPT-5.6 Terra + Hardened + Keyword GR (OpenRouter)"
+    label_en: "GPT-5.6 Terra + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -528,7 +528,7 @@ targets:
 
   - id: openai-gpt56terra-llmgr
     label: "GPT-5.6 Terra + 強化プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "GPT-5.6 Terra + Hardened + LLM guardrail (OpenRouter)"
+    label_en: "GPT-5.6 Terra + hardened prompt + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -539,7 +539,7 @@ targets:
 
   - id: openai-gpt56luna-keyword
     label: "GPT-5.6 Luna + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "GPT-5.6 Luna + Hardened + Keyword GR (OpenRouter)"
+    label_en: "GPT-5.6 Luna + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -550,7 +550,7 @@ targets:
 
   - id: openai-gpt56luna-llmgr
     label: "GPT-5.6 Luna + 強化プロンプト + LLMガードレール (OpenRouter)"
-    label_en: "GPT-5.6 Luna + Hardened + LLM guardrail (OpenRouter)"
+    label_en: "GPT-5.6 Luna + hardened prompt + LLM guardrail (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -568,7 +568,7 @@ targets:
   # ===================================================================
   - id: anthropic-opus55-naked
     label: "Claude Opus 5.5 / 素のAPI"
-    label_en: "Claude Opus 5.5 / Naked API"
+    label_en: "Claude Opus 5.5 / bare API"
     provider: anthropic
     model: claude-opus-5-5
     prompt_strength: low
@@ -577,7 +577,7 @@ targets:
 
   - id: anthropic-fable51-naked
     label: "Claude Fable 5.1 / 素のAPI"
-    label_en: "Claude Fable 5.1 / Naked API"
+    label_en: "Claude Fable 5.1 / bare API"
     provider: anthropic
     model: claude-fable-5-1
     prompt_strength: low
@@ -586,7 +586,7 @@ targets:
 
   - id: gemini-38flash-naked
     label: "Gemini 3.8 Flash / 素のAPI"
-    label_en: "Gemini 3.8 Flash / Naked API"
+    label_en: "Gemini 3.8 Flash / bare API"
     provider: gemini
     model: gemini-3.8-flash
     prompt_strength: low
@@ -595,7 +595,7 @@ targets:
 
   - id: qwen38max-naked
     label: "Qwen3.8 Max / 素のAPI (OpenRouter)"
-    label_en: "Qwen3.8 Max / Naked API (OpenRouter)"
+    label_en: "Qwen3.8 Max / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -609,7 +609,7 @@ targets:
   # ===================================================================
   - id: openrouter-gpt-6-1-sol-naked  # auto-added 2026-10-04 (OpenRouter released 2026-09-29)
     label: "GPT-6.1 Sol / 素のAPI (OpenRouter)"
-    label_en: "GPT-6.1 Sol / Naked API (OpenRouter)"
+    label_en: "GPT-6.1 Sol / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -620,7 +620,7 @@ targets:
 
   - id: openrouter-claude-sonnet-5-5-naked  # auto-added 2026-10-04 (OpenRouter released 2026-09-28)
     label: "Claude Sonnet 5.5 / 素のAPI (OpenRouter)"
-    label_en: "Claude Sonnet 5.5 / Naked API (OpenRouter)"
+    label_en: "Claude Sonnet 5.5 / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
@@ -631,7 +631,7 @@ targets:
 
   - id: openrouter-grok-4-7-naked  # auto-added 2026-10-04 (OpenRouter released 2026-09-21)
     label: "Grok 4.7 / 素のAPI (OpenRouter)"
-    label_en: "Grok 4.7 / Naked API (OpenRouter)"
+    label_en: "Grok 4.7 / bare API (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY

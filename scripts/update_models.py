@@ -99,7 +99,7 @@ def target_block(m, today=None) -> str:
         f"  - id: openrouter-{slug}-naked  # auto-added {today} (OpenRouter released "
         f"{datetime.fromtimestamp(int(m.get('created') or 0), timezone.utc).date().isoformat()})\n"
         f'    label: "{label} / 素のAPI (OpenRouter)"\n'
-        f'    label_en: "{label} / Naked API (OpenRouter)"\n'
+        f'    label_en: "{label} / bare API (OpenRouter)"\n'
         "    provider: openai_compatible\n"
         '    base_url: "https://openrouter.ai/api/v1"\n'
         "    api_key_env: OPENROUTER_API_KEY\n"

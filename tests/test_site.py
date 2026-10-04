@@ -241,7 +241,7 @@ def test_hero_states_how_many_combinations_were_tried():
     assert "2 構成 × 3 攻撃 × 2 変形 = 12 通り" in page
     assert "各 5 回" in page and "60 試行" in page
     assert "有効 56" in page and "API エラー 4" in page
-    assert "2 configs × 3 attacks × 2 transforms = 12 combinations" in page  # EN, switched by the i18n script
+    assert "2 setups × 3 attacks × 2 obfuscation styles = 12 combinations" in page  # EN, switched by the i18n script
 
 
 # ---------- 防御設定の公開（強化プロンプト・LLM ガードレール） ----------
@@ -297,7 +297,7 @@ def test_models_are_counted_once_and_grouped_by_family():
 def test_hero_explains_the_models_compared_by_family():
     page = render_page(_family_data())
     assert "比較したモデル：<b>10 モデル・8 系統</b>" in page
-    assert "Models compared: <b>10 models in 8 families</b>" in page
+    assert "Models compared: <b>10 models from 8 families</b>" in page
     assert "うち 1 モデルは API エラーで未計測" in page
     assert "Anthropic（Claude）" in page and "OpenAI（gpt-oss）" in page and "Mistral AI" in page
     assert "claude-opus-4-8" in page and "gpt-oss-20b" in page  # the list names every model
