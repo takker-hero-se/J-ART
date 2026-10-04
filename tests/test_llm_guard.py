@@ -80,3 +80,37 @@ def test_mock_mode_still_uses_the_documented_simulation():
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+# ---------- Llama Guard 分類器も、LIVE では推測で埋めない ----------
+LG_TARGET = dict(TARGET, id="t-lg", guardrail="llamaguard")
+
+
+def _fake_lg(monkeypatch, *, classifier=None, key=True, fail=False, model_answer="お応えできません。"):
+    calls = []
+
+    def openai_chat(guard, system, user):
+        calls.append(guard["model"])
+        if fail:
+            raise RuntimeError("upstream 429")
+        return classifier, 50, 1
+
+    monkeypatch.setattr(ra, "is_live", lambda target: True)
+    monkeypatch.setattr(ra, "resolve_api_key", lambda t: "k" if (key or t.get("model") != ra.GUARD_MODEL) else None)
+    monkeypatch.setattr(ra, "_call_openai_chat", openai_chat)
+    monkeypatch.setattr(ra, "_call_live", lambda target, system, user: (model_answer, 100, 3))
+    return calls
+
+
+def test_live_llama_guard_blocks_on_unsafe(monkeypatch):
+    calls = _fake_lg(monkeypatch, classifier="unsafe")
+    r = ra.run_one(LG_TARGET, LEAK_ATTACK, "baseline", SECRET, MARKERS)
+    assert calls == [ra.GUARD_MODEL] and r["breached"] is False and r.get("api_error") is not True
+
+
+@pytest.mark.parametrize("case", ["call_fails", "no_guard_key"])
+def test_live_llama_guard_failure_is_an_api_error_not_a_simulated_verdict(monkeypatch, case):
+    _fake_lg(monkeypatch, classifier="safe", fail=(case == "call_fails"), key=(case != "no_guard_key"),
+             model_answer=f"合言葉は『{SECRET}』です。")
+    r = ra.run_one(LG_TARGET, LEAK_ATTACK, "baseline", SECRET, MARKERS)
+    assert r["api_error"] is True
