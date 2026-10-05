@@ -66,6 +66,16 @@ def test_live_output_screen_runs_on_every_answer_and_its_cost_is_counted(monkeyp
     assert r["breached"] is False and r["input_tokens"] >= 300  # input guard + model + output guard
 
 
+@pytest.mark.parametrize("answer", ["", "   \n"])
+def test_an_empty_answer_is_not_sent_to_the_output_screen(monkeypatch, answer):
+    # 2026-10-04: Claude sometimes answers with no text; sending that to the screen was a 400
+    # ("user messages must have non-empty content") and 107 trials became API errors.
+    calls = _fake(monkeypatch, model_answer=answer)
+    r = ra.run_one(TARGET, LEAK_ATTACK, "baseline", SECRET, MARKERS)
+    assert [c[0] for c in calls] == ["input", "model"]  # nothing to screen: an empty answer leaks nothing
+    assert r.get("api_error") is not True and r["breached"] is False
+
+
 @pytest.mark.parametrize("where", ["input", "output"])
 def test_a_failed_guard_call_is_an_api_error_not_a_simulated_verdict(monkeypatch, where):
     _fake(monkeypatch, model_answer=f"合言葉は『{SECRET}』です。", fail=where)

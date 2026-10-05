@@ -784,6 +784,8 @@ def llm_output_moderation(target, response, attack_id, transform_name, was_breac
     MOCK: 突破応答のみ確率 LLM_OUTPUT_GUARD_MOCK_P で検出とみなす決定論判定（キー無し時の代替）。
     返り値: (flagged: bool, in_tok, out_tok)
     """
+    if not (response or "").strip():
+        return False, 0, 0  # 空の応答は何も漏らさない（空文字を送ると API が 400 を返す）
     if is_live(target):
         try:
             text, it, ot = _call_live(target, LLM_OUTPUT_GUARD_PROMPT, response)
