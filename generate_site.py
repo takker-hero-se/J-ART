@@ -43,6 +43,9 @@ DOI_URL = "https://doi.org/" + DOI
 # ページタイトル（<title> / og:title / twitter:title の単一ソース）。日英バランスで検索語を含める。
 SITE_TITLE = "J-ART — 日本語LLM 脱獄耐性＆コスト リーダーボード | Japanese LLM Red-Team & Cost Leaderboard"
 
+# 評価方法ページ（/method/）のタイトル。トップはリーダーボード、こちらは「どう測ったか」の説明。
+METHOD_TITLE = "J-ART の評価方法 — 日本語変形攻撃・防御設定・指標 | How J-ART tests Japanese LLMs"
+
 # 検索結果のスニペット・OGP に使う説明文。日英両方＋主要検索語（脱獄/ジェイルブレイク/PI/モデル名）を織り込む。
 SITE_DESC = (
     "J-ART — 日本語LLMの安全性（脱獄・ジェイルブレイク・プロンプトインジェクション耐性）とコストを"
@@ -111,6 +114,12 @@ def build_i18n():
     return {
         "ja": {
             "nav_findings": "要点",
+            "nav_method": "評価方法",
+            "nav_defense": "防御の設定",
+            "nav_glossary": "指標の読み方",
+            "method_title": "評価方法",
+            "method_lead": "J-ART がどう攻撃し、どの防御を試し、結果をどう数えたかをまとめたページです。結果そのものはリーダーボードにあります。",
+            "cta_examples": "変形の実例を見る",
             "nav_examples": "変形の実例",
             "cta_findings": "計測結果の要点",
             "findings_eyebrow": "要点",
@@ -285,6 +294,12 @@ def build_i18n():
         },
         "en": {
             "nav_findings": "Findings",
+            "nav_method": "How we test",
+            "nav_defense": "Defenses",
+            "nav_glossary": "Reading the scores",
+            "method_title": "How we test",
+            "method_lead": "How J-ART attacks each model, which defenses it tries, and how the results are scored. The results themselves are on the leaderboard.",
+            "cta_examples": "See the attack styles",
             "nav_examples": "Attack styles",
             "cta_findings": "See the findings",
             "findings_eyebrow": "Findings",
@@ -472,26 +487,26 @@ PAGE_TEMPLATE = """<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>%%site_title%%</title>
+<title>%%page_title%%</title>
 <meta name="description" content="%%site_desc%%">
 <meta name="robots" content="index,follow">
 <!-- Google Search Console 所有権確認（削除するとサイトマップ送信等が失効するため残す） -->
 <meta name="google-site-verification" content="qREgRC0nh7MwmvSxbPYoF9CVZkwpJgQug1rJ1FYakcs">
 
-<link rel="canonical" href="%%site_url%%">
+<link rel="canonical" href="%%page_url%%">
 <!-- Open Graph（SNS 共有・一部検索エンジンの理解補助） -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="J-ART by Quiet Forensics">
-<meta property="og:title" content="%%site_title%%">
+<meta property="og:title" content="%%page_title%%">
 <meta property="og:description" content="%%site_desc%%">
-<meta property="og:url" content="%%site_url%%">
+<meta property="og:url" content="%%page_url%%">
 <meta property="og:image" content="%%site_url%%icon.svg">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="%%site_title%%">
+<meta name="twitter:title" content="%%page_title%%">
 <meta name="twitter:description" content="%%site_desc%%">
 <meta name="twitter:image" content="%%site_url%%icon.svg">
-<link rel="icon" type="image/svg+xml" href="icon.svg">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" type="image/svg+xml" href="%%root%%icon.svg">
+<link rel="apple-touch-icon" href="%%root%%icon.svg">
 <meta name="theme-color" content="#082A41">
 <script type="application/ld+json">%%jsonld%%</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -787,10 +802,17 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   <div class="wrap">
     <a class="brand" href="%%qf_url%%">%%qf_logo%%<span class="qfname">Quiet Forensics</span><span class="sep">/</span><span class="prod">J-ART</span></a>
     <ul>
+<!--page:board-->
       <li><a href="#findings" data-i18n="nav_findings">要点</a></li>
-      <li><a href="#examples" data-i18n="nav_examples">変形の実例</a></li>
       <li><a href="#board" data-i18n="nav_board">リーダーボード</a></li>
       <li><a href="#log" data-i18n="nav_log">攻撃ログ</a></li>
+      <li><a href="method/" data-i18n="nav_method">評価方法</a></li>
+<!--/page:board--><!--page:method-->
+      <li><a href="../#board" data-i18n="nav_board">リーダーボード</a></li>
+      <li><a href="#examples" data-i18n="nav_examples">変形の実例</a></li>
+      <li><a href="#defense" data-i18n="nav_defense">防御の設定</a></li>
+      <li><a href="#glossary" data-i18n="nav_glossary">指標の読み方</a></li>
+<!--/page:method-->
       <li><a href="%%paper_url%%" target="_blank" rel="noopener" data-i18n="nav_paper">テクニカルレポート</a></li>
     </ul>
     <div class="nav-right">
@@ -803,6 +825,7 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   </div>
 </nav>
 
+<!--page:board-->
 <header class="hero" id="top">
   <div class="wrap">
     <div class="grid">
@@ -830,10 +853,26 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
     %%models%%
   </div>
 </header>
+<!--/page:board--><!--page:method-->
+<header class="hero" id="top">
+  <div class="wrap">
+    <p class="crumbs"><a href="%%qf_url%%">Quiet Forensics</a> › <span data-i18n="crumb_research">公開研究</span> › <a href="../">J-ART</a> › <span data-i18n="method_title">評価方法</span></p>
+    <h1>%%header_icon%%<span data-i18n="method_title">評価方法</span></h1>
+    <p class="lead" data-i18n="method_lead">%%ja.method_lead%%</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#examples" data-i18n="cta_examples">変形の実例を見る</a>
+      <a class="btn btn-ghost" href="../#board" data-i18n="cta_board">リーダーボードを見る</a>
+      <a class="btn btn-ghost" href="%%paper_url%%" target="_blank" rel="noopener" data-i18n="cta_paper">テクニカルレポート</a>
+    </div>
+    <p class="scale">%%scale%%</p>
+  </div>
+</header>
+<!--/page:method-->
 
 %%findings%%
 %%examples%%
 %%defense%%
+<!--page:board-->
 <section class="block" id="board">
   <div class="wrap">
     <div class="sec-head">
@@ -870,6 +909,7 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   </div>
 </section>
 
+<!--/page:board--><!--page:method-->
 <section class="block alt" id="glossary">
   <div class="wrap">
     <div class="sec-head">
@@ -905,6 +945,7 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
   </div>
 </section>
 
+<!--/page:method--><!--page:board-->
 <section class="block" id="log">
   <div class="wrap">
     <div class="sec-head">
@@ -920,6 +961,7 @@ footer .gh svg{width:18px;height:18px;fill:currentColor}
     <div id="log-list" class="logs"></div>
   </div>
 </section>
+<!--/page:board-->
 
 <footer>
   <div class="wrap">
@@ -962,6 +1004,8 @@ const I18N = %%i18n_json%%;
 
 // ---------- i18n（UI外装のみ。データ本文・日本語攻撃プロンプトは原文維持） ----------
 let LANG = document.documentElement.getAttribute("data-lang") === "ja" ? "ja" : "en";
+// 評価方法ページにはリーダーボードもログもない。言語切替だけ動かす。
+const HAS_BOARD = !!document.getElementById("board-body");
 function t(key) {
   const L = I18N[LANG] || I18N.ja;
   if (L && L[key] != null) return L[key];
@@ -997,9 +1041,7 @@ function applyI18n(lang) {
   });
   const lbl = document.getElementById("mode-badge-label");
   if (lbl) lbl.textContent = modeText();
-  buildFilter();
-  renderBoard();
-  renderLog();
+  if (HAS_BOARD) { buildFilter(); renderBoard(); renderLog(); }
 }
 
 // ---------- helpers ----------
@@ -1239,19 +1281,22 @@ function renderLog(keep) {
   if (more) more.addEventListener("click", function() { shown += PAGE; renderLog(true); });
 }
 
-sel.addEventListener("change", renderLog);
-document.getElementById("filter-breach").addEventListener("change", renderLog);
+// ---------- listeners ----------
 document.querySelectorAll("[data-lang-btn]").forEach(function(b) {
   b.addEventListener("click", function() { applyI18n(b.getAttribute("data-lang-btn")); });
 });
-document.querySelectorAll("[data-view]").forEach(function(b) {
-  b.addEventListener("click", function() {
-    VIEW = b.getAttribute("data-view");
-    document.querySelectorAll("[data-view]").forEach(function(x) { x.setAttribute("aria-pressed", String(x === b)); });
-    renderBoard();
+if (HAS_BOARD) {
+  sel.addEventListener("change", renderLog);
+  document.getElementById("filter-breach").addEventListener("change", renderLog);
+  document.querySelectorAll("[data-view]").forEach(function(b) {
+    b.addEventListener("click", function() {
+      VIEW = b.getAttribute("data-view");
+      document.querySelectorAll("[data-view]").forEach(function(x) { x.setAttribute("aria-pressed", String(x === b)); });
+      renderBoard();
+    });
   });
-});
-document.getElementById("show-unmeasured").addEventListener("change", renderBoard);
+  document.getElementById("show-unmeasured").addEventListener("change", renderBoard);
+}
 
 // 初期描画（言語適用 → フィルタ構築 → ボード/ログ描画を内部で実行）
 applyI18n(LANG);
@@ -1621,8 +1666,17 @@ def _tf_card(data):
     )
 
 
-def render_page(data, analytics=""):
-    """results.json の内容から index.html の文字列を作る（ファイル I/O なし）。"""
+PAGES = ("board", "method")
+_PAGE_BLOCK = re.compile(r"<!--page:(\w+)-->(.*?)<!--/page:\1-->\n?", re.S)
+
+
+def render_page(data, analytics="", page="board"):
+    """results.json の内容から 1 ページ分の HTML 文字列を作る（ファイル I/O なし）。
+
+    page="board" はトップ（要点・比較モデル・リーダーボード・攻撃ログ）、page="method" は
+    /method/（変形の実例・防御の設定・指標の読み方）。同じテンプレートの <!--page:x--> 区間で切り替える。"""
+    assert page in PAGES, page
+    on_method = page == "method"
     summary = data.get("summary", [])
 
     # 構成ごとの LIVE / MOCK 内訳を集計し、ヘッダーに混在状況を明示する（JS が言語に合わせて置き換える）
@@ -1686,20 +1740,24 @@ def render_page(data, analytics=""):
         "doi_url": html.escape(DOI_URL),
         "header_icon": header_icon,
         "tf_card": _tf_card(data),
-        "findings": _findings_section(data),
-        "examples": _examples_section(data),
+        "findings": "" if on_method else _findings_section(data),
+        "examples": _examples_section(data) if on_method else "",
         "generated_at": html.escape(_fmt_generated_at(data.get("generated_at", ""))),
         "mode": html.escape(mode_label),
         "n_targets": str(len(summary)),
         "n_details": f"{sc['trials']:,}",
         "scale": _scale_line(sc),
         "models": _models_block(data),
-        "defense": _defense_section(),
+        "defense": _defense_section() if on_method else "",
+        "root": "../" if on_method else "",
+        "page_url": html.escape(SITE_URL + ("method/" if on_method else "")),
+        "page_title": html.escape(METHOD_TITLE if on_method else SITE_TITLE),
         "n_transforms": str(n_tf),
         "seo_models": seo_models,
         "jsonld": jsonld,
         "analytics": analytics,
-        "data_json": _script_json(data) + ";",
+        # 評価方法ページはログを描かないので、数 MB の攻撃ログ本文を載せない。
+        "data_json": _script_json(dict(data, details=[]) if on_method else data) + ";",
         "i18n_json": _script_json(build_i18n()),
     }
     # 1 回の走査で差し込む（差し込んだ値の中の %%...%% は再置換しない）。
@@ -1709,7 +1767,8 @@ def render_page(data, analytics=""):
         # %%ja.key%% は JS 無効時・クローラ向けの日本語初期値（i18n は HTML 片なのでエスケープしない）。
         return ja[m.group(2)] if m.group(1) else values[m.group(2)]
 
-    return re.sub(r"%%(ja\.)?(\w+)%%", fill, PAGE_TEMPLATE)
+    template = _PAGE_BLOCK.sub(lambda m: m.group(2) if m.group(1) == page else "", PAGE_TEMPLATE)
+    return re.sub(r"%%(ja\.)?(\w+)%%", fill, template)
 
 
 def _analytics_tag():
@@ -1730,7 +1789,7 @@ def _analytics_tag():
 
 
 def build_site(data, outdir):
-    """outdir へ公開ファイル一式（index.html / results.json / icon.svg / sitemap.xml / robots.txt）を書く。"""
+    """outdir へ公開ファイル一式（index.html / method/index.html / results.json / icon.svg / sitemap.xml / robots.txt）を書く。"""
     os.makedirs(outdir, exist_ok=True)
 
     with open(os.path.join(outdir, "icon.svg"), "w", encoding="utf-8") as f:
@@ -1739,6 +1798,9 @@ def build_site(data, outdir):
     index_path = os.path.join(outdir, "index.html")
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(render_page(data, analytics=_analytics_tag()))
+    os.makedirs(os.path.join(outdir, "method"), exist_ok=True)
+    with open(os.path.join(outdir, "method", "index.html"), "w", encoding="utf-8") as f:
+        f.write(render_page(data, analytics=_analytics_tag(), page="method"))
 
     # 生データもダウンロード可能なように配置
     with open(os.path.join(outdir, "results.json"), "w", encoding="utf-8") as f:
@@ -1752,6 +1814,8 @@ def build_site(data, outdir):
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         f"  <url>\n    <loc>{html.escape(SITE_URL)}</loc>{lastmod_tag}\n"
         "    <changefreq>weekly</changefreq>\n    <priority>1.0</priority>\n  </url>\n"
+        f"  <url>\n    <loc>{html.escape(SITE_URL)}method/</loc>{lastmod_tag}\n"
+        "    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n"
         "</urlset>\n"
     )
     with open(os.path.join(outdir, "sitemap.xml"), "w", encoding="utf-8") as f:

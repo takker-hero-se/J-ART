@@ -186,7 +186,7 @@ def test_transform_examples_show_each_wrapper_with_the_core_masked():
     ]
     ex = transform_examples(d)
     assert [e[0] for e in ex] == ["baseline", "gyaru", "base64_wrap"]
-    page = render_page(d)
+    page = render_page(d, page="method")
     assert 'id="examples"' in page
     assert "gyaru 前置き" in page and "&lt;&lt;CORE&gt;&gt;" not in page and "<<CORE>>" not in page.split("<script>")[1].split("</script>")[0]
 
@@ -248,7 +248,7 @@ def test_hero_states_how_many_combinations_were_tried():
 
 def test_defense_settings_are_published_from_the_assessment_code():
     import run_assessment as ra
-    page = render_page(_data())
+    page = render_page(_data(), page="method")
     hardened = ra.build_system_prompt({"prompt_strength": "high"}, generate_site.CANARY_MASK, "")
     for line in hardened.splitlines():
         if line.startswith("- "):
@@ -259,7 +259,7 @@ def test_defense_settings_are_published_from_the_assessment_code():
 
 def test_output_guard_prompt_is_published_and_the_old_simulation_is_disclosed():
     import run_assessment as ra
-    page = render_page(_data())
+    page = render_page(_data(), page="method")
     assert html.escape(ra.LLM_OUTPUT_GUARD_PROMPT) in page
     assert f"{round(ra.LLM_OUTPUT_GUARD_MOCK_P * 100)}%" in page  # runs before the change were simulated
     assert "シミュレーション" in page and "simulation" in page
@@ -306,3 +306,56 @@ def test_hero_explains_the_models_compared_by_family():
 def test_new_vendor_families_are_named():
     fams = generate_site.model_families(_data(summary=[_row("x", model="x-ai/grok-4.7"), _row("z", model="z-ai/glm-5.3")]))
     assert {f["key"] for f in fams} == {"xai", "zai"}
+
+
+# ---------- 2 ページ構成: トップ = リーダーボード / method = 評価方法 ----------
+
+def _ids(page):
+    return set(re.findall(r'<section[^>]* id="(\w+)"', page))
+
+
+def test_top_page_holds_results_and_method_page_holds_the_explanations():
+    top = render_page(_findings_data())
+    method = render_page(_findings_data(), page="method")
+    assert {"findings", "board", "log"} <= _ids(top)
+    assert not {"examples", "defense", "glossary"} & _ids(top)
+    assert {"examples", "defense", "glossary"} <= _ids(method)
+    assert not {"findings", "board", "log"} & _ids(method)
+
+
+def test_pages_link_to_each_other_and_resolve_shared_files_from_their_folder():
+    top = render_page(_data())
+    method = render_page(_data(), page="method")
+    assert 'href="method/"' in top and 'href="#board"' in top
+    assert 'href="../#board"' in method and 'href="#examples"' in method
+    assert 'href="../icon.svg"' in method and 'href="icon.svg"' in top
+
+
+def test_method_page_has_its_own_canonical_title_and_no_attack_log_payload():
+    d = _data()
+    d["details"][0]["response_excerpt"] = "ログ本文マーカー"
+    method = render_page(d, page="method")
+    assert '<link rel="canonical" href="https://jart.quietforensics.com/method/">' in method
+    assert generate_site.METHOD_TITLE in method
+    assert "ログ本文マーカー" not in method and "ログ本文マーカー" in render_page(d)  # the log data stays on the top page
+    ja, en = build_i18n()["ja"], build_i18n()["en"]
+    assert ja["nav_method"] and en["nav_method"]
+
+
+def test_method_page_script_does_not_touch_missing_board_elements():
+    method = render_page(_data(), page="method")
+    js = method.split("const DATA")[1]
+    assert "HAS_BOARD" in js
+    # every board-only listener sits behind the guard
+    tail = js[js.index("// ---------- listeners"):]
+    assert tail.index("if (HAS_BOARD)") < tail.index('getElementById("filter-breach")')
+
+
+def test_build_site_writes_the_method_page_and_lists_both_urls_in_the_sitemap():
+    with tempfile.TemporaryDirectory() as out:
+        build_site(_data(), out)
+        assert os.path.exists(os.path.join(out, "method", "index.html"))
+        with open(os.path.join(out, "sitemap.xml"), encoding="utf-8") as f:
+            sm = f.read()
+        assert "<loc>https://jart.quietforensics.com/</loc>" in sm
+        assert "<loc>https://jart.quietforensics.com/method/</loc>" in sm
