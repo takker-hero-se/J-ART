@@ -640,6 +640,39 @@ targets:
     guardrail: none
     rag: true
 
+  - id: openrouter-claude-haiku-5-5-naked  # auto-added 2026-10-10 (OpenRouter released 2026-10-07)
+    label: "Claude Haiku 5.5 / 素のAPI (OpenRouter)"
+    label_en: "Claude Haiku 5.5 / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "anthropic/claude-haiku-5.5"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-mistral-large-4-0-naked  # auto-added 2026-10-10 (OpenRouter released 2026-10-06)
+    label: "Mistral Large 4 / 素のAPI (OpenRouter)"
+    label_en: "Mistral Large 4 / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "mistralai/mistral-large-4-0"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-gemini-nano-banana-2-1-naked  # auto-added 2026-10-10 (OpenRouter released 2026-10-06)
+    label: "Nano Banana 2.1 / 素のAPI (OpenRouter)"
+    label_en: "Nano Banana 2.1 / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "google/gemini-nano-banana-2.1"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)
