@@ -739,6 +739,28 @@ targets:
     guardrail: none
     rag: true
 
+  - id: openrouter-glm-5-3-flashx-legal-naked  # auto-added 2026-11-07 (OpenRouter released 2026-11-02)
+    label: "GLM 5.3 FlashX Legal / 素のAPI (OpenRouter)"
+    label_en: "GLM 5.3 FlashX Legal / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "z-ai/glm-5.3-flashx-legal"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-gpt-6-1-terra-pro-naked  # auto-added 2026-11-07 (OpenRouter released 2026-10-26)
+    label: "GPT-6.1 Terra Pro / 素のAPI (OpenRouter)"
+    label_en: "GPT-6.1 Terra Pro / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-6.1-terra-pro"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)
