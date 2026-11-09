@@ -44,7 +44,6 @@ schedule via GitHub Actions and auto-publishes results to GitHub Pages.
 | `generate_site.py` | Builds a sortable ranking table + attack logs `index.html` from `results.json` |
 | `.github/workflows/eval.yml` | cron (weekly Mon) + manual + config-file-push → evaluate → build site → auto-deploy to GitHub Pages |
 | `requirements.txt` | Dependencies |
-| `paper/technical-report.md` | Preprint technical report (methodology, results, limitations, ethics) |
 | `assets/icon.svg` | Brand icon (shield = resilience / reticle = adversarial red team / red dot = bullseye), embedded into the site by `generate_site.py` |
 
 ## Run locally
@@ -105,8 +104,9 @@ runs consistently in MOCK mode. Each model's defense rate is reported with a
 
 ## Technical report / Citation
 
-The methodology, results, limitations, and ethics are written up in
-[paper/technical-report.md](paper/technical-report.md) (preprint, v0.1).
+The methodology, results, limitations, and ethics are written up in the technical
+report, archived on Zenodo (English and Japanese): <https://doi.org/10.5281/zenodo.20676879>
+(concept DOI, always resolves to the latest version).
 
 This repository is archived on Zenodo with a DOI. For citation, use the
 **concept DOI (always resolves to the latest version) `10.5281/zenodo.20676879`**,

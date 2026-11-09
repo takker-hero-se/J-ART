@@ -75,7 +75,7 @@ LLMジャッジ不要のため低コスト・再現可能。MOCKモードでも�
 
 ## テクニカルレポート / 引用 (Citation)
 
-手法・結果・限界・倫理を [paper/technical-report.md](paper/technical-report.md) にまとめています（プレプリント, v0.1）。
+手法・結果・限界・倫理をまとめたテクニカルレポート（英語・日本語）は Zenodo にアーカイブしています。<https://doi.org/10.5281/zenodo.20676879>（concept DOI、常に最新版を指す）
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.20676879.svg)](https://doi.org/10.5281/zenodo.20676879)
 

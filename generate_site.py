@@ -35,9 +35,10 @@ SITE_URL = "https://jart.quietforensics.com/"
 # J-ART は Quiet Forensics の公開研究として掲載する。ヘッダーのロゴとフッターの戻り先。
 QF_URL = "https://quietforensics.com/"
 
-# テクニカルレポートと引用先（concept DOI は常に最新版を指す）。
-PAPER_URL = REPO_URL + "/blob/main/paper/technical-report.md"
+# テクニカルレポートと引用先。論文ソースは research-papers リポジトリへ移動したため、
+# 公開リンクは Zenodo の concept DOI（常に最新版を指し、v0.2.0 までの版に paper/ を同梱）に向ける。
 DOI = "10.5281/zenodo.20676879"
+PAPER_URL = "https://doi.org/" + DOI
 DOI_URL = "https://doi.org/" + DOI
 
 # ページタイトル（<title> / og:title / twitter:title の単一ソース）。日英バランスで検索語を含める。
