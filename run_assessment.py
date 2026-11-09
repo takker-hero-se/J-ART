@@ -67,6 +67,7 @@ PRICING = {
     # Qwen3 (Alibaba)
     "qwen/qwen3-235b-a22b-2507":              {"in": 0.09, "out": 0.10},
     "qwen/qwen3-max":                         {"in": 0.78, "out": 3.90},
+    "qwen/qwen3.8-max":                       {"in": 2.00, "out": 6.00},
     # Llama 4 (Meta)
     "meta-llama/llama-4-maverick":            {"in": 0.15, "out": 0.60},
     "meta-llama/llama-4-scout":               {"in": 0.10, "out": 0.30},
@@ -494,7 +495,7 @@ PROVIDER_ROBUSTNESS = {  # MOCKでのモデル自体の防御力補正（大型�
     "gemini-2.5-flash": 0.02, "gemini-2.5-pro": 0.14,
     # OSS（OpenAI互換経由）。大型ほど高め、軽量ほど低めに補正。
     "openai/gpt-oss-120b": 0.06, "openai/gpt-oss-20b": -0.04,
-    "qwen/qwen3-235b-a22b-2507": 0.08, "qwen/qwen3-max": 0.12,
+    "qwen/qwen3-235b-a22b-2507": 0.08, "qwen/qwen3-max": 0.12, "qwen/qwen3.8-max": 0.12,
     "meta-llama/llama-4-maverick": 0.04, "meta-llama/llama-4-scout": -0.02,
     "deepseek/deepseek-chat": 0.06, "deepseek/deepseek-v3.2": 0.10,
     "mistralai/mistral-medium-3.1": 0.02, "mistralai/mistral-large-2512": 0.06,

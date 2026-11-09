@@ -215,13 +215,13 @@ targets:
     guardrail: llm
     rag: true
 
-  - id: qwen3-max-keyword
-    label: "Qwen3-Max + 強化プロンプト + キーワードGR (OpenRouter)"
-    label_en: "Qwen3-Max + hardened prompt + keyword filter (OpenRouter)"
+  - id: qwen38-max-keyword
+    label: "Qwen3.8-Max + 強化プロンプト + キーワードGR (OpenRouter)"
+    label_en: "Qwen3.8-Max + hardened prompt + keyword filter (OpenRouter)"
     provider: openai_compatible
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
-    model: "qwen/qwen3-max"
+    model: "qwen/qwen3.8-max"
     prompt_strength: high
     guardrail: keyword
     rag: true
@@ -411,17 +411,6 @@ targets:
     base_url: "https://openrouter.ai/api/v1"
     api_key_env: OPENROUTER_API_KEY
     model: "qwen/qwen3-235b-a22b-2507"
-    prompt_strength: low
-    guardrail: none
-    rag: true
-
-  - id: qwen3-max-naked
-    label: "Qwen3-Max / 素のAPI (OpenRouter)"
-    label_en: "Qwen3-Max / bare API (OpenRouter)"
-    provider: openai_compatible
-    base_url: "https://openrouter.ai/api/v1"
-    api_key_env: OPENROUTER_API_KEY
-    model: "qwen/qwen3-max"
     prompt_strength: low
     guardrail: none
     rag: true

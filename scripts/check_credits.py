@@ -24,7 +24,7 @@ TOP_UP = {
     "openrouter": ("OpenRouter", "https://openrouter.ai/settings/credits"),
     "google": ("Google AI (Gemini)", "https://aistudio.google.com/apikey"),
 }
-_CREDIT = re.compile(r"credit balance is too low|no credits remaining|insufficient[_ ]quota|insufficient credits|"
+_CREDIT = re.compile(r"credit balance is too low|no credits remaining|insufficient[_ ]quota|insufficient credits|would exceed your available credits|"
                      r"requires more credits|exceeded your current quota|billing", re.I)
 _ACCOUNT = {"anthropic": "anthropic", "openai": "openai", "openai_compatible": "openrouter", "gemini": "google"}
 
