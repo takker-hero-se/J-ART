@@ -169,6 +169,9 @@ jobs:
 
       - name: Post weekly summary to X
         if: ${{ github.event_name != 'push' }}
+        # 投稿の失敗（トークン失効など）で deploy ジョブを失敗扱いにしない。
+        # サイトの公開は前のステップで完了しており、X は付随的な通知にすぎない。
+        continue-on-error: true
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
