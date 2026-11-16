@@ -573,6 +573,15 @@ targets:
     guardrail: none
     rag: true
 
+  - id: anthropic-fable52-naked
+    label: "Claude Fable 5.2 / 素のAPI"
+    label_en: "Claude Fable 5.2 / bare API"
+    provider: anthropic
+    model: claude-fable-5-2
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
   - id: gemini-38flash-naked
     label: "Gemini 3.8 Flash / 素のAPI"
     label_en: "Gemini 3.8 Flash / bare API"

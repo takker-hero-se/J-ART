@@ -59,7 +59,7 @@ def test_refusal_is_a_real_defence(monkeypatch):
     assert text == ""
 
 
-@pytest.mark.parametrize("model", ["claude-opus-5-5", "claude-fable-5-1"])
+@pytest.mark.parametrize("model", ["claude-opus-5-5", "claude-fable-5-1", "claude-fable-5-2"])
 def test_new_models_get_no_sampling_parameters_and_no_fallback(monkeypatch, model):
     sent = _fake_anthropic(monkeypatch, text="ok", stop_reason="end_turn")
     run_assessment._call_anthropic({"model": model}, "sys", "user")
