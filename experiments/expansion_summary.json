@@ -944,5 +944,199 @@
    ],
    "excludes_zero": false
   }
+ },
+ "paired_sensitivity": {
+  "scout|regex-none|compat_forms": {
+   "diff": 18.2,
+   "ci": [
+    0.0,
+    45.5
+   ],
+   "excludes_zero": false
+  },
+  "4omini|regex-none|compat_forms": {
+   "diff": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|regex-none|compat_forms": {
+   "diff": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "scout|skeleton-regex|compat_forms": {
+   "diff": 36.4,
+   "ci": [
+    9.1,
+    63.6
+   ],
+   "excludes_zero": true
+  },
+  "4omini|skeleton-regex|compat_forms": {
+   "diff": 9.1,
+   "ci": [
+    0.0,
+    27.3
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|skeleton-regex|compat_forms": {
+   "diff": 18.2,
+   "ci": [
+    0.0,
+    45.5
+   ],
+   "excludes_zero": false
+  },
+  "scout|skeleton-none|compat_forms": {
+   "diff": 54.5,
+   "ci": [
+    27.3,
+    81.8
+   ],
+   "excludes_zero": true
+  },
+  "4omini|skeleton-none|compat_forms": {
+   "diff": 9.1,
+   "ci": [
+    0.0,
+    27.3
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|skeleton-none|compat_forms": {
+   "diff": 18.2,
+   "ci": [
+    0.0,
+    45.5
+   ],
+   "excludes_zero": false
+  },
+  "scout|llamaguard-none|compat_forms": {
+   "diff": 27.3,
+   "ci": [
+    0.0,
+    54.5
+   ],
+   "excludes_zero": false
+  },
+  "4omini|llamaguard-none|compat_forms": {
+   "diff": 12.1,
+   "ci": [
+    0.0,
+    30.3
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|llamaguard-none|compat_forms": {
+   "diff": 9.1,
+   "ci": [
+    0.0,
+    27.3
+   ],
+   "excludes_zero": false
+  },
+  "scout|regex-none|variant_forms": {
+   "diff": -3.0,
+   "ci": [
+    -9.1,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "4omini|regex-none|variant_forms": {
+   "diff": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|regex-none|variant_forms": {
+   "diff": -3.0,
+   "ci": [
+    -9.1,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "scout|skeleton-regex|variant_forms": {
+   "diff": 42.4,
+   "ci": [
+    15.2,
+    69.7
+   ],
+   "excludes_zero": true
+  },
+  "4omini|skeleton-regex|variant_forms": {
+   "diff": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|skeleton-regex|variant_forms": {
+   "diff": 12.1,
+   "ci": [
+    0.0,
+    30.3
+   ],
+   "excludes_zero": false
+  },
+  "scout|skeleton-none|variant_forms": {
+   "diff": 39.4,
+   "ci": [
+    12.1,
+    66.7
+   ],
+   "excludes_zero": true
+  },
+  "4omini|skeleton-none|variant_forms": {
+   "diff": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|skeleton-none|variant_forms": {
+   "diff": 9.1,
+   "ci": [
+    0.0,
+    27.3
+   ],
+   "excludes_zero": false
+  },
+  "scout|llamaguard-none|variant_forms": {
+   "diff": 9.1,
+   "ci": [
+    -6.1,
+    30.3
+   ],
+   "excludes_zero": false
+  },
+  "4omini|llamaguard-none|variant_forms": {
+   "diff": 0.0,
+   "ci": [
+    0.0,
+    0.0
+   ],
+   "excludes_zero": false
+  },
+  "gpt41|llamaguard-none|variant_forms": {
+   "diff": 3.0,
+   "ci": [
+    0.0,
+    9.1
+   ],
+   "excludes_zero": false
+  }
  }
 }

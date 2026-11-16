@@ -87,8 +87,46 @@ def main():
                 diffs["%s|%s-%s|%s" % (model, a, b, t)] = {"diff": round(diff, 1), "ci": [round(lo, 1), round(hi, 1)],
                                                          "excludes_zero": bool(lo > 0 or hi < 0)}
             print("%-14s %-17s %s" % (t, "%s - %s" % (a, b), "   ".join(row)))
+    # 感度分析：各群は同じ 11 攻撃を共有するので、攻撃ごとに対応づけて復元抽出する。
+    # 結果を見た後に加えた解析であり、有意性の判定には使わない。
+    import random
+    by_attack = {}
+    for d in data["details"]:
+        _, model, guard = d["target_id"].split("-", 2)
+        by_attack[(model, guard, d["transformation"], d["attack_id"])] = (
+            d["breaches"], d["trials"] - d.get("api_errors", 0))
+    attacks = sorted({k[3] for k in by_attack})
+    rng = random.Random(20260614)
+
+    def paired(model, a, b, t, n_boot=3000):
+        pa = [by_attack[(model, a, t, x)] for x in attacks]
+        pb = [by_attack[(model, b, t, x)] for x in attacks]
+
+        def diff(idx):
+            ba = sum(pa[i][0] for i in idx)
+            na = sum(pa[i][1] for i in idx)
+            bb = sum(pb[i][0] for i in idx)
+            nb = sum(pb[i][1] for i in idx)
+            return ((1 - ba / na) - (1 - bb / nb)) * 100.0
+        ds = sorted(diff([rng.randrange(len(attacks)) for _ in attacks]) for _ in range(n_boot))
+        return diff(range(len(attacks))), ds[int(0.025 * n_boot)], ds[int(0.975 * n_boot) - 1]
+
+    print("\n== 感度分析：攻撃ごとに対応づけた復元抽出（防御率の差、ポイント）==")
+    paired_out, n_ex = {}, 0
+    for t in ("compat_forms", "variant_forms"):
+        for a, b in (("regex", "none"), ("skeleton", "regex"), ("skeleton", "none"), ("llamaguard", "none")):
+            for model in MODELS:
+                diff, lo, hi = paired(model, a, b, t)
+                ex = bool(lo > 0 or hi < 0)
+                n_ex += ex
+                paired_out["%s|%s-%s|%s" % (model, a, b, t)] = {"diff": round(diff, 1),
+                                                              "ci": [round(lo, 1), round(hi, 1)],
+                                                              "excludes_zero": ex}
+                if ex:
+                    print("%-14s %-17s %-7s %+5.1f [%+5.1f,%+5.1f]" % (t, "%s - %s" % (a, b), model, diff, lo, hi))
+    print("ゼロを含まない対比: %d / %d" % (n_ex, len(paired_out)))
     with open(os.path.join(HERE, "expansion_summary.json"), "w", encoding="utf-8", newline="\n") as f:
-        json.dump({"cells": out, "diffs": diffs}, f, ensure_ascii=False, indent=1)
+        json.dump({"cells": out, "diffs": diffs, "paired_sensitivity": paired_out}, f, ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
