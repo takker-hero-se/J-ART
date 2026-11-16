@@ -18,7 +18,7 @@ except Exception:
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
-from run_assessment import wilson_ci  # noqa: E402
+from run_assessment import bootstrap_diff_ci, wilson_ci  # noqa: E402
 
 MODELS = ["scout", "4omini", "gpt41"]
 GUARDS = ["none", "keyword", "regex", "skeleton", "llamaguard"]
@@ -70,8 +70,25 @@ def main():
                                                        "breaches": a["breaches"], "n": a["n"],
                                                        "excluded": a["errors"]}
             print("%-11s" % guard + "".join(cells))
+    # 構成間の差（防御率の差、ポイント）。セル（攻撃）単位で復元抽出するクラスタ頑健 95% CI。
+    cells = collections.defaultdict(list)
+    for d in data["details"]:
+        _, model, guard = d["target_id"].split("-", 2)
+        cells[(model, guard, d["transformation"])].append((d["breaches"], d["trials"] - d.get("api_errors", 0)))
+    print("\n== 防御率の差（ポイント）[クラスタ頑健 95% CI]、* はゼロを含まない ==")
+    diffs = {}
+    for t in ("compat_forms", "variant_forms"):
+        for a, b in (("regex", "none"), ("skeleton", "regex"), ("skeleton", "none"), ("llamaguard", "none")):
+            row = []
+            for model in MODELS:
+                diff, lo, hi = bootstrap_diff_ci(cells[(model, a, t)], cells[(model, b, t)])
+                sig = "*" if (lo > 0 or hi < 0) else " "
+                row.append("%s %+5.1f [%+5.1f,%+5.1f]%s" % (model, diff, lo, hi, sig))
+                diffs["%s|%s-%s|%s" % (model, a, b, t)] = {"diff": round(diff, 1), "ci": [round(lo, 1), round(hi, 1)],
+                                                         "excludes_zero": bool(lo > 0 or hi < 0)}
+            print("%-14s %-17s %s" % (t, "%s - %s" % (a, b), "   ".join(row)))
     with open(os.path.join(HERE, "expansion_summary.json"), "w", encoding="utf-8", newline="\n") as f:
-        json.dump(out, f, ensure_ascii=False, indent=1)
+        json.dump({"cells": out, "diffs": diffs}, f, ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":
