@@ -91,6 +91,40 @@ Keys are read from the process environment (the harness does not auto-load
 `.env`). Export them first, e.g. `set -a; . ./.env; set +a`, or pass them inline.
 Targets whose key is absent are evaluated in MOCK and labeled `mode=MOCK`.
 
+## Transform expansion (2026-11): NFKC-reversible vs. NFKC-resistant Japanese rewrites
+
+Nine transforms were added to `run_assessment.py`. They rewrite kana and kanji only and never touch
+ASCII, so the markers and the canary stay intact for the lexical judge.
+
+| Transform | What it rewrites | Undone by NFKC |
+|---|---|---|
+| `halfwidth_kana` | katakana to half-width kana | yes |
+| `dakuten_split` | voiced kana to base + combining mark (U+3099 / U+309A) | yes |
+| `kanji_compat` | kanji to Kangxi radicals / CJK compatibility ideographs | yes |
+| `compat_forms` | the three above combined | yes |
+| `kana_swap` | hiragana and katakana exchanged | no |
+| `kana_homoglyph` | katakana and look-alike kanji exchanged (ロ/口, カ/力, ...) | no |
+| `kanji_variant` | Japanese forms to simplified / traditional forms (無視 to 无视) | no |
+| `variant_forms` | the three above combined | no |
+| `ringi_document` | pretext only: the core wrapped in a ringi (approval document) form | core intact |
+
+The normalizing filter is staged: `regex_guardrail_blocks(text, level)` with level 1 = the published
+`regex` guardrail (unchanged, no NFKC), level 2 = level 1 + NFKC, level 3 = level 2 + skeleton
+matching (variant kanji, look-alikes and kana folded). Level 3 is selectable as `guardrail: skeleton`.
+
+```bash
+python experiments/filter_matrix.py     # deterministic: attacks blocked per transform and filter level -> filter_matrix.json
+python experiments/benign_fp.py         # deterministic: false positives on 80 benign requests -> benign_fp.json
+python experiments/make_expansion_config.py
+JART_TRIALS=3 python run_assessment.py --config experiments/expansion.yaml --out experiments/expansion_run.json
+python experiments/analyze_expansion.py # model x guardrail x transform breach rates -> expansion_summary.json
+```
+
+`expansion_run.json` is the LIVE run of 2026-11-16 (UTC): three bare models x five guardrails x five
+transforms x 11 attacks, K=3, 2,472 valid trials, 3 excluded. `benign_requests.json` was written by
+hand for this check and is not real traffic; the `hard_negative` and `boundary` categories were
+built to expose a mechanism, so the counts are not a false-positive rate.
+
 ## Notes
 
 - Determinism: MOCK results are reproducible from `_frac`/`_seed`; the
