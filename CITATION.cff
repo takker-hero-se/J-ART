@@ -30,6 +30,9 @@ identifiers:
     value: "10.5281/zenodo.24287649"
     description: "Version DOI for v0.4.0"
   - type: doi
+    value: "10.5281/zenodo.24296243"
+    description: "Version DOI for v0.4.1"
+  - type: doi
     value: "10.5281/zenodo.20676880"
     description: "Version DOI for v0.1.0"
 license: MIT
