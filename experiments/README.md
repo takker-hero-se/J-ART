@@ -117,12 +117,13 @@ python experiments/filter_matrix.py     # deterministic: attacks blocked per tra
 python experiments/benign_fp.py         # deterministic: false positives on 80 benign requests -> benign_fp.json
 python experiments/make_expansion_config.py
 JART_TRIALS=3 python run_assessment.py --config experiments/expansion.yaml --out experiments/expansion_run.json
-python experiments/analyze_expansion.py # model x guardrail x transform breach rates -> expansion_summary.json
+python experiments/analyze_expansion.py # breach rates, cluster-robust and paired contrasts, sign test -> expansion_summary.json
+python experiments/analyze_spread.py    # cross-model spread intervals and breach-rate ratios per ablation arm
 ```
 
 `expansion_run.json` is the LIVE run of 2026-11-16 (UTC): three bare models x five guardrails x five
-transforms x 11 attacks, K=3, 2,472 valid trials, 3 excluded. `benign_requests.json` was written by
-hand for this check and is not real traffic; the `hard_negative` and `boundary` categories were
+transforms x 11 attacks, K=3, 2,472 valid trials, 3 excluded. `benign_requests.json` was drafted
+with AI assistance and checked by the author for this check; it is not real traffic; the `hard_negative` and `boundary` categories were
 built to expose a mechanism, so the counts are not a false-positive rate.
 
 ## Notes

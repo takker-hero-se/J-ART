@@ -952,7 +952,12 @@
     0.0,
     45.5
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 2,
+    "negative": 0,
+    "p_two_sided": 0.5
+   }
   },
   "4omini|regex-none|compat_forms": {
    "diff": 0.0,
@@ -960,7 +965,12 @@
     0.0,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|regex-none|compat_forms": {
    "diff": 0.0,
@@ -968,7 +978,12 @@
     0.0,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "scout|skeleton-regex|compat_forms": {
    "diff": 36.4,
@@ -976,7 +991,12 @@
     9.1,
     63.6
    ],
-   "excludes_zero": true
+   "excludes_zero": true,
+   "sign_test": {
+    "positive": 4,
+    "negative": 0,
+    "p_two_sided": 0.125
+   }
   },
   "4omini|skeleton-regex|compat_forms": {
    "diff": 9.1,
@@ -984,7 +1004,12 @@
     0.0,
     27.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 1,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|skeleton-regex|compat_forms": {
    "diff": 18.2,
@@ -992,7 +1017,12 @@
     0.0,
     45.5
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 2,
+    "negative": 0,
+    "p_two_sided": 0.5
+   }
   },
   "scout|skeleton-none|compat_forms": {
    "diff": 54.5,
@@ -1000,7 +1030,12 @@
     27.3,
     81.8
    ],
-   "excludes_zero": true
+   "excludes_zero": true,
+   "sign_test": {
+    "positive": 6,
+    "negative": 0,
+    "p_two_sided": 0.0312
+   }
   },
   "4omini|skeleton-none|compat_forms": {
    "diff": 9.1,
@@ -1008,7 +1043,12 @@
     0.0,
     27.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 1,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|skeleton-none|compat_forms": {
    "diff": 18.2,
@@ -1016,7 +1056,12 @@
     0.0,
     45.5
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 2,
+    "negative": 0,
+    "p_two_sided": 0.5
+   }
   },
   "scout|llamaguard-none|compat_forms": {
    "diff": 27.3,
@@ -1024,7 +1069,12 @@
     0.0,
     54.5
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 3,
+    "negative": 0,
+    "p_two_sided": 0.25
+   }
   },
   "4omini|llamaguard-none|compat_forms": {
    "diff": 12.1,
@@ -1032,7 +1082,12 @@
     0.0,
     30.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 2,
+    "negative": 0,
+    "p_two_sided": 0.5
+   }
   },
   "gpt41|llamaguard-none|compat_forms": {
    "diff": 9.1,
@@ -1040,7 +1095,12 @@
     0.0,
     27.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 1,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "scout|regex-none|variant_forms": {
    "diff": -3.0,
@@ -1048,7 +1108,12 @@
     -9.1,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 1,
+    "p_two_sided": 1.0
+   }
   },
   "4omini|regex-none|variant_forms": {
    "diff": 0.0,
@@ -1056,7 +1121,12 @@
     0.0,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|regex-none|variant_forms": {
    "diff": -3.0,
@@ -1064,7 +1134,12 @@
     -9.1,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 1,
+    "p_two_sided": 1.0
+   }
   },
   "scout|skeleton-regex|variant_forms": {
    "diff": 42.4,
@@ -1072,7 +1147,12 @@
     15.2,
     69.7
    ],
-   "excludes_zero": true
+   "excludes_zero": true,
+   "sign_test": {
+    "positive": 5,
+    "negative": 0,
+    "p_two_sided": 0.0625
+   }
   },
   "4omini|skeleton-regex|variant_forms": {
    "diff": 0.0,
@@ -1080,7 +1160,12 @@
     0.0,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|skeleton-regex|variant_forms": {
    "diff": 12.1,
@@ -1088,7 +1173,12 @@
     0.0,
     30.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 2,
+    "negative": 0,
+    "p_two_sided": 0.5
+   }
   },
   "scout|skeleton-none|variant_forms": {
    "diff": 39.4,
@@ -1096,7 +1186,12 @@
     12.1,
     66.7
    ],
-   "excludes_zero": true
+   "excludes_zero": true,
+   "sign_test": {
+    "positive": 5,
+    "negative": 0,
+    "p_two_sided": 0.0625
+   }
   },
   "4omini|skeleton-none|variant_forms": {
    "diff": 0.0,
@@ -1104,7 +1199,12 @@
     0.0,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|skeleton-none|variant_forms": {
    "diff": 9.1,
@@ -1112,7 +1212,12 @@
     0.0,
     27.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 1,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "scout|llamaguard-none|variant_forms": {
    "diff": 9.1,
@@ -1120,7 +1225,12 @@
     -6.1,
     30.3
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 2,
+    "negative": 1,
+    "p_two_sided": 1.0
+   }
   },
   "4omini|llamaguard-none|variant_forms": {
    "diff": 0.0,
@@ -1128,7 +1238,12 @@
     0.0,
     0.0
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 0,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   },
   "gpt41|llamaguard-none|variant_forms": {
    "diff": 3.0,
@@ -1136,7 +1251,12 @@
     0.0,
     9.1
    ],
-   "excludes_zero": false
+   "excludes_zero": false,
+   "sign_test": {
+    "positive": 1,
+    "negative": 0,
+    "p_two_sided": 1.0
+   }
   }
  }
 }

@@ -8,6 +8,7 @@
 """
 import collections
 import json
+import math
 import os
 import sys
 
@@ -111,6 +112,18 @@ def main():
         ds = sorted(diff([rng.randrange(len(attacks)) for _ in attacks]) for _ in range(n_boot))
         return diff(range(len(attacks))), ds[int(0.025 * n_boot)], ds[int(0.975 * n_boot) - 1]
 
+    def sign_test(model, a, b, t):
+        """攻撃ごとの防御率の差の符号だけを使う正確な両側検定。攻撃は 11 しかないので検出力は低い。"""
+        pos = neg = 0
+        for x in attacks:
+            (ba, na), (bb, nb) = by_attack[(model, a, t, x)], by_attack[(model, b, t, x)]
+            d = (1 - ba / na) - (1 - bb / nb)
+            pos += d > 0
+            neg += d < 0
+        n, k = pos + neg, min(pos, neg)
+        p = min(1.0, 2.0 * sum(math.comb(n, i) for i in range(k + 1)) / 2 ** n) if n else 1.0
+        return pos, neg, p
+
     print("\n== 感度分析：攻撃ごとに対応づけた復元抽出（防御率の差、ポイント）==")
     paired_out, n_ex = {}, 0
     for t in ("compat_forms", "variant_forms"):
@@ -119,11 +132,15 @@ def main():
                 diff, lo, hi = paired(model, a, b, t)
                 ex = bool(lo > 0 or hi < 0)
                 n_ex += ex
+                pos, neg, p = sign_test(model, a, b, t)
                 paired_out["%s|%s-%s|%s" % (model, a, b, t)] = {"diff": round(diff, 1),
                                                               "ci": [round(lo, 1), round(hi, 1)],
-                                                              "excludes_zero": ex}
+                                                              "excludes_zero": ex,
+                                                              "sign_test": {"positive": pos, "negative": neg,
+                                                                            "p_two_sided": round(p, 4)}}
                 if ex:
-                    print("%-14s %-17s %-7s %+5.1f [%+5.1f,%+5.1f]" % (t, "%s - %s" % (a, b), model, diff, lo, hi))
+                    print("%-14s %-17s %-7s %+5.1f [%+5.1f,%+5.1f]  符号検定: +%d/-%d, 両側 p=%.4f"
+                          % (t, "%s - %s" % (a, b), model, diff, lo, hi, pos, neg, p))
     print("ゼロを含まない対比: %d / %d" % (n_ex, len(paired_out)))
     with open(os.path.join(HERE, "expansion_summary.json"), "w", encoding="utf-8", newline="\n") as f:
         json.dump({"cells": out, "diffs": diffs, "paired_sensitivity": paired_out}, f, ensure_ascii=False, indent=1)
