@@ -770,6 +770,39 @@ targets:
     guardrail: none
     rag: true
 
+  - id: openrouter-pixtral-large-naked  # auto-added 2026-11-21 (OpenRouter released 2026-11-20)
+    label: "Pixtral Large 2502 / 素のAPI (OpenRouter)"
+    label_en: "Pixtral Large 2502 / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "mistralai/pixtral-large-2502"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-gemini-4-neon-naked  # auto-added 2026-11-21 (OpenRouter released 2026-11-18)
+    label: "Gemini 4 Neon / 素のAPI (OpenRouter)"
+    label_en: "Gemini 4 Neon / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "google/gemini-4-neon"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
+  - id: openrouter-gpt-6-2-sol-naked  # auto-added 2026-11-21 (OpenRouter released 2026-11-17)
+    label: "GPT-6.2 Sol / 素のAPI (OpenRouter)"
+    label_en: "GPT-6.2 Sol / bare API (OpenRouter)"
+    provider: openai_compatible
+    base_url: "https://openrouter.ai/api/v1"
+    api_key_env: OPENROUTER_API_KEY
+    model: "openai/gpt-6.2-sol"
+    prompt_strength: low
+    guardrail: none
+    rag: true
+
 # ---------------------------------------------------------------------
 # ベース攻撃（MITRE ATLAS 準拠）
 #   vector : user(ユーザ入力に注入) | rag(検索コンテキストに注入)
